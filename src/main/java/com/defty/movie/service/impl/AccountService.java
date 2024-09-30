@@ -1,6 +1,6 @@
-package com.defty.movie.service.Impl;
+package com.defty.movie.service.impl;
 
-import com.defty.movie.dto.Request.LoginRequest;
+import com.defty.movie.dto.request.LoginRequest;
 import com.defty.movie.entity.Account;
 import com.defty.movie.repository.IAccountRepository;
 import com.defty.movie.security.JwtTokenUtil;

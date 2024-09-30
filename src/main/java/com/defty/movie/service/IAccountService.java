@@ -1,6 +1,6 @@
 package com.defty.movie.service;
 
-import com.defty.movie.dto.Request.LoginRequest;
+import com.defty.movie.dto.request.LoginRequest;
 
 
 public interface IAccountService {

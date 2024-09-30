@@ -1,8 +1,8 @@
 package com.defty.movie.controller.admin;
 
-import com.defty.movie.dto.Request.LoginRequest;
-import com.defty.movie.dto.Response.ApiResponse;
-import com.defty.movie.dto.Response.LoginResponse;
+import com.defty.movie.dto.request.LoginRequest;
+import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.dto.response.LoginResponse;
 import com.defty.movie.common.ApiStatus;
 import com.defty.movie.service.IAccountService;
 import lombok.RequiredArgsConstructor;

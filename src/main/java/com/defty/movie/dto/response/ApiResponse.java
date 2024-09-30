@@ -1,4 +1,4 @@
-package com.defty.movie.dto.Response;
+package com.defty.movie.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
