@@ -23,7 +23,7 @@ springdoc:
   show-actuator: true
 
 api:
-  prefix: /api/v1
+  prefix: /api/v1/admin
 
 jwt:
   expiration: 600  # 10 phut

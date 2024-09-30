@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                                     "/webjars/**",
                                     "/swagger-ui/api-docs/swagger-config"
                             ).permitAll()
-                            .requestMatchers(POST, "/api/v1/account/login").permitAll()
+                            .requestMatchers(POST, "/api/v1//admin/account/login").permitAll()
                             .anyRequest().authenticated();
                 })
 //                .oauth2Login(withDefaults())
