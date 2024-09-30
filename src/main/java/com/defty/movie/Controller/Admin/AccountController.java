@@ -27,7 +27,7 @@ public class AccountController {
             ApiResponse<LoginResponse> response = ApiResponse.<LoginResponse>builder()
                     .status(ApiStatus.SUCCESS.getCode())
                     .message(ApiStatus.SUCCESS.getMessage())
-                    .result(loginResponse)
+                    .data(loginResponse)
                     .build();
             return ResponseEntity.status(HttpStatus.OK).body(response);
 
