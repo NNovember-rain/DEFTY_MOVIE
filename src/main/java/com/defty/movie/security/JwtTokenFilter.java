@@ -80,6 +80,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 Pair.of("/swagger-ui/.*", "GET"),
                 Pair.of("/swagger-ui.html", "GET"),
                 Pair.of("/swagger-ui/index.html", "GET")
+
         );
 
         String requestPath = request.getServletPath();
