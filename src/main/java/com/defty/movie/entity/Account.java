@@ -15,18 +15,15 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE) //private
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class) //clientId == client_id
 
-public class Account implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-
+public class Account extends BaseEntity implements UserDetails {
     @Column(nullable = false, length = 50, unique = true)
     String username;
 

@@ -45,10 +45,10 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 return;
             }
             final String token = authHeader.substring(7);
-            final String email = jwtTokenUtil.extractUsername(token);
-            if (email != null
+            final String username = jwtTokenUtil.extractUsername(token);
+            if (username != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
-                Account accountDetails = (Account) userDetailsService.loadUserByUsername(email);
+                Account accountDetails = (Account) userDetailsService.loadUserByUsername(username);
                 if(jwtTokenUtil.validateToken(token, accountDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
@@ -69,7 +69,9 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
-                Pair.of(String.format("%s/account/login", apiPrefix), "POST"),
+                Pair.of(String.format("%s/admin/account/login", apiPrefix), "POST"),
+                Pair.of(String.format("%s/admin/account/check-account", apiPrefix), "POST"),
+
                 // Swagger
                 Pair.of("/v3/api-docs", "GET"),
                 Pair.of("/v3/api-docs/.*", "GET"),

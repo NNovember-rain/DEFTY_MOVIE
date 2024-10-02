@@ -1,10 +1,15 @@
 package com.defty.movie.config;
 
 import com.defty.movie.security.JwtTokenFilter;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,8 +26,11 @@ import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
+    @Value("${api.prefix}")
+    private String apiPrefix;
     private final JwtTokenFilter jwtTokenFilter;
 
     @Bean
@@ -44,7 +52,10 @@ public class WebSecurityConfig {
                                     "/webjars/**",
                                     "/swagger-ui/api-docs/swagger-config"
                             ).permitAll()
-                            .requestMatchers(POST, "/api/v1/admin/account/login").permitAll()
+//                            .requestMatchers(GET, String.format("%s/admin/permission/get-all-permissions", apiPrefix)).hasAnyRole("ADMIN")
+//                            .requestMatchers(GET, String.format("%s/admin/permission/get-permissions/**", apiPrefix)).hasAnyRole("ADMIN")
+                            .requestMatchers(POST, String.format("%s/admin/account/login", apiPrefix)).permitAll()
+                            .requestMatchers(POST, String.format("%s/admin/account/check-account", apiPrefix)).permitAll()
                             .anyRequest().authenticated();
                 })
 //                .oauth2Login(withDefaults())
@@ -54,7 +65,7 @@ public class WebSecurityConfig {
             @Override
             public void customize(CorsConfigurer<HttpSecurity> httpSecurityCorsConfigurer) {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
-                corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+                corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
                 corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                 corsConfiguration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
                 corsConfiguration.setExposedHeaders(List.of("x-auth-token"));

@@ -26,20 +26,15 @@ public class JwtTokenUtil {
     @Value("${jwt.secretKey}")
     private String secretKey;
 
-    public String generateToken(Account account) throws Exception{
+    public String generateToken(Account account){
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", account.getUsername());
-
-        try {
-            return Jwts.builder()
-                    .setClaims(claims)
-                    .setSubject(account.getUsername())
-                    .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L))
-                    .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                    .compact();
-        }catch (Exception e) {
-            throw new InvalidParamException("Cannot create jwt token, error: "+e.getMessage());
-        }
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(account.getUsername())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private Key getSignInKey() {
