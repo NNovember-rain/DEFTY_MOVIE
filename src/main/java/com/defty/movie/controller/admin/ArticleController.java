@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
     private final ArticleService articleService;
 
+
     @PostMapping("/article")
     public ResponseEntity<ApiResponse<ArticleResponse>> addArticle(@RequestBody ArticleRequest articleRequest) {
         try {
