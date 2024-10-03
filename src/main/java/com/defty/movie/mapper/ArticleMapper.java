@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ArticleConverter {
+public class ArticleMapper {
     private final ModelMapper modelMapper;
 
-    public Article ArticleRequestToArticleEntity(ArticleRequest articleRequest) {
+    public Article toArticleEntity(ArticleRequest articleRequest) {
         Article article = modelMapper.map(articleRequest, Article.class);
         return article;
     }

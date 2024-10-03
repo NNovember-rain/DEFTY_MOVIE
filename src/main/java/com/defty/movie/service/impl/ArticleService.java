@@ -1,6 +1,6 @@
 package com.defty.movie.service.impl;
 
-import com.defty.movie.mapper.ArticleConverter;
+import com.defty.movie.mapper.ArticleMapper;
 import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.entity.Article;
 import com.defty.movie.repository.IAriticleRepository;
@@ -16,19 +16,19 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ArticleService implements IArticleService {
 
-    private final ArticleConverter articleConverter;
+    private final ArticleMapper articleMapper;
     private final IAriticleRepository ariticleRepository;
-    private final ModelMapper modelMapper;
 
     @Override
     public void addArticle(ArticleRequest articleRequest) {
-        Article article = articleConverter.ArticleRequestToArticleEntity(articleRequest);
+        Article article = articleMapper.toArticleEntity(articleRequest);
         ariticleRepository.save(article);
     }
 
     @Override
     public void updateArticle(Integer id, ArticleRequest articleRequest) {
-        Article article = articleConverter.ArticleRequestToArticleEntity(articleRequest);
+        id == null ? throw NullPointerException("Article not found !");
+        Article article = articleMapper.toArticleEntity(articleRequest);
         article.setId(id);
         ariticleRepository.save(article);
     }
