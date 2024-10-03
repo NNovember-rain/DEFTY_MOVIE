@@ -1,5 +1,6 @@
 package com.defty.movie.controller.admin;
 
+import com.defty.movie.dto.request.PermissionRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PermissionResponse;
 import com.defty.movie.dto.response.RoleResponse;
@@ -11,10 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class PermissionController {
 
     @GetMapping("/get-all-permissions")
     @PreAuthorize("hasRole('ADMIN')")
-//    @PreAuthorize("ha")
+//    @PreAuthorize("hasPermission()")
     public ResponseEntity<?> getALlPermissions() {
         List<PermissionResponse> permissionResponses = permissionService.getAllPermissions();
         ApiResponse<?> response = ApiResponse.builder()
@@ -40,7 +38,7 @@ public class PermissionController {
     }
 
     @GetMapping("/get-permissions/{roleId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("requiredPermission.checkPermission('GET_PERMISSION')")
     public ResponseEntity<?> getPermissionByRoleId(@PathVariable("roleId") Integer roleId) {
         RoleResponse roleResponse = permissionService.getPermissionsByRoleId(roleId);
         ApiResponse<?> response = ApiResponse.builder()
@@ -49,5 +47,21 @@ public class PermissionController {
                 .data(roleResponse)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/create-permission")
+    public ResponseEntity<?> assignPermission(@RequestBody PermissionRequest permissionRequest) {
+        PermissionResponse permissionResponse = permissionService.createPermission(permissionRequest);
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(permissionResponse)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-permission/{permissionIds}")
+    public ResponseEntity<?> unassignPermission(@PathVariable List<String> permissionIds) {
+        PermissionResponse permissionResponse
     }
 }

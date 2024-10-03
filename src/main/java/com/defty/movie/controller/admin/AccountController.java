@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,12 +32,12 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/check-account")
+    @GetMapping("/check-account")
     public ResponseEntity<?> checkAccount(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             ApiResponse<?> response = ApiResponse.builder()
                     .status(HttpStatus.UNAUTHORIZED.value())
-                    .message("Chưa đăng nhập hoặc không có token hợp lệ")
+                    .message("Not logged in or do not have a valid token")
                     .data(null)
                     .build();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
@@ -52,5 +51,4 @@ public class AccountController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 }

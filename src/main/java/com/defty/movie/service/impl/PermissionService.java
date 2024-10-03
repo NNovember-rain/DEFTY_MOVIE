@@ -43,7 +43,7 @@ public class PermissionService implements IPermissionService {
     }
 
     @Override
-    public void deletePermission(String api) {
+    public void deletePermissions(List<String> permissionIds) {
 
     }
 

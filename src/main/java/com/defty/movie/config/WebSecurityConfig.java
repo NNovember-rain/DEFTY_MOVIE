@@ -52,10 +52,8 @@ public class WebSecurityConfig {
                                     "/webjars/**",
                                     "/swagger-ui/api-docs/swagger-config"
                             ).permitAll()
-//                            .requestMatchers(GET, String.format("%s/admin/permission/get-all-permissions", apiPrefix)).hasAnyRole("ADMIN")
-//                            .requestMatchers(GET, String.format("%s/admin/permission/get-permissions/**", apiPrefix)).hasAnyRole("ADMIN")
                             .requestMatchers(POST, String.format("%s/admin/account/login", apiPrefix)).permitAll()
-                            .requestMatchers(POST, String.format("%s/admin/account/check-account", apiPrefix)).permitAll()
+                            .requestMatchers(GET, String.format("%s/admin/account/check-account", apiPrefix)).permitAll()
                             .anyRequest().authenticated();
                 })
 //                .oauth2Login(withDefaults())

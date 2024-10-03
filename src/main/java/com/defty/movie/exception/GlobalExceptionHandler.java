@@ -55,7 +55,6 @@ public class GlobalExceptionHandler {
         errorResponse.setStatus(BAD_REQUEST.value());
         errorResponse.setError("Bad Request");
         errorResponse.setMessage(e.getMessage());
-
         return errorResponse;
     }
 

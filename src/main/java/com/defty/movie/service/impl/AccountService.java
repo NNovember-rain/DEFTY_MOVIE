@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -65,4 +67,15 @@ public class AccountService implements IAccountService {
                 .role(account.getRole().getName())
                 .build();
     }
+
+    @Override
+    public Optional<Account> getCurrentAccount() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
+            return Optional.empty();
+        }
+        String username = (String) auth.getPrincipal();
+        return accountRepository.findByUsername(username);
+    }
+
 }
