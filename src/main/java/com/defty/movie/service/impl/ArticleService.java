@@ -1,9 +1,8 @@
 package com.defty.movie.service.impl;
 
-import com.defty.movie.converter.ArticleConverter;
+import com.defty.movie.mapper.ArticleConverter;
 import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.entity.Article;
-import com.defty.movie.exception.ArticleNotFoundException;
 import com.defty.movie.repository.IAriticleRepository;
 import com.defty.movie.service.IArticleService;
 import lombok.AccessLevel;

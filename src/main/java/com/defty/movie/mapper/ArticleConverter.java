@@ -1,12 +1,10 @@
-package com.defty.movie.converter;
+package com.defty.movie.mapper;
 
 import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.entity.Article;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
