@@ -41,6 +41,7 @@ public class AccountController {
                     .message("Chưa đăng nhập hoặc không có token hợp lệ")
                     .data(null)
                     .build();
+
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
         String extractedToken = authorizationHeader.substring(7);
@@ -52,5 +53,4 @@ public class AccountController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 }

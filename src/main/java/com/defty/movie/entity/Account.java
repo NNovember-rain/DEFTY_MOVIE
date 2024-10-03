@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -56,6 +57,9 @@ public class Account extends BaseEntity implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "role_id")
     Role role;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    Set<Article> articles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

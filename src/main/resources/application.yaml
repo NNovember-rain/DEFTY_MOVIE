@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/movie
-    username: phpmyadmin
-    password: 123456
+    username: root
+    password: Hoanghiep2003@
 
   jpa:
     hibernate:
