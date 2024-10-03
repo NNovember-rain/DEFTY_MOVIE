@@ -25,6 +25,9 @@ public class RequiredPermission {
     IPermissionRepository permissionRepository;
 
     public boolean checkPermission(String permissionCheck){
+        if (permissionCheck == null || permissionCheck.isEmpty()) {
+            return true;
+        }
         Optional<Account> account = accountService.getCurrentAccount();
         boolean success = false;
         if(account.isPresent()){

@@ -26,15 +26,12 @@ public class CreatedAccountConfig {
     @Bean
     ApplicationRunner createAccount(IAccountRepository accountRepository) {
         return args -> {
-            if(accountRepository.findByUsername("vannv").isEmpty()) {
-                Role role = Role.builder()
-                        .name("Admin")
-                        .build();
-                Role roleTest =  roleRepository.save(role);
+            if(accountRepository.findByUsername("vannvUm").isEmpty()) {
+                Role role = roleRepository.findRoleByName("Manager");
                 Account account = Account.builder()
-                        .username("vannv")
+                        .username("vannvUm")
                         .password(passwordEncoder.encode("123456"))
-                        .role(roleTest)
+                        .role(role)
                         .build();
                 accountRepository.save(account);
                 log.info("Created account successfully: {}", account.getUsername());

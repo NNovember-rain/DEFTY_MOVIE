@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -74,7 +75,7 @@ public class AccountService implements IAccountService {
         if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
             return Optional.empty();
         }
-        String username = (String) auth.getPrincipal();
+        String username = ((UserDetails) auth.getPrincipal()).getUsername();
         return accountRepository.findByUsername(username);
     }
 

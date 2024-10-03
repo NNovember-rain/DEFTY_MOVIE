@@ -4,6 +4,7 @@ import com.defty.movie.dto.request.PermissionRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PermissionResponse;
 import com.defty.movie.dto.response.RoleResponse;
+import com.defty.movie.security.RequiredPermission;
 import com.defty.movie.service.IPermissionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,7 @@ public class PermissionController {
     IPermissionService permissionService;
 
     @GetMapping("/get-all-permissions")
-    @PreAuthorize("hasRole('ADMIN')")
-//    @PreAuthorize("hasPermission()")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_PERMISSIONS')")
     public ResponseEntity<?> getALlPermissions() {
         List<PermissionResponse> permissionResponses = permissionService.getAllPermissions();
         ApiResponse<?> response = ApiResponse.builder()
@@ -38,7 +38,7 @@ public class PermissionController {
     }
 
     @GetMapping("/get-permissions/{roleId}")
-    @PreAuthorize("requiredPermission.checkPermission('GET_PERMISSION')")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_PERMISSIONS_ROLE')")
     public ResponseEntity<?> getPermissionByRoleId(@PathVariable("roleId") Integer roleId) {
         RoleResponse roleResponse = permissionService.getPermissionsByRoleId(roleId);
         ApiResponse<?> response = ApiResponse.builder()
@@ -50,6 +50,7 @@ public class PermissionController {
     }
 
     @PostMapping("/create-permission")
+    @PreAuthorize("@requiredPermission.checkPermission('CREATE_PERMISSION')")
     public ResponseEntity<?> assignPermission(@RequestBody PermissionRequest permissionRequest) {
         PermissionResponse permissionResponse = permissionService.createPermission(permissionRequest);
         ApiResponse<?> response = ApiResponse.builder()
@@ -61,7 +62,33 @@ public class PermissionController {
     }
 
     @DeleteMapping("/delete-permission/{permissionIds}")
-    public ResponseEntity<?> unassignPermission(@PathVariable List<String> permissionIds) {
-        PermissionResponse permissionResponse
+    @PreAuthorize("@requiredPermission.checkPermission('DELETE_PERMISSION')")
+    public ResponseEntity<?> unassignPermission(@PathVariable List<Integer> permissionIds) {
+        permissionService.deletePermissions(permissionIds);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/assign-permissons/{permissionIds}")
+    @PreAuthorize("@requiredPermission.checkPermission('ASSIGN_PERMISSION')")
+    public ResponseEntity<?> assignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
+        RoleResponse roleResponse = permissionService.assignPermissionToRole(roleId, permissionIds);
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(roleResponse)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/unassign-permissons/{permissionIds}")
+    @PreAuthorize("@requiredPermission.checkPermission('UNASSIGN_PERMISSION')")
+    public ResponseEntity<?> unassignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
+        RoleResponse roleResponse = permissionService.unassignPermissionFromRole(roleId, permissionIds);
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(roleResponse)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

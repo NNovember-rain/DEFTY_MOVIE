@@ -7,4 +7,5 @@ import java.util.Set;
 
 public interface IRolePermissionRepository extends JpaRepository<RolePermission, Integer> {
     Set<RolePermission> findByRoleId(Integer roleId);
+    RolePermission findByRoleIdAndPermissionId(Integer roleId, Integer permissionId);
 }
