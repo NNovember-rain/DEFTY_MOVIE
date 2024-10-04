@@ -27,7 +27,7 @@ public class ArticleService implements IArticleService {
 
     @Override
     public void updateArticle(Integer id, ArticleRequest articleRequest) {
-        id == null ? throw NullPointerException("Article not found !");
+        Article articleCheck=ariticleRepository.findById(id).orElseThrow(()->new RuntimeException("The article dont exist !"));
         Article article = articleMapper.toArticleEntity(articleRequest);
         article.setId(id);
         ariticleRepository.save(article);

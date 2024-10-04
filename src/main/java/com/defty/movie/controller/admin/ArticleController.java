@@ -7,6 +7,7 @@ import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.dto.response.LoginResponse;
 import com.defty.movie.service.impl.ArticleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class ArticleController {
 
 
     @PostMapping("/article/{id}")
-    public ResponseEntity<ApiResponse<ArticleResponse>> updateArticle(@PathVariable Integer id,
+    public ResponseEntity<ApiResponse<ArticleResponse>> updateArticle(@Valid @PathVariable Integer id,
                                                                       @RequestBody ArticleRequest articleRequest) {
         articleService.updateArticle(id,articleRequest);
         ApiResponse<ArticleResponse> apiResponse = ApiResponse.<ArticleResponse>builder()
