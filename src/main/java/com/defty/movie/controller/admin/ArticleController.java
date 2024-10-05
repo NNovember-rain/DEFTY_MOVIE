@@ -8,11 +8,17 @@ import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.dto.response.LoginResponse;
 import com.defty.movie.service.impl.ArticleService;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -35,9 +41,13 @@ public class ArticleController {
     }
 
 
-    @PostMapping("/article/{id}")
-    public ResponseEntity<ApiResponse<ArticleResponse>> updateArticle(@Valid @PathVariable Integer id,
-                                                                      @RequestBody ArticleRequest articleRequest) {
+    @PatchMapping("/article/{id}")
+    public ResponseEntity<ApiResponse<ArticleResponse>> updateArticle( @PathVariable Integer id,
+                                                                       @Valid @RequestBody ArticleRequest articleRequest,BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new RuntimeException("loi roi");
+        }
         articleService.updateArticle(id,articleRequest);
         ApiResponse<ArticleResponse> apiResponse = ApiResponse.<ArticleResponse>builder()
                 .message("Success")
@@ -48,9 +58,9 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
-    @DeleteMapping("/article/{id}")
-    public ResponseEntity<ApiResponse<ArticleResponse>> deleteArticle(@PathVariable Integer id) {
-        articleService.deleteArticle(id);
+    @DeleteMapping("/article/{ids}")
+    public ResponseEntity<ApiResponse<ArticleResponse>> deleteArticle(@PathVariable List<Integer> ids) {
+        articleService.deleteArticle(ids);
         ApiResponse<ArticleResponse> apiResponse = ApiResponse.<ArticleResponse>builder()
                 .message("Success")
                 .status(HttpStatus.OK.value())

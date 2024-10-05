@@ -1,12 +1,14 @@
 package com.defty.movie.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Date;
 
@@ -60,6 +62,7 @@ public class GlobalExceptionHandler {
     }
 
 
+
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ErrorResponse handleNullPointerException(NullPointerException e, WebRequest request) {
@@ -71,6 +74,7 @@ public class GlobalExceptionHandler {
         errorResponse.setMessage("A null value was encountered where it shouldn't have been.");
         return errorResponse;
     }
+
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(INTERNAL_SERVER_ERROR)
@@ -84,6 +88,7 @@ public class GlobalExceptionHandler {
 
         return errorResponse;
     }
+
 
     //TODO: thầy Hạnh viết
 //    @ExceptionHandler(UnauthorizedException.class)

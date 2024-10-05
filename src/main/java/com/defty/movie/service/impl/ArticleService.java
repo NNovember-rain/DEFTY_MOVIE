@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +37,11 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public void deleteArticle(Integer id) {
-        Article article = ariticleRepository.findById(id).orElse(null);
-        article.setStatus(0);
-        ariticleRepository.save(article);
+    public void deleteArticle(List<Integer> ids) {
+        try {
+            List<Article> articles = ariticleRepository.findAllById(ids);
+        }catch (Exception e){
+            throw new RuntimeException("Error deleting articles");
+        }
     }
 }

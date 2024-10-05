@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Fetch;
+import org.springframework.lang.NonNull;
 
 import java.util.Date;
 
@@ -16,6 +17,7 @@ import java.util.Date;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Article {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
