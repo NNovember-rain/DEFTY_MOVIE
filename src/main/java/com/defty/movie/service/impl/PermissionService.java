@@ -11,12 +11,13 @@ import com.defty.movie.repository.IPermissionRepository;
 import com.defty.movie.repository.IRolePermissionRepository;
 import com.defty.movie.repository.IRoleRepository;
 import com.defty.movie.service.IPermissionService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,18 +45,14 @@ public class PermissionService implements IPermissionService {
     }
 
     @Override
+    @Transactional
     public void deletePermissions(List<Integer> permissionIds) {
         permissionRepository.deleteByIdIn(permissionIds);
     }
 
     @Override
     public RoleResponse getPermissionsByRoleId(Integer roleId) {
-        Set<RolePermission> rolePermissions = rolePermissionRepository.findByRoleId(roleId);
-        Set<Permission> permissions = new HashSet<>();
-        for (RolePermission rolePermission : rolePermissions) {
-            Permission permission = permissionRepository.findById(rolePermission.getPermission().getId()).orElse(null);
-            permissions.add(permission);
-        }
+        Set<Permission> permissions = permissionRepository.findPermissionsByRoleId(roleId);
         Set<PermissionResponse> permissionResponses = permissions.stream().map(permissionMapper::toPermissionResponse).collect(Collectors.toSet());
         return RoleResponse.builder()
                 .name(roleRepository.findById(roleId).get().getName())
@@ -69,12 +66,17 @@ public class PermissionService implements IPermissionService {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
         List<Permission> permissions = permissionRepository.findAllById(permissionIds);
+        Set<Permission> existPermissions = permissionRepository.findPermissionsByRoleId(roleId);
+        List<RolePermission> newRolePermissions = new ArrayList<>();
         for (Permission permission : permissions) {
-            RolePermission rolePermission = new RolePermission();
-            rolePermission.setRole(role);
-            rolePermission.setPermission(permission);
-            rolePermissionRepository.save(rolePermission);
+            if (!existPermissions.contains(permission)) {
+                RolePermission rolePermission = new RolePermission();
+                rolePermission.setRole(role);
+                rolePermission.setPermission(permission);
+                newRolePermissions.add(rolePermission);
+            }
         }
+        rolePermissionRepository.saveAll(newRolePermissions);
         return RoleResponse.builder()
                 .name(role.getName())
                 .description(role.getDescription())
@@ -90,10 +92,12 @@ public class PermissionService implements IPermissionService {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
         List<Permission> permissions = permissionRepository.findAllById(permissionIds);
+        List<RolePermission> rolePermissions = new ArrayList<>();
         for (Permission permission : permissions) {
             RolePermission rolePermission = rolePermissionRepository.findByRoleIdAndPermissionId(roleId, permission.getId());
-            rolePermissionRepository.delete(rolePermission);
+            rolePermissions.add(rolePermission);
         }
+        rolePermissionRepository.deleteAll(rolePermissions);
         return RoleResponse.builder()
                 .name(role.getName())
                 .description(role.getDescription())

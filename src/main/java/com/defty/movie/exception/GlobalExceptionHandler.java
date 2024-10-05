@@ -80,14 +80,12 @@ public class GlobalExceptionHandler {
         errorResponse.setStatus(INTERNAL_SERVER_ERROR.value());
         errorResponse.setError("Internal Server Error");
         errorResponse.setMessage(e.getMessage());
-
         return errorResponse;
     }
 
-    //TODO: thầy Hạnh viết
-//    @ExceptionHandler(UnauthorizedException.class)
+//    @ExceptionHandler(TokenExpiredException.class)
 //    @ResponseStatus(UNAUTHORIZED)
-//    public ErrorResponse handleUnauthorizedException(UnauthorizedException e, WebRequest request) {
+//    public ErrorResponse handleUnauthorizedException(TokenExpiredException e, WebRequest request) {
 //        ErrorResponse errorResponse = new ErrorResponse();
 //        errorResponse.setTimestamp(new Date());
 //        errorResponse.setPath(request.getDescription(false).replace("uri=", ""));

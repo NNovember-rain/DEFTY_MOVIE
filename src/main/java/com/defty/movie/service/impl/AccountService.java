@@ -3,6 +3,7 @@ package com.defty.movie.service.impl;
 import com.defty.movie.dto.request.LoginRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.entity.Account;
+import com.defty.movie.mapper.AccountMapper;
 import com.defty.movie.repository.IAccountRepository;
 import com.defty.movie.security.JwtTokenUtil;
 import com.defty.movie.service.IAccountService;
@@ -27,6 +28,7 @@ public class AccountService implements IAccountService {
     AuthenticationManager authenticationManager;
     PasswordEncoder passwordEncoder;
     JwtTokenUtil jwtTokenUtil;
+    AccountMapper accountMapper;
 
     @Override
     public String login(LoginRequest loginRequest){
@@ -55,18 +57,7 @@ public class AccountService implements IAccountService {
             throw new RuntimeException("User not found");
         }
         Account account = accountOptional.get();
-        return AccountResponse.builder()
-                .username(account.getUsername())
-                .fullName(account.getFullName())
-                .email(account.getEmail())
-                .phone(account.getPhone())
-                .address(account.getAddress())
-                .avatar(account.getAvatar())
-                .gender(account.getGender())
-                .status(account.getStatus())
-                .dateOfBirth(account.getDateOfBirth())
-                .role(account.getRole().getName())
-                .build();
+        return accountMapper.toAccountResponse(account);
     }
 
     @Override

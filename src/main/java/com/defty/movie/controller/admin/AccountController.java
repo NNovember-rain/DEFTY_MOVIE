@@ -43,12 +43,21 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
         String extractedToken = authorizationHeader.substring(7);
-        AccountResponse accountResponse = accountService.getAccountFromToken(extractedToken);
-        ApiResponse<?> response = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(accountResponse)
-                .build();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        try {
+            AccountResponse accountResponse = accountService.getAccountFromToken(extractedToken);
+            ApiResponse<?> response = ApiResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.getReasonPhrase())
+                    .data(accountResponse)
+                    .build();
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            ApiResponse<?> response = ApiResponse.builder()
+                    .status(HttpStatus.UNAUTHORIZED.value())
+                    .message("Token is expired")
+                    .data(null)
+                    .build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
     }
 }
