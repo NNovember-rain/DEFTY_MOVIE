@@ -4,18 +4,20 @@ import com.defty.movie.dto.request.PermissionRequest;
 import com.defty.movie.dto.response.PermissionResponse;
 import com.defty.movie.dto.response.RoleResponse;
 import com.defty.movie.entity.Permission;
+import com.defty.movie.entity.Role;
 import com.defty.movie.entity.RolePermission;
 import com.defty.movie.mapper.PermissionMapper;
 import com.defty.movie.repository.IPermissionRepository;
 import com.defty.movie.repository.IRolePermissionRepository;
 import com.defty.movie.repository.IRoleRepository;
 import com.defty.movie.service.IPermissionService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,18 +45,14 @@ public class PermissionService implements IPermissionService {
     }
 
     @Override
-    public void deletePermission(String api) {
-
+    @Transactional
+    public void deletePermissions(List<Integer> permissionIds) {
+        permissionRepository.deleteByIdIn(permissionIds);
     }
 
     @Override
     public RoleResponse getPermissionsByRoleId(Integer roleId) {
-        Set<RolePermission> rolePermissions = rolePermissionRepository.findByRoleId(roleId);
-        Set<Permission> permissions = new HashSet<>();
-        for (RolePermission rolePermission : rolePermissions) {
-            Permission permission = permissionRepository.findById(rolePermission.getPermission().getId()).orElse(null);
-            permissions.add(permission);
-        }
+        Set<Permission> permissions = permissionRepository.findPermissionsByRoleId(roleId);
         Set<PermissionResponse> permissionResponses = permissions.stream().map(permissionMapper::toPermissionResponse).collect(Collectors.toSet());
         return RoleResponse.builder()
                 .name(roleRepository.findById(roleId).get().getName())
@@ -63,4 +61,49 @@ public class PermissionService implements IPermissionService {
                 .build();
     }
 
+    @Override
+    public RoleResponse assignPermissionToRole(Integer roleId, List<Integer> permissionIds) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
+        List<Permission> permissions = permissionRepository.findAllById(permissionIds);
+        Set<Permission> existPermissions = permissionRepository.findPermissionsByRoleId(roleId);
+        List<RolePermission> newRolePermissions = new ArrayList<>();
+        for (Permission permission : permissions) {
+            if (!existPermissions.contains(permission)) {
+                RolePermission rolePermission = new RolePermission();
+                rolePermission.setRole(role);
+                rolePermission.setPermission(permission);
+                newRolePermissions.add(rolePermission);
+            }
+        }
+        rolePermissionRepository.saveAll(newRolePermissions);
+        return RoleResponse.builder()
+                .name(role.getName())
+                .description(role.getDescription())
+                .rolePermissions(role.getRolePermissions().stream()
+                        .map(rolePermission -> permissionMapper.toPermissionResponse(rolePermission.getPermission()))
+                        .collect(Collectors.toSet()))
+                .build();
+    }
+
+
+    @Override
+    public RoleResponse unassignPermissionFromRole(Integer roleId, List<Integer> permissionIds) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
+        List<Permission> permissions = permissionRepository.findAllById(permissionIds);
+        List<RolePermission> rolePermissions = new ArrayList<>();
+        for (Permission permission : permissions) {
+            RolePermission rolePermission = rolePermissionRepository.findByRoleIdAndPermissionId(roleId, permission.getId());
+            rolePermissions.add(rolePermission);
+        }
+        rolePermissionRepository.deleteAll(rolePermissions);
+        return RoleResponse.builder()
+                .name(role.getName())
+                .description(role.getDescription())
+                .rolePermissions(role.getRolePermissions().stream()
+                        .map(rolePermission -> permissionMapper.toPermissionResponse(rolePermission.getPermission()))
+                        .collect(Collectors.toSet()))
+                .build();
+    }
 }

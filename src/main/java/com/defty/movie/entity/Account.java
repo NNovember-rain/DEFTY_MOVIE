@@ -59,7 +59,7 @@ public class Account extends BaseEntity implements UserDetails {
     Role role;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    Set<Article> articles;
+    Set<RefreshToken> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

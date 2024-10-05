@@ -2,9 +2,9 @@ package com.defty.movie.repository;
 
 import com.defty.movie.entity.RolePermission;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.Set;
-
+@Repository
 public interface IRolePermissionRepository extends JpaRepository<RolePermission, Integer> {
-    Set<RolePermission> findByRoleId(Integer roleId);
+    RolePermission findByRoleIdAndPermissionId(Integer roleId, Integer permissionId);
 }

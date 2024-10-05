@@ -18,12 +18,12 @@ import java.util.Set;
 
 public class Permission extends BaseEntity {
     @Column(nullable = false, length = 255)
-    String api;
+    String name;
 
     @Column(length = 255)
     String description;
 
-    @OneToMany(mappedBy = "permission", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "permission", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     Set<RolePermission> rolePermissions;
 
 }
