@@ -3,7 +3,6 @@ package com.defty.movie.service.impl;
 import com.defty.movie.mapper.ArticleMapper;
 import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.entity.Article;
-import com.defty.movie.exception.ArticleNotFoundException;
 import com.defty.movie.repository.IAriticleRepository;
 import com.defty.movie.service.IArticleService;
 import lombok.AccessLevel;
@@ -19,8 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ArticleService implements IArticleService {
-
-    private final ArticleMapper articleMapper;
 
     private final ArticleMapper articleMapper;
     private final IAriticleRepository ariticleRepository;
