@@ -19,6 +19,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ArticleService implements IArticleService {
 
+
     private final ArticleMapper articleMapper;
     private final IAriticleRepository ariticleRepository;
 
