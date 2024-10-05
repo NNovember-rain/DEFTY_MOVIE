@@ -3,7 +3,6 @@ package com.defty.movie.controller.admin;
 import com.defty.movie.dto.request.LoginRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.LoginResponse;
-import com.defty.movie.common.ApiStatus;
 import com.defty.movie.service.IAccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +24,8 @@ public class AccountController {
             LoginResponse loginResponse = new LoginResponse();
             loginResponse.setToken(token);
             ApiResponse<LoginResponse> response = ApiResponse.<LoginResponse>builder()
-                    .status(ApiStatus.SUCCESS.getCode())
-                    .message(ApiStatus.SUCCESS. getMessage())
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.getReasonPhrase())
                     .data(loginResponse)
                     .build();
             return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -34,7 +33,7 @@ public class AccountController {
         } catch (Exception e) {
             log.error("Login failed: {}", e.getMessage(), e);
             ApiResponse<LoginResponse> response = ApiResponse.<LoginResponse>builder()
-                    .status(ApiStatus.UNAUTHORIZED.getCode())
+                    .status(HttpStatus.UNAUTHORIZED.value())
                     .message("Unauthorized: Invalid username or password")
                     .build();
 

@@ -1,6 +1,5 @@
 package com.defty.movie.controller.admin;
 
-import com.defty.movie.common.ApiStatus;
 import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.dto.request.LoginRequest;
 import com.defty.movie.dto.response.ApiResponse;
@@ -27,12 +26,10 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
 
-
     @PostMapping("/article")
     public ResponseEntity<ApiResponse<ArticleResponse>> addArticle(@RequestBody ArticleRequest articleRequest) {
         articleService.addArticle(articleRequest);
         ApiResponse<ArticleResponse> apiResponse = ApiResponse.<ArticleResponse>builder()
-                .message("Success")
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(new ArticleResponse("Article added successfully!"))
@@ -43,14 +40,9 @@ public class ArticleController {
 
     @PatchMapping("/article/{id}")
     public ResponseEntity<ApiResponse<ArticleResponse>> updateArticle( @PathVariable Integer id,
-                                                                       @Valid @RequestBody ArticleRequest articleRequest,BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            throw new RuntimeException("loi roi");
-        }
+                                                                       @RequestBody ArticleRequest articleRequest) {
         articleService.updateArticle(id,articleRequest);
         ApiResponse<ArticleResponse> apiResponse = ApiResponse.<ArticleResponse>builder()
-                .message("Success")
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(new ArticleResponse("Edited the article successfully !"))
@@ -62,7 +54,6 @@ public class ArticleController {
     public ResponseEntity<ApiResponse<ArticleResponse>> deleteArticle(@PathVariable List<Integer> ids) {
         articleService.deleteArticle(ids);
         ApiResponse<ArticleResponse> apiResponse = ApiResponse.<ArticleResponse>builder()
-                .message("Success")
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(new ArticleResponse("Deleted the article successfully!"))
