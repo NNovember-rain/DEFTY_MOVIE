@@ -41,9 +41,9 @@ public class ArticleController {
         articleService.updateArticle(id,articleRequest);
         ApiResponse<ArticleResponse> apiResponse = ApiResponse.<ArticleResponse>builder()
                 .message("Success")
-                .status(ApiStatus.SUCCESS.getCode())
-                .message(ApiStatus.SUCCESS. getMessage())
-                .data(new ArticleResponse("Edited the article successfully!"))
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(new ArticleResponse("Edited the article successfully !"))
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
@@ -53,8 +53,8 @@ public class ArticleController {
         articleService.deleteArticle(id);
         ApiResponse<ArticleResponse> apiResponse = ApiResponse.<ArticleResponse>builder()
                 .message("Success")
-                .status(ApiStatus.SUCCESS.getCode())
-                .message(ApiStatus.SUCCESS. getMessage())
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
                 .data(new ArticleResponse("Deleted the article successfully!"))
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
