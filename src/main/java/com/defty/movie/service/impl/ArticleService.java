@@ -40,7 +40,7 @@ public class ArticleService implements IArticleService {
     @Override
     public void deleteArticle(List<Integer> ids) {
         List<Article> articles = ariticleRepository.findAllById(ids);
-        if(articles.size()!=ids.size()) throw new RuntimeException("Some user not found for delete !");
+        if(articles.size()!=ids.size()) throw new RuntimeException("Some users weren't found for delete !");
         ariticleRepository.deleteAll(articles);
 
     }
