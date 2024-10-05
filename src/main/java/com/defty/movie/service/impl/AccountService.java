@@ -59,6 +59,17 @@ public class AccountService implements IAccountService {
     }
 
     @Override
+    public void logout(String token) {
+        String username = jwtTokenUtil.extractUsername(token);
+        Account account = accountRepository.findByUsername(username).orElseThrow(
+                () -> new RuntimeException("Account not found")
+        );
+        if(account != null) {
+            refreshTokenService.deleteRefreshToken(account.getId());
+        }
+    }
+
+    @Override
     public AccountResponse getAccountFromToken(String token) {
         if(jwtTokenUtil.isTokenExpired(token)) {
             throw new RuntimeException("Token is expired");

@@ -5,6 +5,7 @@ import com.defty.movie.entity.RefreshToken;
 import com.defty.movie.repository.IAccountRepository;
 import com.defty.movie.repository.IRefreshTokenRepository;
 import com.defty.movie.service.IRefreshTokenService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -42,5 +43,11 @@ public class RefreshTokenService implements IRefreshTokenService {
         token.setExpiresAt(expiresAt);
         refreshTokenRepository.save(token);
         return refreshToken;
+    }
+
+    @Override
+    @Transactional
+    public void deleteRefreshToken(Integer accountId) {
+        refreshTokenRepository.deleteByAccountId(accountId);
     }
 }

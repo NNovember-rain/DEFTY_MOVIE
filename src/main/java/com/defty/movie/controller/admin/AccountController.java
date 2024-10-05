@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountController {
     IAccountService accountService;
-    IRefreshTokenService refreshTokenService;
-    JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
@@ -67,6 +65,7 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
+
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
        RefreshTokenResponse newToken = accountService.refreshToken(request.getRefreshToken());
@@ -76,5 +75,20 @@ public class AccountController {
                .data(newToken)
                .build();
        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Access token is missing or invalid");
+        }
+        String accessToken = authorizationHeader.substring(7);
+        accountService.logout(accessToken);
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data("Account logged out successfully")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
