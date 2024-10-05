@@ -53,6 +53,7 @@ public class WebSecurityConfig {
                                     "/swagger-ui/api-docs/swagger-config"
                             ).permitAll()
                             .requestMatchers(POST, String.format("%s/admin/account/login", apiPrefix)).permitAll()
+                            .requestMatchers(POST, String.format("%s/admin/account/refresh-token", apiPrefix)).permitAll()
                             .requestMatchers(GET, String.format("%s/admin/account/check-account", apiPrefix)).permitAll()
                             .anyRequest().authenticated();
                 })

@@ -70,6 +70,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
                 Pair.of(String.format("%s/admin/account/login", apiPrefix), "POST"),
+                Pair.of(String.format("%s/admin/account/refresh-token", apiPrefix), "POST"),
                 Pair.of(String.format("%s/admin/account/check-account", apiPrefix), "GET"),
 
                 // Swagger

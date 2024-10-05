@@ -1,11 +1,17 @@
 package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.LoginRequest;
+import com.defty.movie.dto.request.RefreshTokenRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.LoginResponse;
+import com.defty.movie.dto.response.RefreshTokenResponse;
+import com.defty.movie.security.JwtTokenUtil;
 import com.defty.movie.service.IAccountService;
+import com.defty.movie.service.IRefreshTokenService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
@@ -16,14 +22,15 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/admin/account")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountController {
-    private final IAccountService accountService;
+    IAccountService accountService;
+    IRefreshTokenService refreshTokenService;
+    JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
-        String token = accountService.login(loginRequest);
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(token);
+        LoginResponse loginResponse = accountService.login(loginRequest);
         ApiResponse<LoginResponse> response = ApiResponse.<LoginResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -59,5 +66,15 @@ public class AccountController {
                     .build();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
+    }
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
+       RefreshTokenResponse newToken = accountService.refreshToken(request.getRefreshToken());
+       ApiResponse<?> response = ApiResponse.builder()
+               .status(HttpStatus.OK.value())
+               .message(HttpStatus.OK.getReasonPhrase())
+               .data(newToken)
+               .build();
+       return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
