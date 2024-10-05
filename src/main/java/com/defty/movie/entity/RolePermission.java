@@ -15,7 +15,6 @@ import lombok.experimental.FieldDefaults;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 
 public class RolePermission extends BaseEntity{
-
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     Role role;

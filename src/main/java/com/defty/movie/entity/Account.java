@@ -21,8 +21,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE) //private
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class) //clientId == client_id
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 
 public class Account extends BaseEntity implements UserDetails {
     @Column(nullable = false, length = 50, unique = true)
