@@ -45,7 +45,6 @@ public class AccountController {
                     .message("Not logged in or do not have a valid token")
                     .data(null)
                     .build();
-
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
         String extractedToken = authorizationHeader.substring(7);
@@ -92,4 +91,5 @@ public class AccountController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
 }
