@@ -1,5 +1,6 @@
 package com.defty.movie.service.impl;
 
+import com.defty.movie.Util.CookieUtil;
 import com.defty.movie.dto.request.LoginRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.dto.response.LoginResponse;
@@ -12,6 +13,7 @@ import com.defty.movie.repository.IRefreshTokenRepository;
 import com.defty.movie.security.JwtTokenUtil;
 import com.defty.movie.service.IAccountService;
 import com.defty.movie.service.IRefreshTokenService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -38,7 +40,7 @@ public class AccountService implements IAccountService {
     AccountMapper accountMapper;
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
         Optional<Account> accountOptional = accountRepository.findByUsername(loginRequest.getUsername());
         if (accountOptional.isEmpty()) {
             throw new RuntimeException("Account not found");
@@ -52,6 +54,8 @@ public class AccountService implements IAccountService {
         authenticationManager.authenticate(authenticationToken);
         String accessToken = jwtTokenUtil.generateToken(account);
         String refreshToken = refreshTokenService.createRefreshToken(account.getId());
+        CookieUtil.create(response, "access_token", accessToken, true, true, 60 * 60 * 10, "/");
+        CookieUtil.create(response, "refresh_token", refreshToken, true, true, 7 * 24 * 60 * 60, "/");
         return LoginResponse.builder()
                 .token(accessToken)
                 .refreshToken(refreshToken)

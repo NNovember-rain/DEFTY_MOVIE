@@ -1,6 +1,5 @@
 package com.defty.movie.dto.response;
 
-import com.defty.movie.entity.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

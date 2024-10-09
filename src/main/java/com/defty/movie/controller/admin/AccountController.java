@@ -1,5 +1,6 @@
 package com.defty.movie.controller.admin;
 
+import com.defty.movie.Util.CookieUtil;
 import com.defty.movie.dto.request.LoginRequest;
 import com.defty.movie.dto.request.RefreshTokenRequest;
 import com.defty.movie.dto.response.AccountResponse;
@@ -9,10 +10,13 @@ import com.defty.movie.dto.response.RefreshTokenResponse;
 import com.defty.movie.security.JwtTokenUtil;
 import com.defty.movie.service.IAccountService;
 import com.defty.movie.service.IRefreshTokenService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +24,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/account")
+@RequestMapping("${api.prefix}/admin/account")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountController {
-    private final IAccountService accountService;
+    IAccountService accountService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
-        LoginResponse loginResponse = accountService.login(loginRequest);
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse res){
+        LoginResponse loginResponse = accountService.login(loginRequest, res);
         ApiResponse<LoginResponse> response = ApiResponse.<LoginResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -36,8 +41,9 @@ public class AccountController {
     }
 
     @GetMapping("/check-account")
-    public ResponseEntity<?> checkAccount(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+    public ResponseEntity<?> checkAccount(HttpServletRequest request) {
+        String token = CookieUtil.getValue(request, "access_token");
+        if (token == null || token.isEmpty()) {
             ApiResponse<?> response = ApiResponse.builder()
                     .status(HttpStatus.UNAUTHORIZED.value())
                     .message("Not logged in or do not have a valid token")
@@ -45,9 +51,8 @@ public class AccountController {
                     .build();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
-        String extractedToken = authorizationHeader.substring(7);
         try {
-            AccountResponse accountResponse = accountService.getAccountFromToken(extractedToken);
+            AccountResponse accountResponse = accountService.getAccountFromToken(token);
             ApiResponse<?> response = ApiResponse.builder()
                     .status(HttpStatus.OK.value())
                     .message(HttpStatus.OK.getReasonPhrase())
@@ -57,7 +62,7 @@ public class AccountController {
         } catch (Exception e) {
             ApiResponse<?> response = ApiResponse.builder()
                     .status(HttpStatus.UNAUTHORIZED.value())
-                    .message("Token is expired")
+                    .message("Token is expired or invalid")
                     .data(null)
                     .build();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
@@ -76,18 +81,16 @@ public class AccountController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new IllegalArgumentException("Access token is missing or invalid");
-        }
-        String accessToken = authorizationHeader.substring(7);
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = CookieUtil.getValue(request, "access_token");
         accountService.logout(accessToken);
-        ApiResponse<?> response = ApiResponse.builder()
+        CookieUtil.clear(response, "access_token");
+        CookieUtil.clear(response, "refresh_token");
+        ApiResponse<?> responseObj = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data("Account logged out successfully")
+                .data(null)
                 .build();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(responseObj);
     }
-
 }

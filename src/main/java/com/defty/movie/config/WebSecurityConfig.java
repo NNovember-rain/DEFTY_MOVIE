@@ -1,14 +1,11 @@
 package com.defty.movie.config;
 
 import com.defty.movie.security.JwtTokenFilter;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,7 +19,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
 @EnableWebSecurity
@@ -53,6 +51,7 @@ public class WebSecurityConfig {
                                     "/swagger-ui/api-docs/swagger-config"
                             ).permitAll()
                             .requestMatchers(POST, String.format("%s/admin/account/login", apiPrefix)).permitAll()
+                            .requestMatchers(POST, String.format("%s/admin/account/logout", apiPrefix)).permitAll()
                             .requestMatchers(POST, String.format("%s/admin/account/refresh-token", apiPrefix)).permitAll()
                             .requestMatchers(GET, String.format("%s/admin/account/check-account", apiPrefix)).permitAll()
                             .anyRequest().authenticated();
