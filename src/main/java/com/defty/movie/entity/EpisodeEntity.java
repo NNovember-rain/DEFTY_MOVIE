@@ -5,6 +5,7 @@ import lombok.Data;
 @Entity
 @Table(name = "episode")
 public class EpisodeEntity extends BaseEntity{
+
     @Column(name = "number")
     private Integer number;
 
