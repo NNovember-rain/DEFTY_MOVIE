@@ -1,7 +1,7 @@
 package com.defty.movie.security;
 
-
 import com.defty.movie.entity.Account;
+import com.defty.movie.Util.CookieUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.*;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -23,33 +23,36 @@ import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
-public class JwtTokenFilter extends OncePerRequestFilter{
+public class JwtTokenFilter extends OncePerRequestFilter {
+
     @Value("${api.prefix}")
     private String apiPrefix;
 
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
+
     @Override
-    protected void doFilterInternal(@NonNull  HttpServletRequest request,
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
             throws IOException {
         try {
-            if(isBypassToken(request)) {
+            if (isBypassToken(request)) {
                 filterChain.doFilter(request, response);
                 return;
             }
-            final String authHeader = request.getHeader("Authorization");
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+
+            final String token = CookieUtil.getValue(request, "access_token");
+
+            if (token == null || token.isEmpty()) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: No access token");
                 return;
             }
-            final String token = authHeader.substring(7);
+
             final String username = jwtTokenUtil.extractUsername(token);
-            if (username != null
-                    && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 Account accountDetails = (Account) userDetailsService.loadUserByUsername(username);
-                if(jwtTokenUtil.validateToken(token, accountDetails)) {
+                if (jwtTokenUtil.validateToken(token, accountDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
                                     accountDetails,
@@ -61,9 +64,8 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 }
             }
             filterChain.doFilter(request, response);
-        }
-        catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Invalid token");
         }
     }
 

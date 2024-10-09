@@ -98,7 +98,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public RefreshTokenResponse refreshToken(String refreshToken) {
+    public RefreshTokenResponse refreshToken(String refreshToken, HttpServletResponse response) {
         Optional<RefreshToken> exitRefreshToken = refreshTokenRepository.findByRefreshToken(refreshToken);
         if (exitRefreshToken.isEmpty()) {
             throw new RuntimeException("Refresh token not found");
@@ -106,6 +106,8 @@ public class AccountService implements IAccountService {
         Account account = exitRefreshToken.get().getAccount();
         String newToken = jwtTokenUtil.generateToken(account);
         String newRefreshToken = refreshTokenService.createRefreshToken(account.getId());
+        CookieUtil.create(response, "access_token", newToken, true, true, 60 * 60 * 10, "/");
+        CookieUtil.create(response, "refresh_token", newRefreshToken, true, true, 7 * 24 * 60 * 60, "/");
         return RefreshTokenResponse.builder()
                 .refreshToken(newRefreshToken)
                 .token(newToken)

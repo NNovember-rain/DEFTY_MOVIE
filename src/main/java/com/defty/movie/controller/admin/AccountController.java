@@ -70,8 +70,8 @@ public class AccountController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
-       RefreshTokenResponse newToken = accountService.refreshToken(request.getRefreshToken());
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request, HttpServletResponse res) {
+       RefreshTokenResponse newToken = accountService.refreshToken(request.getRefreshToken(), res);
        ApiResponse<?> response = ApiResponse.builder()
                .status(HttpStatus.OK.value())
                .message(HttpStatus.OK.getReasonPhrase())

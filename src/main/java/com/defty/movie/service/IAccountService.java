@@ -14,5 +14,5 @@ public interface IAccountService {
     void logout(String token);
     AccountResponse getAccountFromToken(String token);
     Optional<Account> getCurrentAccount();
-    RefreshTokenResponse refreshToken(String refreshToken);
+    RefreshTokenResponse refreshToken(String refreshToken, HttpServletResponse response);
 }
