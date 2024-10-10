@@ -10,7 +10,6 @@ public interface IPermissionService {
     PermissionResponse createPermission(PermissionRequest permissionRequest);
     List<PermissionResponse> getAllPermissions();
     void deletePermissions(List<Integer> permissionIds);
-    RoleResponse getPermissionsByRoleId(Integer roleId);
     RoleResponse assignPermissionToRole(Integer roleId, List<Integer> permissionIds);
     RoleResponse unassignPermissionFromRole(Integer roleId, List<Integer> permissionIds);
 }

@@ -27,6 +27,6 @@ api:
   prefix: /api/v1
 
 jwt:
-  expiration: 30  # 30s
-  expiration-refresh-token: 60 # 1p
+  expiration: 600  # 10m
+  expiration-refresh-token: 604800 # 7day
   secretKey: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=

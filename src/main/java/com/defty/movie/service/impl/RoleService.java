@@ -1,8 +1,12 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.RoleRequest;
+import com.defty.movie.dto.response.PermissionResponse;
 import com.defty.movie.dto.response.RoleResponse;
+import com.defty.movie.entity.Permission;
 import com.defty.movie.entity.Role;
+import com.defty.movie.mapper.PermissionMapper;
+import com.defty.movie.repository.IPermissionRepository;
 import com.defty.movie.repository.IRoleRepository;
 import com.defty.movie.service.IRoleService;
 import lombok.AccessLevel;
@@ -18,11 +22,13 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoleService implements IRoleService {
     IRoleRepository roleRepository;
+    IPermissionRepository permissionRepository;
+    PermissionMapper permissionMapper;
 
     @Override
     public Set<RoleResponse> getAllRoles() {
         return roleRepository.findAll().stream()
-                .map(role -> new RoleResponse(role.getName(), role.getDescription(), null))
+                .map(role -> new RoleResponse(role.getId(), role.getName(), role.getDescription(), null))
                 .collect(Collectors.toSet());
     }
 
@@ -35,6 +41,18 @@ public class RoleService implements IRoleService {
         roleRepository.save(role);
     }
 
+    @Override
+    public RoleResponse getRoleId(Integer roleId) {
+        Set<Permission> permissions = permissionRepository.findPermissionsByRoleId(roleId);
+        Set<PermissionResponse> permissionResponses = permissions.stream().map(permissionMapper::toPermissionResponse).collect(Collectors.toSet());
+        return RoleResponse.builder()
+                .name(roleRepository.findById(roleId).get().getName())
+                .description(roleRepository.findById(roleId).get().getDescription())
+                .rolePermissions(permissionResponses)
+                .build();
+    }
+
+    @Override
     public RoleResponse updateRole(Integer id, RoleRequest roleRequest) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Role not found"));

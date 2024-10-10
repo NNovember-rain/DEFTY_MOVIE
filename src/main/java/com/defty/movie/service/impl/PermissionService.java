@@ -51,17 +51,6 @@ public class PermissionService implements IPermissionService {
     }
 
     @Override
-    public RoleResponse getPermissionsByRoleId(Integer roleId) {
-        Set<Permission> permissions = permissionRepository.findPermissionsByRoleId(roleId);
-        Set<PermissionResponse> permissionResponses = permissions.stream().map(permissionMapper::toPermissionResponse).collect(Collectors.toSet());
-        return RoleResponse.builder()
-                .name(roleRepository.findById(roleId).get().getName())
-                .description(roleRepository.findById(roleId).get().getDescription())
-                .rolePermissions(permissionResponses)
-                .build();
-    }
-
-    @Override
     public RoleResponse assignPermissionToRole(Integer roleId, List<Integer> permissionIds) {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
@@ -85,7 +74,6 @@ public class PermissionService implements IPermissionService {
                         .collect(Collectors.toSet()))
                 .build();
     }
-
 
     @Override
     public RoleResponse unassignPermissionFromRole(Integer roleId, List<Integer> permissionIds) {

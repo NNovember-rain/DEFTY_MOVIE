@@ -33,6 +33,18 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/{roleId}")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_ROLE')")
+    public ResponseEntity<?> getRoleId(@PathVariable("roleId") Integer roleId) {
+        RoleResponse roleResponse = roleService.getRoleId(roleId);
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(roleResponse)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createRole(@RequestBody RoleRequest roleRequest) {

@@ -9,4 +9,5 @@ public interface IRoleService{
     Set<RoleResponse> getAllRoles();
     void createRole(RoleRequest roleRequest);
     RoleResponse updateRole(Integer id, RoleRequest roleRequest);
+    RoleResponse getRoleId(Integer roleId);
 }

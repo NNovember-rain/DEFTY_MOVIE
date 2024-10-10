@@ -1,12 +1,10 @@
 package com.defty.movie.service.impl;
 
-import com.defty.movie.Util.CookieUtil;
 import com.defty.movie.entity.Account;
 import com.defty.movie.entity.RefreshToken;
 import com.defty.movie.repository.IAccountRepository;
 import com.defty.movie.repository.IRefreshTokenRepository;
 import com.defty.movie.service.IRefreshTokenService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
