@@ -3,11 +3,11 @@ package com.defty.movie.entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Fetch;
-import org.springframework.lang.NonNull;
 
 import java.util.Date;
 
@@ -16,11 +16,11 @@ import java.util.Date;
 @Setter
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Article {
+public class Article extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    @Column
+    @NonNull
+    String title;
 
     @Column( length = 255)
     String content;
@@ -30,9 +30,6 @@ public class Article {
 
     @Column( length = 255)
     String thumbnail;
-
-    @Column
-    Date createdAt=new Date();
 
     @Column( length = 50)
     String slug;
