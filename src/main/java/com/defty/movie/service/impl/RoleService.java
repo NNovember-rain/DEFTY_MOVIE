@@ -5,8 +5,10 @@ import com.defty.movie.dto.response.PermissionResponse;
 import com.defty.movie.dto.response.RoleResponse;
 import com.defty.movie.entity.Permission;
 import com.defty.movie.entity.Role;
+import com.defty.movie.entity.RolePermission;
 import com.defty.movie.mapper.PermissionMapper;
 import com.defty.movie.repository.IPermissionRepository;
+import com.defty.movie.repository.IRolePermissionRepository;
 import com.defty.movie.repository.IRoleRepository;
 import com.defty.movie.service.IRoleService;
 import lombok.AccessLevel;
@@ -14,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +28,7 @@ public class RoleService implements IRoleService {
     IRoleRepository roleRepository;
     IPermissionRepository permissionRepository;
     PermissionMapper permissionMapper;
+    IRolePermissionRepository rolePermissionRepository;
 
     @Override
     public Set<RoleResponse> getAllRoles() {
@@ -33,12 +38,13 @@ public class RoleService implements IRoleService {
     }
 
     @Override
-    public void createRole(RoleRequest roleRequest) {
+    public RoleResponse createRole(RoleRequest roleRequest) {
         Role role = Role.builder()
                 .name(roleRequest.getName())
                 .description(roleRequest.getDescription())
                 .build();
         roleRepository.save(role);
+        return new RoleResponse(role.getId(), role.getName(), role.getDescription(), null);
     }
 
     @Override
@@ -49,6 +55,51 @@ public class RoleService implements IRoleService {
                 .name(roleRepository.findById(roleId).get().getName())
                 .description(roleRepository.findById(roleId).get().getDescription())
                 .rolePermissions(permissionResponses)
+                .build();
+    }
+
+    @Override
+    public RoleResponse assignPermissionToRole(Integer roleId, List<Integer> permissionIds) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
+        List<Permission> permissions = permissionRepository.findAllById(permissionIds);
+        Set<Permission> existPermissions = permissionRepository.findPermissionsByRoleId(roleId);
+        List<RolePermission> newRolePermissions = new ArrayList<>();
+        for (Permission permission : permissions) {
+            if (!existPermissions.contains(permission)) {
+                RolePermission rolePermission = new RolePermission();
+                rolePermission.setRole(role);
+                rolePermission.setPermission(permission);
+                newRolePermissions.add(rolePermission);
+            }
+        }
+        rolePermissionRepository.saveAll(newRolePermissions);
+        return RoleResponse.builder()
+                .name(role.getName())
+                .description(role.getDescription())
+                .rolePermissions(role.getRolePermissions().stream()
+                        .map(rolePermission -> permissionMapper.toPermissionResponse(rolePermission.getPermission()))
+                        .collect(Collectors.toSet()))
+                .build();
+    }
+
+    @Override
+    public RoleResponse unassignPermissionFromRole(Integer roleId, List<Integer> permissionIds) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
+        List<Permission> permissions = permissionRepository.findAllById(permissionIds);
+        List<RolePermission> rolePermissions = new ArrayList<>();
+        for (Permission permission : permissions) {
+            RolePermission rolePermission = rolePermissionRepository.findByRoleIdAndPermissionId(roleId, permission.getId());
+            rolePermissions.add(rolePermission);
+        }
+        rolePermissionRepository.deleteAll(rolePermissions);
+        return RoleResponse.builder()
+                .name(role.getName())
+                .description(role.getDescription())
+                .rolePermissions(role.getRolePermissions().stream()
+                        .map(rolePermission -> permissionMapper.toPermissionResponse(rolePermission.getPermission()))
+                        .collect(Collectors.toSet()))
                 .build();
     }
 

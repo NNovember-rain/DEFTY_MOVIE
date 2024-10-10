@@ -34,8 +34,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain)
-            throws IOException {
+                                    @NonNull FilterChain filterChain) throws IOException {
         try {
             if (isBypassToken(request)) {
                 filterChain.doFilter(request, response);

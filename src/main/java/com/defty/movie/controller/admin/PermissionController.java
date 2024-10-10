@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("${api.prefix}/admin")
+@RequestMapping("${api.prefix}/admin/permission")
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PermissionController {
     IPermissionService permissionService;
 
-    @GetMapping("/permissions")
+    @GetMapping("/all")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ALL_PERMISSIONS')")
     public ResponseEntity<?> getALlPermissions() {
         List<PermissionResponse> permissionResponses = permissionService.getAllPermissions();
@@ -43,39 +43,28 @@ public class PermissionController {
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(permissionResponse)
+                .data(permissionResponse.getId())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/permission/{permissionIds}")
+    @PatchMapping("/{permissionId}")
+    @PreAuthorize("@requiredPermission.checkPermission('UPDATE_PERMISSION')")
+    public ResponseEntity<?> updatePermission(@PathVariable("permissionId") Integer permissionId, @RequestBody PermissionRequest permissionRequest) {
+        permissionService.updatePermission(permissionId, permissionRequest);
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data("success")
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{permissionIds}")
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_PERMISSION')")
     public ResponseEntity<?> unassignPermission(@PathVariable List<Integer> permissionIds) {
         permissionService.deletePermissions(permissionIds);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/assign-permissions/{permissionIds}")
-    @PreAuthorize("@requiredPermission.checkPermission('ASSIGN_PERMISSION')")
-    public ResponseEntity<?> assignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
-        RoleResponse roleResponse = permissionService.assignPermissionToRole(roleId, permissionIds);
-        ApiResponse<?> response = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(roleResponse)
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/unassign-permissions/{permissionIds}")
-    @PreAuthorize("@requiredPermission.checkPermission('UNASSIGN_PERMISSION')")
-    public ResponseEntity<?> unassignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
-        RoleResponse roleResponse = permissionService.unassignPermissionFromRole(roleId, permissionIds);
-        ApiResponse<?> response = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(roleResponse)
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 }

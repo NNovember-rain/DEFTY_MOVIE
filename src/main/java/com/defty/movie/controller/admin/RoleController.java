@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -48,11 +49,11 @@ public class RoleController {
     @PostMapping("")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createRole(@RequestBody RoleRequest roleRequest) {
-        roleService.createRole(roleRequest);
+        RoleResponse roleResponse = roleService.createRole(roleRequest);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
                 .message(HttpStatus.CREATED.getReasonPhrase())
-                .data("Create Role")
+                .data(roleResponse.getId())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -67,5 +68,29 @@ public class RoleController {
                 .data(roleResponse)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/assignment/{permissionIds}")
+    @PreAuthorize("@requiredPermission.checkPermission('ASSIGN_PERMISSION')")
+    public ResponseEntity<?> assignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
+        RoleResponse roleResponse = roleService.assignPermissionToRole(roleId, permissionIds);
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(roleResponse)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/unassignment/{permissionIds}")
+    @PreAuthorize("@requiredPermission.checkPermission('UNASSIGN_PERMISSION')")
+    public ResponseEntity<?> unassignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
+        RoleResponse roleResponse = roleService.unassignPermissionFromRole(roleId, permissionIds);
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(roleResponse)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
