@@ -71,7 +71,7 @@ public class RoleController {
     }
 
     @PatchMapping("/assignment/{permissionIds}")
-    @PreAuthorize("@requiredPermission.checkPermission('ASSIGN_PERMISSION')")
+    @PreAuthorize("@requiredPermission.checkPermission('ASSIGN_PERMISSION_TO_ROLE')")
     public ResponseEntity<?> assignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
         RoleResponse roleResponse = roleService.assignPermissionToRole(roleId, permissionIds);
         ApiResponse<?> response = ApiResponse.builder()
@@ -83,7 +83,7 @@ public class RoleController {
     }
 
     @DeleteMapping("/unassignment/{permissionIds}")
-    @PreAuthorize("@requiredPermission.checkPermission('UNASSIGN_PERMISSION')")
+    @PreAuthorize("@requiredPermission.checkPermission('UNASSIGN_PERMISSION_FROM_ROLE')")
     public ResponseEntity<?> unassignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
         RoleResponse roleResponse = roleService.unassignPermissionFromRole(roleId, permissionIds);
         ApiResponse<?> response = ApiResponse.builder()

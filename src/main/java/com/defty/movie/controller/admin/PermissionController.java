@@ -36,13 +36,13 @@ public class PermissionController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/permission")
+    @PostMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_PERMISSION')")
     public ResponseEntity<?> createPermission(@RequestBody PermissionRequest permissionRequest) {
         PermissionResponse permissionResponse = permissionService.createPermission(permissionRequest);
         ApiResponse<?> response = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
+                .status(HttpStatus.CREATED.value())
+                .message(HttpStatus.CREATED.getReasonPhrase())
                 .data(permissionResponse.getId())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
