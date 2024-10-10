@@ -7,16 +7,13 @@ import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.LoginResponse;
 import com.defty.movie.dto.response.RefreshTokenResponse;
-import com.defty.movie.security.JwtTokenUtil;
 import com.defty.movie.service.IAccountService;
-import com.defty.movie.service.IRefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,14 +67,15 @@ public class AccountController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request, HttpServletResponse res) {
-       RefreshTokenResponse newToken = accountService.refreshToken(request.getRefreshToken(), res);
-       ApiResponse<?> response = ApiResponse.builder()
+    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse res) {
+        String refreshToken = CookieUtil.getValue(request, "refresh_token");
+        RefreshTokenResponse newToken = accountService.refreshToken(refreshToken, res);
+        ApiResponse<?> response = ApiResponse.builder()
                .status(HttpStatus.OK.value())
                .message(HttpStatus.OK.getReasonPhrase())
                .data(newToken)
                .build();
-       return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/logout")

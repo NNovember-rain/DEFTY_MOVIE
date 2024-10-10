@@ -41,14 +41,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-
             final String token = CookieUtil.getValue(request, "access_token");
-
             if (token == null || token.isEmpty()) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: No access token");
                 return;
             }
-
             final String username = jwtTokenUtil.extractUsername(token);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 Account accountDetails = (Account) userDetailsService.loadUserByUsername(username);
@@ -86,10 +83,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("/swagger-ui.html", "GET"),
                 Pair.of("/swagger-ui/index.html", "GET")
         );
-
         String requestPath = request.getServletPath();
         String requestMethod = request.getMethod();
-
         for (Pair<String, String> bypassToken : bypassTokens) {
             String pattern = bypassToken.getFirst();
             if (Pattern.matches(pattern, requestPath) && requestMethod.equalsIgnoreCase(bypassToken.getSecond())) {
