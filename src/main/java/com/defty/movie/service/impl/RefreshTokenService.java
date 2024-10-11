@@ -29,7 +29,7 @@ public class RefreshTokenService implements IRefreshTokenService {
     @Override
     public String createRefreshToken(Integer accountId) {
         String refreshToken = UUID.randomUUID().toString();
-        Instant expiresAt = Instant.now().plusMillis(expirationRefreshToken);
+        Instant expiresAt = Instant.now().plusMillis(expirationRefreshToken * 1000L);
         Account account = accountRepository.findById(accountId).orElseThrow(
                 () -> new RuntimeException("Account not found")
         );
