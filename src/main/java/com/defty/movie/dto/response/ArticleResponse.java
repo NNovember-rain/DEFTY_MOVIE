@@ -23,4 +23,5 @@ public class ArticleResponse {
 
     String slug;
 
+
 }

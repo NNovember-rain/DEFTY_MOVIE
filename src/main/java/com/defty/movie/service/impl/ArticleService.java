@@ -39,11 +39,12 @@ public class ArticleService implements IArticleService {
         if(accountOptional.isPresent()) article.setCreatedBy(account.getUsername());
         article.setAccount(account);
 
-        article.setSlug(SlugUtil.createSlug(articleRequest.getTitle()));
-
         article.setCreatedDate(new Date());
-        ariticleRepository.save(article);
-        return ariticleRepository.findBySlug(article.getSlug()).getId();
+        Article articleSave=ariticleRepository.save(article);
+        article.setId(articleSave.getId());
+
+        ariticleRepository.save(articleSave);
+        return articleSave.getId();
     }
 
     @Override
@@ -51,7 +52,7 @@ public class ArticleService implements IArticleService {
         Article articleCheck=ariticleRepository.findById(id).orElseThrow(()->new RuntimeException("The article dont exist !"));
         Article article = articleMapper.toArticleEntity(articleRequest);
 
-        article.setSlug(SlugUtil.createSlug(articleRequest.getTitle()));
+        article.setSlug(SlugUtil.createSlug(articleRequest.getTitle(),id));
         article.setCreatedDate(articleCheck.getCreatedDate());
         article.setAccount(articleCheck.getAccount());
         article.setCreatedBy(articleCheck.getCreatedBy());
@@ -99,5 +100,10 @@ public class ArticleService implements IArticleService {
             }
             return articleResponses;
         }else throw new RuntimeException(" Article not found !");
+    }
+
+    @Override
+    public Long getArticleCount() {
+        return ariticleRepository.count();
     }
 }

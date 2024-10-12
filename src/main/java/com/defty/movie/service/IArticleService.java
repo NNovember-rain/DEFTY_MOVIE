@@ -13,5 +13,5 @@ public interface IArticleService {
     void deleteArticle(List<Integer> ids);
     ArticleResponse getArticle(Integer id);
     List<ArticleResponse> getAllArticles(Pageable pageable);
-
+    Long getArticleCount();
 }
