@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("${api.prefix}/admin")
+@RequestMapping("${api.prefix}/admin/permission")
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PermissionController {
     IPermissionService permissionService;
 
-    @GetMapping("/permissions")
+    @GetMapping("/all")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ALL_PERMISSIONS')")
     public ResponseEntity<?> getALlPermissions() {
         List<PermissionResponse> permissionResponses = permissionService.getAllPermissions();
@@ -36,58 +36,35 @@ public class PermissionController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/permissions/{roleId}")
-    @PreAuthorize("@requiredPermission.checkPermission('GET_PERMISSIONS_ROLE')")
-    public ResponseEntity<?> getPermissionByRoleId(@PathVariable("roleId") Integer roleId) {
-        RoleResponse roleResponse = permissionService.getPermissionsByRoleId(roleId);
-        ApiResponse<?> response = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(roleResponse)
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PostMapping("/permission")
+    @PostMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_PERMISSION')")
     public ResponseEntity<?> createPermission(@RequestBody PermissionRequest permissionRequest) {
         PermissionResponse permissionResponse = permissionService.createPermission(permissionRequest);
         ApiResponse<?> response = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(permissionResponse)
+                .status(HttpStatus.CREATED.value())
+                .message(HttpStatus.CREATED.getReasonPhrase())
+                .data(permissionResponse.getId())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/permission/{permissionIds}")
+    @PatchMapping("/{permissionId}")
+    @PreAuthorize("@requiredPermission.checkPermission('UPDATE_PERMISSION')")
+    public ResponseEntity<?> updatePermission(@PathVariable("permissionId") Integer permissionId, @RequestBody PermissionRequest permissionRequest) {
+        permissionService.updatePermission(permissionId, permissionRequest);
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data("success")
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{permissionIds}")
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_PERMISSION')")
     public ResponseEntity<?> unassignPermission(@PathVariable List<Integer> permissionIds) {
         permissionService.deletePermissions(permissionIds);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/assign-permissions/{permissionIds}")
-    @PreAuthorize("@requiredPermission.checkPermission('ASSIGN_PERMISSION')")
-    public ResponseEntity<?> assignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
-        RoleResponse roleResponse = permissionService.assignPermissionToRole(roleId, permissionIds);
-        ApiResponse<?> response = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(roleResponse)
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/unassign-permissions/{permissionIds}")
-    @PreAuthorize("@requiredPermission.checkPermission('UNASSIGN_PERMISSION')")
-    public ResponseEntity<?> unassignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
-        RoleResponse roleResponse = permissionService.unassignPermissionFromRole(roleId, permissionIds);
-        ApiResponse<?> response = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(roleResponse)
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 }
