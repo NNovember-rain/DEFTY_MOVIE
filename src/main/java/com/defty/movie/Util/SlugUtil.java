@@ -7,23 +7,24 @@ import java.util.Random;
 import java.util.UUID;
 
 public class SlugUtil {
+
+    // Create Slug
     public static String createSlug(String name,Integer id) {
-        // Chuyển đổi về chữ thường
-        String slug = name.toLowerCase();
+        //Chuyển chuỗi thành dạng không dấu
+        String normalized = Normalizer.normalize(name, Normalizer.Form.NFD);
+        String withoutAccent = normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 
-        // Loại bỏ dấu tiếng Việt hoặc ký tự đặc biệt
-        slug = Normalizer.normalize(slug, Normalizer.Form.NFD);
-        slug = slug.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        String slug = withoutAccent
+                .toLowerCase() // Chuyển tất cả các chữ cái thành chữ thường
+                .trim() // Xóa các khoảng trắng ở đầu và cuối
+                .replaceAll("[\\s\\W-]+", "-") // Thay thế khoảng trắng, ký tự đặc biệt thành dấu gạch ngang
+                .replaceAll("^-+|-+$", ""); // Xóa dấu gạch ngang ở đầu và cuối
 
-        // Thay thế các ký tự không phải chữ và số, khoảng trắng, dấu gạch ngang thành dấu gạch ngang
-        slug = slug.replaceAll("[^a-z0-9\\s-]", "").replaceAll("[\\s]+", "-");
+        return slug+"-"+id + generateRandomString(5);
 
-        // Loại bỏ dấu gạch ngang ở đầu và cuối
-        slug = slug.replaceAll("^-+|-+$", "")+"-"+id + generateRandomString(5);
-
-        return slug;
     }
 
+    //Create random
     private static String generateRandomString(int length) {
         String characters = "abcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
@@ -34,10 +35,6 @@ public class SlugUtil {
         }
 
         return randomString.toString();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(createSlug("NGuyễn vết văn",4));
     }
 
 }
