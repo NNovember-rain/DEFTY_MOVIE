@@ -1,4 +1,4 @@
-package com.defty.movie.dto.response;
+package com.defty.movie.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginResponse {
-    String token;
-    String refreshToken;
+public class RoleRequest {
+    String name;
+    String description;
 }

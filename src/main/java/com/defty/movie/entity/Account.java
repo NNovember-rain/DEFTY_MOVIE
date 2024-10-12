@@ -13,20 +13,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE) //private
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class) //clientId == client_id
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 
-public class Account implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-
+public class Account extends BaseEntity implements UserDetails {
     @Column(nullable = false, length = 50, unique = true)
     String username;
 
@@ -59,6 +57,9 @@ public class Account implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "role_id")
     Role role;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    Set<RefreshToken> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

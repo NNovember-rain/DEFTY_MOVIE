@@ -1,6 +1,5 @@
 package com.defty.movie.config;
 
-
 import com.defty.movie.repository.IAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -21,7 +21,10 @@ public class SecurityConfig {
     //TODO: lay thong tin chi tiet cua nguoi dung
     @Bean
     public UserDetailsService userDetailsService() {
-        return accountRepository::findByUsername; //
+        return username -> accountRepository
+                .findByUsername(username)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("Cannot find user with username = " + username));
     }
 
     //TODO: ma hoa mat khau
@@ -43,4 +46,5 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
 }
