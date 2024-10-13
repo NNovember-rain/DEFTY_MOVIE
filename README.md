@@ -27,11 +27,11 @@ Follow the steps below to set up the project:
     mvn clean install
     ```
 
-4. Configure MySQL database in the `application.properties` file:
-    ```properties
-    spring.datasource.url=jdbc:mysql://localhost:3306/defty_movie_db
-    spring.datasource.username=root
-    spring.datasource.password=yourpassword
+4. Configure MySQL database in the `application.yaml` file:
+    ```yaml
+    url: jdbc:mysql://movie.cdo2go0s62es.ap-southeast-2.rds.amazonaws.com:3306/movie
+    username: admin
+    password: 12345678
     ```
 
 5. Run the project:
