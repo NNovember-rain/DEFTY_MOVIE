@@ -2,7 +2,6 @@ package com.defty.movie.service;
 
 import com.defty.movie.dto.request.PermissionRequest;
 import com.defty.movie.dto.response.PermissionResponse;
-import com.defty.movie.dto.response.RoleResponse;
 
 import java.util.List;
 

@@ -3,7 +3,6 @@ package com.defty.movie.controller.admin;
 import com.defty.movie.dto.request.PermissionRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PermissionResponse;
-import com.defty.movie.dto.response.RoleResponse;
 import com.defty.movie.service.IPermissionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +49,8 @@ public class PermissionController {
 
     @PatchMapping("/{permissionId}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_PERMISSION')")
-    public ResponseEntity<?> updatePermission(@PathVariable("permissionId") Integer permissionId, @RequestBody PermissionRequest permissionRequest) {
+    public ResponseEntity<?> updatePermission(@PathVariable("permissionId") Integer permissionId,
+                                              @RequestBody PermissionRequest permissionRequest) {
         permissionService.updatePermission(permissionId, permissionRequest);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())

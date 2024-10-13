@@ -43,6 +43,7 @@ public class AccountController {
             ApiResponse<?> response = ApiResponse.builder()
                     .status(HttpStatus.UNAUTHORIZED.value())
                     .message("Not logged in or do not have a valid token")
+                    .data("Ok")
                     .data(null)
                     .build();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
