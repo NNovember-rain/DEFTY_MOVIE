@@ -12,6 +12,9 @@ public class ArticleRequest {
     @NotNull(message = "required")
     Integer id;
 
+    @NotNull(message = "required")
+    String title;
+
     String content;
 
     String author;

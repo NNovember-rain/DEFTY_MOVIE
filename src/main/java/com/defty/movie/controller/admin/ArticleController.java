@@ -1,63 +1,68 @@
 package com.defty.movie.controller.admin;
 
+import com.defty.movie.Util.ApiResponeUtil;
 import com.defty.movie.dto.request.ArticleRequest;
-import com.defty.movie.dto.request.LoginRequest;
-import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.dto.response.ArticlePageableResponse;
 import com.defty.movie.dto.response.ArticleResponse;
-import com.defty.movie.dto.response.LoginResponse;
 import com.defty.movie.service.impl.ArticleService;
-import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.File;
 import java.util.List;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}")
+@RequestMapping("${api.prefix}/admin")
 public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping("/article")
-    public ResponseEntity<ApiResponse<ArticleResponse>> addArticle(@RequestBody ArticleRequest articleRequest) {
-        articleService.addArticle(articleRequest);
-        ApiResponse<ArticleResponse> apiResponse = ApiResponse.<ArticleResponse>builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(new ArticleResponse("Article added successfully!"))
-                .build();
-        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    @PreAuthorize("@requiredPermission.checkPermission('CREATE_ARTICLE')")
+    public ResponseEntity<Integer> addArticle(@RequestBody ArticleRequest articleRequest) {
+        Integer id=articleService.addArticle(articleRequest);
+        return  ApiResponeUtil.ResponseOK(id);
     }
 
 
     @PatchMapping("/article/{id}")
-    public ResponseEntity<ApiResponse<ArticleResponse>> updateArticle( @PathVariable Integer id,
-                                                                       @RequestBody ArticleRequest articleRequest) {
+    @PreAuthorize("@requiredPermission.checkPermission('UPDATE_ARTICLE')")
+    public ResponseEntity<String> updateArticle( @PathVariable Integer id,
+                                            @RequestBody ArticleRequest articleRequest) {
         articleService.updateArticle(id,articleRequest);
-        ApiResponse<ArticleResponse> apiResponse = ApiResponse.<ArticleResponse>builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(new ArticleResponse("Edited the article successfully !"))
-                .build();
-        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+        String responseMessage="Update successful";
+        return  ApiResponeUtil.ResponseOK(responseMessage);
     }
 
     @DeleteMapping("/article/{ids}")
-    public ResponseEntity<ApiResponse<ArticleResponse>> deleteArticle(@PathVariable List<Integer> ids) {
+    @PreAuthorize("@requiredPermission.checkPermission('DELETE_ARTICLE')")
+    public ResponseEntity<String> deleteArticle(@PathVariable List<Integer> ids) {
         articleService.deleteArticle(ids);
-        ApiResponse<ArticleResponse> apiResponse = ApiResponse.<ArticleResponse>builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(new ArticleResponse("Deleted the article successfully!"))
-                .build();
-        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+        String responseMessage="Delete successful";
+        return ApiResponeUtil.ResponseOK(responseMessage);
     }
+
+    @GetMapping("/articles")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLE')")
+    public ResponseEntity<?> getArticle(@RequestParam(required = false) Integer id,
+                                        Pageable pageable) {
+        if (id != null) {
+            ArticleResponse articleResponse=articleService.getArticle(id);
+            return  ApiResponeUtil.ResponseOK(articleResponse);
+        }else {
+            Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
+            List<ArticleResponse> articleResponses=articleService.getAllArticles(sortedPageable);
+            ArticlePageableResponse articlePageableResponse = ArticlePageableResponse.builder()
+                    .articleResponses(articleResponses)
+                    .totalElements(articleService.getArticleCount())
+                    .build();
+            return ApiResponeUtil.ResponseOK(articlePageableResponse);
+        }
+    }
+
 }
