@@ -14,7 +14,7 @@ import java.time.Instant;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+//@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RefreshToken extends BaseEntity {
     @Column(unique = true, nullable = false)

@@ -23,7 +23,7 @@ public class RoleController {
     IRoleService roleService;
 
     @GetMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_ALL_ROLE')")
     public ResponseEntity<?> getRoles() {
         Set<RoleResponse> roleResponses = roleService.getAllRoles();
         ApiResponse<?> response = ApiResponse.builder()
@@ -47,7 +47,7 @@ public class RoleController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@requiredPermission.checkPermission('CREATE_ROLE')")
     public ResponseEntity<?> createRole(@RequestBody RoleRequest roleRequest) {
         RoleResponse roleResponse = roleService.createRole(roleRequest);
         ApiResponse<?> response = ApiResponse.builder()
@@ -59,8 +59,9 @@ public class RoleController {
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateRole(@PathVariable Integer id, @RequestBody RoleRequest roleRequest) {
+    @PreAuthorize("@requiredPermission.checkPermission('UPDATE_ROLE')")
+    public ResponseEntity<?> updateRole(@PathVariable Integer id,
+                                        @RequestBody RoleRequest roleRequest) {
         RoleResponse roleResponse = roleService.updateRole(id, roleRequest);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -72,7 +73,8 @@ public class RoleController {
 
     @PatchMapping("/assignment/{permissionIds}")
     @PreAuthorize("@requiredPermission.checkPermission('ASSIGN_PERMISSION_TO_ROLE')")
-    public ResponseEntity<?> assignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
+    public ResponseEntity<?> assignPermissions(@RequestParam Integer roleId,
+                                               @PathVariable List<Integer> permissionIds) {
         RoleResponse roleResponse = roleService.assignPermissionToRole(roleId, permissionIds);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -84,7 +86,8 @@ public class RoleController {
 
     @DeleteMapping("/unassignment/{permissionIds}")
     @PreAuthorize("@requiredPermission.checkPermission('UNASSIGN_PERMISSION_FROM_ROLE')")
-    public ResponseEntity<?> unassignPermissions(@RequestParam Integer roleId, @PathVariable List<Integer> permissionIds) {
+    public ResponseEntity<?> unassignPermissions(@RequestParam Integer roleId,
+                                                 @PathVariable List<Integer> permissionIds) {
         RoleResponse roleResponse = roleService.unassignPermissionFromRole(roleId, permissionIds);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
