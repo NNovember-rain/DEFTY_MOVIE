@@ -14,7 +14,7 @@ import java.time.Instant;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+//@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RefreshToken extends BaseEntity {
     @Column(unique = true, nullable = false)
@@ -30,6 +30,6 @@ public class RefreshToken extends BaseEntity {
     private Instant createdAt = Instant.now();
 
     @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
+    @JoinColumn(name = "account_id", nullable = false, unique = true)
     Account account;
 }

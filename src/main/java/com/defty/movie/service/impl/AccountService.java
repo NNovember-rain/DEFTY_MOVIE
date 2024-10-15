@@ -14,9 +14,8 @@ import com.defty.movie.security.JwtTokenUtil;
 import com.defty.movie.service.IAccountService;
 import com.defty.movie.service.IRefreshTokenService;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,15 +28,18 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountService implements IAccountService {
-    IAccountRepository accountRepository;
-    AuthenticationManager authenticationManager;
-    IRefreshTokenService refreshTokenService;
-    IRefreshTokenRepository refreshTokenRepository;
-    PasswordEncoder passwordEncoder;
-    JwtTokenUtil jwtTokenUtil;
-    AccountMapper accountMapper;
+    @Value("${jwt.expiration}")
+    private Integer expirationAccessToken;
+    @Value("${jwt.expiration-refresh-token}")
+    private Integer expirationRefreshToken;
+    private final IAccountRepository accountRepository;
+    private final AuthenticationManager authenticationManager;
+    private final IRefreshTokenService refreshTokenService;
+    private final IRefreshTokenRepository refreshTokenRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final AccountMapper accountMapper;
 
     @Override
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
@@ -54,8 +56,8 @@ public class AccountService implements IAccountService {
         authenticationManager.authenticate(authenticationToken);
         String accessToken = jwtTokenUtil.generateToken(account);
         String refreshToken = refreshTokenService.createRefreshToken(account.getId());
-        CookieUtil.create(response, "access_token", accessToken, true, true, 60 * 60 * 10, "/");
-        CookieUtil.create(response, "refresh_token", refreshToken, true, true, 7 * 24 * 60 * 60, "/");
+        CookieUtil.create(response, "access_token", accessToken, true, true, expirationAccessToken, "/");
+        CookieUtil.create(response, "refresh_token", refreshToken, true, true, expirationRefreshToken, "/");
         return LoginResponse.builder()
                 .token(accessToken)
                 .refreshToken(refreshToken)
@@ -105,8 +107,8 @@ public class AccountService implements IAccountService {
         Account account = exitRefreshToken.get().getAccount();
         String newToken = jwtTokenUtil.generateToken(account);
         String newRefreshToken = refreshTokenService.createRefreshToken(account.getId());
-        CookieUtil.create(response, "access_token", newToken, true, true, 60 * 60 * 10, "/");
-        CookieUtil.create(response, "refresh_token", newRefreshToken, true, true, 7 * 24 * 60 * 60, "/");
+        CookieUtil.create(response, "access_token", newToken, true, true, expirationAccessToken, "/");
+        CookieUtil.create(response, "refresh_token", newRefreshToken, true, true, expirationRefreshToken, "/");
         return RefreshTokenResponse.builder()
                 .refreshToken(newRefreshToken)
                 .token(newToken)
