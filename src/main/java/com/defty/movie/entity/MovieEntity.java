@@ -26,7 +26,7 @@ public class MovieEntity extends BaseEntity{
     private String coverImage;
 
     @Column(name = "status")
-    private Integer status;
+    private Integer status = 1;
 
     @Column(name = "nation")
     private String nation;

@@ -40,6 +40,7 @@ public class WebSecurityConfig {
                                 "/configuration/ui", "/configuration/security", "/swagger-ui/**", "/swagger-ui.html",
                                 "/webjars/swagger-ui/**", "/swagger-ui/index.html", "/webjars/**", "/swagger-ui/api-docs/swagger-config")
                         .permitAll()
+                        .requestMatchers("/movie/**").permitAll()
                         .requestMatchers(POST, String.format("%s/admin/account/login", apiPrefix)).permitAll()
                         .requestMatchers(POST, String.format("%s/admin/account/logout", apiPrefix)).permitAll()
                         .requestMatchers(POST, String.format("%s/admin/account/refresh-token", apiPrefix)).permitAll()
