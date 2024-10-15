@@ -6,10 +6,11 @@ import java.text.Normalizer;
 import java.util.Random;
 import java.util.UUID;
 
+@Component
 public class SlugUtil {
 
     // Create Slug
-    public static String createSlug(String name,Integer id) {
+    public String createSlug(String name,Integer id) {
         //Chuyển chuỗi thành dạng không dấu
         String normalized = Normalizer.normalize(name, Normalizer.Form.NFD);
         String withoutAccent = normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
@@ -25,7 +26,7 @@ public class SlugUtil {
     }
 
     //Create random
-    private static String generateRandomString(int length) {
+    private String generateRandomString(int length) {
         String characters = "abcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
         StringBuilder randomString = new StringBuilder(length);

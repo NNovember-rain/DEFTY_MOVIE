@@ -80,13 +80,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("/configuration/security", "GET"),
                 Pair.of("/swagger-ui/.*", "GET"),
                 Pair.of("/swagger-ui.html", "GET"),
-                Pair.of("/swagger-ui/index.html", "GET")
+                Pair.of("/swagger-ui/index.html", "GET"),
+
+                Pair.of("/movie.*", "*")
         );
         String requestPath = request.getServletPath();
         String requestMethod = request.getMethod();
         for (Pair<String, String> bypassToken : bypassTokens) {
             String pattern = bypassToken.getFirst();
-            if (Pattern.matches(pattern, requestPath) && requestMethod.equalsIgnoreCase(bypassToken.getSecond())) {
+            String method = bypassToken.getSecond();
+
+            if (Pattern.matches(pattern, requestPath) && (method.equals("*") || requestMethod.equalsIgnoreCase(method))) {
                 return true;
             }
         }
