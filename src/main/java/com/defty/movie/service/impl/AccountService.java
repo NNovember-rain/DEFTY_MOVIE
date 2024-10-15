@@ -95,7 +95,8 @@ public class AccountService implements IAccountService {
         if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
             return Optional.empty();
         }
-        return (Optional<Account>) auth.getPrincipal();
+        String userName=auth.getName();
+        return
     }
 
     @Override

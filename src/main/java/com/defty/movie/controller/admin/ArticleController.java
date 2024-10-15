@@ -49,16 +49,14 @@ public class ArticleController {
 
     @GetMapping("/article/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLE')")
-    public ResponseEntity<?> getArticle(@PathVariable Integer id,
-                                        Pageable pageable) {
+    public ResponseEntity<?> getArticle(@PathVariable Integer id) {
         ArticleResponse articleResponse=articleService.getArticle(id);
         return  ApiResponeUtil.ResponseOK(articleResponse);
     }
 
     @GetMapping("/articles")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLE')")
-    public ResponseEntity<?> getArticles(@RequestParam(required = false) Integer id,
-                                        Pageable pageable) {
+    public ResponseEntity<?> getArticles(Pageable pageable) {
 
         ArticlePageableResponse articlePageableResponse=articleService.getAllArticles(pageable);
         return ApiResponeUtil.ResponseOK(articlePageableResponse);
