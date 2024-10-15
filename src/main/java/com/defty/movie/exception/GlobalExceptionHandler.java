@@ -1,14 +1,20 @@
 package com.defty.movie.exception;
 
+import com.defty.movie.dto.response.ErrorResponseDTO;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -84,4 +90,51 @@ public class GlobalExceptionHandler {
         return errorResponse;
     }
 
+    @ExceptionHandler(FieldRequiredException.class)
+    @ResponseStatus(OK)
+    public ErrorResponseDTO handleFieldRequiredException(FieldRequiredException e, WebRequest request) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+        errorResponseDTO.setTimestamp(new Date());
+        errorResponseDTO.setPath(request.getDescription(false).replace("uri=", ""));
+        errorResponseDTO.setStatus(HttpStatus.BAD_REQUEST.value());
+        String[] message = e.getMessage().split("!");
+        errorResponseDTO.setError(message[0]);
+        List<String> detailMessage = new ArrayList<>();
+        for(int i = 1; i < message.length; i++){
+            detailMessage.add(message[i]);
+            System.out.println(message[i]);
+        }
+        errorResponseDTO.setDetailMessage(detailMessage);
+        return errorResponseDTO;
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDTO handleNotFoundException(NotFoundException e, WebRequest request) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+        errorResponseDTO.setTimestamp(new Date());
+        errorResponseDTO.setPath(request.getDescription(false).replace("uri=", ""));
+        errorResponseDTO.setStatus(HttpStatus.NOT_FOUND.value());
+        errorResponseDTO.setError(e.getMessage());
+        List<String> detailMessage = new ArrayList<>();
+        detailMessage.add("No records found");
+        errorResponseDTO.setDetailMessage(detailMessage);
+        return errorResponseDTO;
+    }
+
+
+
+    //TODO: thầy Hạnh viết
+//    @ExceptionHandler(UnauthorizedException.class)
+//    @ResponseStatus(UNAUTHORIZED)
+//    public ErrorResponse handleUnauthorizedException(UnauthorizedException e, WebRequest request) {
+//        ErrorResponse errorResponse = new ErrorResponse();
+//        errorResponse.setTimestamp(new Date());
+//        errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
+//        errorResponse.setStatus(UNAUTHORIZED.value());
+//        errorResponse.setError("Unauthorized");
+//        errorResponse.setMessage(e.getMessage());
+//
+//        return errorResponse;
+//    }
 }

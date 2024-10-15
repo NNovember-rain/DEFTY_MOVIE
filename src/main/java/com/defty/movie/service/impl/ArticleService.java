@@ -31,6 +31,7 @@ public class ArticleService implements IArticleService {
     ArticleMapper articleMapper;
     IAriticleRepository ariticleRepository;
     AccountService accountService;
+    private final SlugUtil slugUtil;
 
     @Override
     public Integer addArticle(ArticleRequest articleRequest) {
@@ -55,7 +56,7 @@ public class ArticleService implements IArticleService {
         Article articleCheck=ariticleRepository.findById(id).orElseThrow(()->new RuntimeException("The article dont exist !"));
         Article article = articleMapper.toArticleEntity(articleRequest);
 
-        article.setSlug(SlugUtil.createSlug(articleRequest.getTitle(),id));
+        article.setSlug(slugUtil.createSlug(articleRequest.getTitle(),id));
         article.setCreatedDate(articleCheck.getCreatedDate());
         article.setAccount(articleCheck.getAccount());
         article.setCreatedBy(articleCheck.getCreatedBy());
