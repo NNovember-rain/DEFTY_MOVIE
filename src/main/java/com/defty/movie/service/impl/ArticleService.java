@@ -1,6 +1,7 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.Util.SlugUtil;
+import com.defty.movie.dto.response.ArticlePageableResponse;
 import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.entity.Account;
 import com.defty.movie.mapper.ArticleMapper;
@@ -11,8 +12,10 @@ import com.defty.movie.service.IArticleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -91,14 +94,20 @@ public class ArticleService implements IArticleService {
 
 
     @Override
-    public List<ArticleResponse> getAllArticles(Pageable pageable) {
-        Optional<Page<Article>> articles= Optional.ofNullable(ariticleRepository.findAll(pageable));
+    public ArticlePageableResponse getAllArticles(Pageable pageable) {
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
+        Optional<Page<Article>> articles= Optional.ofNullable(ariticleRepository.findAll(sortedPageable));
         List<ArticleResponse> articleResponses=new ArrayList<>();
         if(!articles.get().isEmpty()) {
             for(Article article:articles.get()) {
                 articleResponses.add(articleMapper.toArticleResponse(article));
             }
-            return articleResponses;
+            ArticlePageableResponse articlePageableResponse = ArticlePageableResponse.builder()
+                    .articleResponses(articleResponses)
+                    .totalElements(ariticleRepository.count())
+                    .build();
+
+            return articlePageableResponse;
         }else throw new RuntimeException(" Article not found !");
     }
 

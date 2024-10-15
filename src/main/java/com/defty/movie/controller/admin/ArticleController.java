@@ -47,22 +47,21 @@ public class ArticleController {
         return ApiResponeUtil.ResponseOK(responseMessage);
     }
 
+    @GetMapping("/article/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLE')")
+    public ResponseEntity<?> getArticle(@PathVariable Integer id,
+                                        Pageable pageable) {
+        ArticleResponse articleResponse=articleService.getArticle(id);
+        return  ApiResponeUtil.ResponseOK(articleResponse);
+    }
+
     @GetMapping("/articles")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLE')")
-    public ResponseEntity<?> getArticle(@RequestParam(required = false) Integer id,
+    public ResponseEntity<?> getArticles(@RequestParam(required = false) Integer id,
                                         Pageable pageable) {
-        if (id != null) {
-            ArticleResponse articleResponse=articleService.getArticle(id);
-            return  ApiResponeUtil.ResponseOK(articleResponse);
-        }else {
-            Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-            List<ArticleResponse> articleResponses=articleService.getAllArticles(sortedPageable);
-            ArticlePageableResponse articlePageableResponse = ArticlePageableResponse.builder()
-                    .articleResponses(articleResponses)
-                    .totalElements(articleService.getArticleCount())
-                    .build();
-            return ApiResponeUtil.ResponseOK(articlePageableResponse);
-        }
+
+        ArticlePageableResponse articlePageableResponse=articleService.getAllArticles(pageable);
+        return ApiResponeUtil.ResponseOK(articlePageableResponse);
     }
 
 }
