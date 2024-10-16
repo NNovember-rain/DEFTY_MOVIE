@@ -8,6 +8,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,12 +28,27 @@ public class PermissionController {
 
     @GetMapping("/all")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ALL_PERMISSIONS')")
-    public ResponseEntity<?> getALlPermissions() {
-        List<PermissionResponse> permissionResponses = permissionService.getAllPermissions();
+    public ResponseEntity<?> getAllPermissions(@RequestParam(value = "page", defaultValue = "0") int page,
+                                               @RequestParam(value = "size", defaultValue = "10") int size,
+                                               @RequestParam(value = "name", required = false) String name) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PermissionResponse> permissionResponses = permissionService.getAllPermissions(name, pageable);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(permissionResponses)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_PERMISSION')")
+    public ResponseEntity<?> getPermissionById(@PathVariable Integer id) {
+        PermissionResponse permissionResponse = permissionService.getPermissionById(id);
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(permissionResponse)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,9 +31,22 @@ public class PermissionService implements IPermissionService {
     }
 
     @Override
-    public List<PermissionResponse> getAllPermissions() {
-        List<Permission> permissions = permissionRepository.findAll();
-        return permissions.stream().map(permissionMapper::toPermissionResponse).toList();
+    public PermissionResponse getPermissionById(Integer id) {
+        Permission permission = permissionRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Permission not found")
+        );
+        return permissionMapper.toPermissionResponse(permission);
+    }
+
+    @Override
+    public Page<PermissionResponse> getAllPermissions(String name, Pageable pageable) {
+        Page<Permission> permissions;
+        if (name != null && !name.isEmpty()) {
+            permissions = permissionRepository.findPermission(name, pageable);
+        } else {
+            permissions = permissionRepository.findAll(pageable);
+        }
+        return permissions.map(permissionMapper::toPermissionResponse);
     }
 
     @Override
@@ -43,7 +58,7 @@ public class PermissionService implements IPermissionService {
     @Override
     public void updatePermission(Integer permissionId, PermissionRequest permissionRequest) {
         Permission permission = permissionRepository.findById(permissionId).orElseThrow(
-                () -> new RuntimeException("Permission not found with id: " + permissionId)
+                () -> new RuntimeException("Permission not found")
         );
         permission.setName(permissionRequest.getName());
         permission.setDescription(permissionRequest.getDescription());

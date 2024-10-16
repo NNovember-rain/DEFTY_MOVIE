@@ -58,6 +58,18 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('DELETE_ROLE')")
+    public ResponseEntity<?> deleteRole(@PathVariable("id") Integer id) {
+        roleService.deleteRole(id);
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data("success")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PatchMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_ROLE')")
     public ResponseEntity<?> updateRole(@PathVariable Integer id,

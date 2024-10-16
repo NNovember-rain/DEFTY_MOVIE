@@ -32,7 +32,7 @@ public class RoleService implements IRoleService {
 
     @Override
     public Set<RoleResponse> getAllRoles() {
-        return roleRepository.findAll().stream()
+        return roleRepository.findByStatus(1).stream()
                 .map(role -> new RoleResponse(role.getId(), role.getName(), role.getDescription(), null))
                 .collect(Collectors.toSet());
     }
@@ -56,6 +56,15 @@ public class RoleService implements IRoleService {
                 .description(roleRepository.findById(roleId).get().getDescription())
                 .rolePermissions(permissionResponses)
                 .build();
+    }
+
+    @Override
+    public void deleteRole(Integer roleId) {
+        Role role = roleRepository.findById(roleId).orElseThrow(
+                () -> new RuntimeException("Role not found")
+        );
+        role.setStatus(0);
+        roleRepository.save(role);
     }
 
     @Override

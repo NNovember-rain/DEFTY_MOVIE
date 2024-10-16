@@ -24,6 +24,9 @@ public class Role extends BaseEntity {
     @Column(length = 255)
     String description;
 
+    @Column
+    Integer status = 1;
+
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     Set<Account> accounts;
 
