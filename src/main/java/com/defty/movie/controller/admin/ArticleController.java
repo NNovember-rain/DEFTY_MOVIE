@@ -24,7 +24,7 @@ public class ArticleController {
 
     @PostMapping("/article")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_ARTICLE')")
-    public ResponseEntity<Integer> addArticle(@RequestBody ArticleRequest articleRequest) {
+    public ResponseEntity<Integer> addArticle(@ModelAttribute ArticleRequest articleRequest) {
         Integer id=articleService.addArticle(articleRequest);
         return  ApiResponeUtil.ResponseOK(id);
     }

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import java.text.Normalizer;
 import java.util.Random;
-import java.util.UUID;
 
 @Component
 public class SlugUtil {
@@ -26,7 +25,7 @@ public class SlugUtil {
     }
 
     //Create random
-    private String generateRandomString(int length) {
+    private  String generateRandomString(int length) {
         String characters = "abcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
         StringBuilder randomString = new StringBuilder(length);

@@ -4,11 +4,13 @@ import com.defty.movie.Util.SlugUtil;
 import com.defty.movie.dto.response.ArticlePageableResponse;
 import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.entity.Account;
+import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.mapper.ArticleMapper;
 import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.entity.Article;
 import com.defty.movie.repository.IAriticleRepository;
 import com.defty.movie.service.IArticleService;
+import com.defty.movie.uploadImage.UploadImage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -31,7 +33,8 @@ public class ArticleService implements IArticleService {
     ArticleMapper articleMapper;
     IAriticleRepository ariticleRepository;
     AccountService accountService;
-    private final SlugUtil slugUtil;
+    UploadImage uploadImage;
+    SlugUtil slugUtil;
 
     @Override
     public Integer addArticle(ArticleRequest articleRequest) {
@@ -39,13 +42,17 @@ public class ArticleService implements IArticleService {
         Article article = articleMapper.toArticleEntity(articleRequest);
 
         Optional<Account> accountOptional= accountService.getCurrentAccount();
-        Account account = accountOptional.get();
-        if(accountOptional.isPresent()) article.setCreatedBy(account.getUsername());
-        article.setAccount(account);
+        article.setAccount(accountOptional.get());
 
-        article.setCreatedDate(new Date());
         Article articleSave=ariticleRepository.save(article);
-        article.setId(articleSave.getId());
+
+        articleSave.setSlug(slugUtil.createSlug(articleRequest.getTitle(),articleSave.getId()));
+
+        try {
+            article.setThumbnail(uploadImage.upload(articleRequest.getThumbnail()));
+        }catch (Exception e){
+            throw new ImageUploadException("Could not upload the image, please try again later.");
+        }
 
         ariticleRepository.save(articleSave);
         return articleSave.getId();
@@ -59,11 +66,7 @@ public class ArticleService implements IArticleService {
         article.setSlug(slugUtil.createSlug(articleRequest.getTitle(),id));
         article.setCreatedDate(articleCheck.getCreatedDate());
         article.setAccount(articleCheck.getAccount());
-        article.setCreatedBy(articleCheck.getCreatedBy());
-
-        article.setModifiedBy(accountService.getCurrentAccount().get().getUsername());
-        article.setModifiedDate(new Date());
-
+        article.setSlug(slugUtil.createSlug(articleRequest.getTitle(),id));
         article.setId(id);
 
         ariticleRepository.save(article);
@@ -84,7 +87,7 @@ public class ArticleService implements IArticleService {
     @Override
     public ArticleResponse getArticle(Integer id) {
         Optional<Article> article=ariticleRepository.findById(id);
-        if(article.isPresent()) {
+        if(article.isPresent() && article.get().getStatus()==1) {
             return articleMapper.toArticleResponse(article.get());
         }
         else{
@@ -97,18 +100,17 @@ public class ArticleService implements IArticleService {
     @Override
     public ArticlePageableResponse getAllArticles(Pageable pageable) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-        Optional<Page<Article>> articles= Optional.ofNullable(ariticleRepository.findAll(sortedPageable));
+        Optional<Page<Article>> articles= Optional.ofNullable(ariticleRepository.findAllByStatus(1,sortedPageable));
         List<ArticleResponse> articleResponses=new ArrayList<>();
         if(!articles.get().isEmpty()) {
             for(Article article:articles.get()) {
                 articleResponses.add(articleMapper.toArticleResponse(article));
             }
-            ArticlePageableResponse articlePageableResponse = ArticlePageableResponse.builder()
+
+            return ArticlePageableResponse.builder()
                     .articleResponses(articleResponses)
                     .totalElements(ariticleRepository.count())
                     .build();
-
-            return articlePageableResponse;
         }else throw new RuntimeException(" Article not found !");
     }
 
