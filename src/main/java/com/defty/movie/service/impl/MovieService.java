@@ -1,6 +1,6 @@
 package com.defty.movie.service.impl;
 
-import com.defty.movie.Util.SlugUtil;
+import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.dto.request.MovieRequest;
 import com.defty.movie.dto.response.MovieResponseDTO;
 import com.defty.movie.entity.MovieEntity;
@@ -12,7 +12,6 @@ import com.defty.movie.validation.MovieValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

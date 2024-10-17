@@ -1,4 +1,4 @@
-package com.defty.movie.Util;
+package com.defty.movie.utils;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

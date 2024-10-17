@@ -1,3 +1,9 @@
+server:
+  port: 8088
+
 spring:
   profiles:
     active: dev
+
+cloudinary:
+  url: cloudinary://384567153543315:54BO4msJ06zCcivaIthZHvUnIuI@drsmkfjfo

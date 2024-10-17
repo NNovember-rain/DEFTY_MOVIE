@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface IAriticleRepository extends JpaRepository<Article, Integer> {
 
     Article findBySlug(String slug);
-    Page<Article> findAll(Pageable pageable);
+    Page<Article> findAllByStatus(Integer status,Pageable pageable);
 }

@@ -1,15 +1,13 @@
 package com.defty.movie.controller.admin;
 
-import com.defty.movie.Util.ApiResponeUtil;
+import com.defty.movie.utils.ApiResponeUtil;
 import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.dto.response.ArticlePageableResponse;
 import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.service.impl.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +22,7 @@ public class ArticleController {
 
     @PostMapping("/article")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_ARTICLE')")
-    public ResponseEntity<Integer> addArticle(@RequestBody ArticleRequest articleRequest) {
+    public ResponseEntity<Integer> addArticle(@ModelAttribute ArticleRequest articleRequest) {
         Integer id=articleService.addArticle(articleRequest);
         return  ApiResponeUtil.ResponseOK(id);
     }
@@ -47,22 +45,19 @@ public class ArticleController {
         return ApiResponeUtil.ResponseOK(responseMessage);
     }
 
+    @GetMapping("/article/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLE')")
+    public ResponseEntity<?> getArticle(@PathVariable Integer id) {
+        ArticleResponse articleResponse=articleService.getArticle(id);
+        return  ApiResponeUtil.ResponseOK(articleResponse);
+    }
+
     @GetMapping("/articles")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLE')")
-    public ResponseEntity<?> getArticle(@RequestParam(required = false) Integer id,
-                                        Pageable pageable) {
-        if (id != null) {
-            ArticleResponse articleResponse=articleService.getArticle(id);
-            return  ApiResponeUtil.ResponseOK(articleResponse);
-        }else {
-            Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-            List<ArticleResponse> articleResponses=articleService.getAllArticles(sortedPageable);
-            ArticlePageableResponse articlePageableResponse = ArticlePageableResponse.builder()
-                    .articleResponses(articleResponses)
-                    .totalElements(articleService.getArticleCount())
-                    .build();
-            return ApiResponeUtil.ResponseOK(articlePageableResponse);
-        }
+    public ResponseEntity<?> getArticles(Pageable pageable) {
+
+        ArticlePageableResponse articlePageableResponse=articleService.getAllArticles(pageable);
+        return ApiResponeUtil.ResponseOK(articlePageableResponse);
     }
 
 }

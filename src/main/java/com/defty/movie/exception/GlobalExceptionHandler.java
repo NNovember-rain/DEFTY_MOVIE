@@ -122,6 +122,18 @@ public class GlobalExceptionHandler {
         return errorResponseDTO;
     }
 
+    @ExceptionHandler(ImageUploadException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleImageUploadException(ImageUploadException e, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setTimestamp(new Date());
+        errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorResponse.setError("Image Upload Error");
+        errorResponse.setMessage(e.getMessage());
+        return errorResponse;
+    }
+
 
 
     //TODO: thầy Hạnh viết

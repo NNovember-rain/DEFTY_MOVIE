@@ -1,7 +1,7 @@
 package com.defty.movie.security;
 
 import com.defty.movie.entity.Account;
-import com.defty.movie.Util.CookieUtil;
+import com.defty.movie.utils.CookieUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
