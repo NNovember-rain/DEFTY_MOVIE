@@ -1,8 +1,6 @@
-package com.defty.movie.Util;
+package com.defty.movie.utils;
 
 import com.defty.movie.dto.response.ApiResponse;
-import com.defty.movie.dto.response.ArticleResponse;
-import com.mysql.cj.x.protobuf.Mysqlx;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

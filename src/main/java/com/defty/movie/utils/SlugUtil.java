@@ -1,4 +1,4 @@
-package com.defty.movie.Util;
+package com.defty.movie.utils;
 
 import org.springframework.stereotype.Component;
 

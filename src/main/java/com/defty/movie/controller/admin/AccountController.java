@@ -1,6 +1,6 @@
 package com.defty.movie.controller.admin;
 
-import com.defty.movie.Util.CookieUtil;
+import com.defty.movie.utils.CookieUtil;
 import com.defty.movie.dto.request.LoginRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.dto.response.ApiResponse;

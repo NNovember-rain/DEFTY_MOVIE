@@ -22,7 +22,7 @@ public class ArticleRequest {
 
     String author;
 
-    List<MultipartFile> thumbnail;
+    MultipartFile thumbnail;
 
 }
 

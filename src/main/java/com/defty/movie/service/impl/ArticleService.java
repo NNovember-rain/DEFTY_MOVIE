@@ -1,6 +1,6 @@
 package com.defty.movie.service.impl;
 
-import com.defty.movie.Util.SlugUtil;
+import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.dto.response.ArticlePageableResponse;
 import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.entity.Account;
@@ -10,7 +10,7 @@ import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.entity.Article;
 import com.defty.movie.repository.IAriticleRepository;
 import com.defty.movie.service.IArticleService;
-import com.defty.movie.uploadImage.UploadImage;
+import com.defty.movie.utils.UploadImageUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,7 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +32,7 @@ public class ArticleService implements IArticleService {
     ArticleMapper articleMapper;
     IAriticleRepository ariticleRepository;
     AccountService accountService;
-    UploadImage uploadImage;
+    UploadImageUtil uploadImageUtil;
     SlugUtil slugUtil;
 
     @Override
@@ -49,9 +48,9 @@ public class ArticleService implements IArticleService {
         articleSave.setSlug(slugUtil.createSlug(articleRequest.getTitle(),articleSave.getId()));
 
         try {
-            article.setThumbnail(uploadImage.upload(articleRequest.getThumbnail()));
+            article.setThumbnail(uploadImageUtil.upload(articleRequest.getThumbnail()));
         }catch (Exception e){
-            throw new ImageUploadException("Could not upload the image, please try again later.");
+            throw new ImageUploadException("Could not upload the image, please try again later !");
         }
 
         ariticleRepository.save(articleSave);
