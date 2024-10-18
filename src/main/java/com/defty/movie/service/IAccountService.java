@@ -1,18 +1,16 @@
 package com.defty.movie.service;
 
-import com.defty.movie.dto.request.LoginRequest;
+import com.defty.movie.dto.request.AccountRequest;
 import com.defty.movie.dto.response.AccountResponse;
-import com.defty.movie.dto.response.LoginResponse;
-import com.defty.movie.dto.response.RefreshTokenResponse;
-import com.defty.movie.entity.Account;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface IAccountService {
-    LoginResponse login(LoginRequest loginRequest, HttpServletResponse response);
-    void logout(String token);
-    AccountResponse getAccountFromToken(String token);
-    Optional<Account> getCurrentAccount();
-    RefreshTokenResponse refreshToken(String refreshToken, HttpServletResponse response);
+    AccountResponse createAccount(AccountRequest accountRequest);
+    Page<AccountResponse> findAccount(String username, Pageable pageable);
+    void deleteAccount(List<Integer> ids);
+    AccountResponse updateAccount(Integer id, AccountRequest accountRequest);
+    AccountResponse getAccount(Integer id);
 }

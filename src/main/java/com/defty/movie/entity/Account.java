@@ -3,6 +3,7 @@ package com.defty.movie.entity;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,20 +24,25 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-
 public class Account extends BaseEntity implements UserDetails {
+
+    @NotBlank(message = "Username cannot be blank")
     @Column(nullable = false, length = 50, unique = true)
     String username;
 
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 6, max = 255, message = "Password must be between 6 and 255 characters")
     @Column(nullable = false, length = 255)
     String password;
 
     @Column(length = 50)
     String fullName;
 
+    @Email(message = "Email should be valid")
     @Column(length = 50, unique = true)
     String email;
 
+    @Pattern(regexp = "^\\+?\\d{1,15}$", message = "Phone must be a valid phone number")
     @Column(length = 50)
     String phone;
 
@@ -51,6 +57,7 @@ public class Account extends BaseEntity implements UserDetails {
 
     Integer status;
 
+    @Past(message = "Date of birth must be in the past")
     @Column(name = "date_of_birth")
     LocalDate dateOfBirth;
 

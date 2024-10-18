@@ -1,6 +1,6 @@
 package com.defty.movie.service.impl;
 
-import com.defty.movie.Util.SlugUtil;
+import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.entity.Account;
 import com.defty.movie.mapper.ArticleMapper;
@@ -27,7 +27,7 @@ public class ArticleService implements IArticleService {
 
     ArticleMapper articleMapper;
     IAriticleRepository ariticleRepository;
-    AccountService accountService;
+    AuthService authService;
     private final SlugUtil slugUtil;
 
     @Override
@@ -35,7 +35,7 @@ public class ArticleService implements IArticleService {
         if(articleRequest.getTitle() == null || articleRequest.getTitle().trim().equals("")) throw new RuntimeException("Some fields are missing");
         Article article = articleMapper.toArticleEntity(articleRequest);
 
-        Optional<Account> accountOptional= accountService.getCurrentAccount();
+        Optional<Account> accountOptional= authService.getCurrentAccount();
         Account account = accountOptional.get();
         if(accountOptional.isPresent()) article.setCreatedBy(account.getUsername());
         article.setAccount(account);
@@ -58,7 +58,7 @@ public class ArticleService implements IArticleService {
         article.setAccount(articleCheck.getAccount());
         article.setCreatedBy(articleCheck.getCreatedBy());
 
-        article.setModifiedBy(accountService.getCurrentAccount().get().getUsername());
+        article.setModifiedBy(authService.getCurrentAccount().get().getUsername());
         article.setModifiedDate(new Date());
 
         article.setId(id);

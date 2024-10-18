@@ -14,6 +14,9 @@ import com.defty.movie.service.IRoleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,10 +34,19 @@ public class RoleService implements IRoleService {
     IRolePermissionRepository rolePermissionRepository;
 
     @Override
-    public Set<RoleResponse> getAllRoles() {
-        return roleRepository.findByStatus(1).stream()
-                .map(role -> new RoleResponse(role.getId(), role.getName(), role.getDescription(), null))
-                .collect(Collectors.toSet());
+    public Page<RoleResponse> getAllRoles(String name, Pageable pageable) {
+        Page<Role> roles;
+        if (name != null && !name.isEmpty()) {
+            roles = roleRepository.findRole(name, pageable);
+        } else {
+            roles = roleRepository.findAllWithStatus(pageable);
+        }
+        return roles.map(role -> new RoleResponse(
+                role.getId(),
+                role.getName(),
+                role.getDescription(),
+                null
+        ));
     }
 
     @Override

@@ -1,13 +1,13 @@
-package com.defty.movie.Util;
+package com.defty.movie.utils;
 
 import org.springframework.stereotype.Component;
 
 import java.text.Normalizer;
 import java.util.Random;
-import java.util.UUID;
 
 @Component
 public class SlugUtil {
+
 
     // Create Slug
     public String createSlug(String name,Integer id) {

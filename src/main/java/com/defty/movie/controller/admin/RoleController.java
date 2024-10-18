@@ -7,6 +7,9 @@ import com.defty.movie.service.IRoleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,8 +27,11 @@ public class RoleController {
 
     @GetMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ALL_ROLE')")
-    public ResponseEntity<?> getRoles() {
-        Set<RoleResponse> roleResponses = roleService.getAllRoles();
+    public ResponseEntity<?> getAllRoles(@RequestParam(value = "page", defaultValue = "0") int page,
+                                      @RequestParam(value = "size", defaultValue = "10") int size,
+                                      @RequestParam(value = "name", required = false) String name) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RoleResponse> roleResponses = roleService.getAllRoles(name, pageable);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message("Roles retrieved successfully")

@@ -1,6 +1,6 @@
 package com.defty.movie.controller.admin;
 
-import com.defty.movie.Util.ApiResponeUtil;
+import com.defty.movie.utils.ApiResponeUtil;
 import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.dto.response.ArticlePageableResponse;
 import com.defty.movie.dto.response.ArticleResponse;
