@@ -56,7 +56,7 @@ public class AccountController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_ACCOUNT')")
-    public ResponseEntity<?> getAllAccount(@Valid @PathVariable Integer id,
+    public ResponseEntity<?> updateAccount(@Valid @PathVariable Integer id,
                                            @RequestBody AccountRequest accountRequest) {
         AccountResponse accountResponse = accountService.updateAccount(id, accountRequest);
         ApiResponse<?> response = ApiResponse.builder()
@@ -69,7 +69,7 @@ public class AccountController {
 
     @GetMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ACCOUNT')")
-    public ResponseEntity<?> getAccount(@Valid @PathVariable Integer id) {
+    public ResponseEntity<?> getAccount(@PathVariable Integer id) {
         AccountResponse accountResponse = accountService.getAccount(id);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -81,7 +81,7 @@ public class AccountController {
 
     @DeleteMapping("/{ids}")
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_ACCOUNTS')")
-    public ResponseEntity<?> getAccount(@Valid @PathVariable List<Integer> ids) {
+    public ResponseEntity<?> deleteAccount(@PathVariable List<Integer> ids) {
         accountService.deleteAccount(ids);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
