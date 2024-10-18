@@ -71,12 +71,12 @@ public class RoleService implements IRoleService {
     }
 
     @Override
-    public void deleteRole(Integer roleId) {
-        Role role = roleRepository.findById(roleId).orElseThrow(
-                () -> new RuntimeException("Role not found")
-        );
-        role.setStatus(0);
-        roleRepository.save(role);
+    public void deleteRole(List<Integer> roleId) {
+        List<Role> roles = roleRepository.findAllById(roleId);
+        for (Role role : roles) {
+            role.setStatus(0);
+            roleRepository.save(role);
+        }
     }
 
     @Override

@@ -3,22 +3,30 @@ package com.defty.movie.service.impl;
 import com.defty.movie.dto.request.AccountRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.entity.Account;
+import com.defty.movie.entity.Role;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.AccountMapper;
 import com.defty.movie.repository.IAccountRepository;
+import com.defty.movie.repository.IRoleRepository;
 import com.defty.movie.service.IAccountService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountService implements IAccountService {
-    private final IAccountRepository accountRepository;
-    private final AccountMapper accountMapper;
+    IAccountRepository accountRepository;
+    AccountMapper accountMapper;
+    PasswordEncoder passwordEncoder;
+    IRoleRepository roleRepository;
 
     @Override
     public AccountResponse createAccount(AccountRequest accountRequest) {
@@ -46,15 +54,34 @@ public class AccountService implements IAccountService {
         }
     }
 
-
     @Override
     public void deleteAccount(List<Integer> ids) {
-
+        List<Account> accounts = accountRepository.findAllById(ids);
+        for(Account account : accounts) {
+            account.setStatus(0);
+            accountRepository.save(account);
+        }
     }
 
     @Override
     public AccountResponse updateAccount(Integer id, AccountRequest accountRequest) {
-        return null;
+        Account account = accountRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Account not found")
+        );
+        account.setUsername(accountRequest.getUsername());
+        account.setFullName(accountRequest.getFullName());
+        account.setEmail(accountRequest.getEmail());
+        account.setPhone(accountRequest.getPhone());
+        account.setAddress(accountRequest.getAddress());
+        account.setGender(accountRequest.getGender());
+        Role role = roleRepository.findByName(accountRequest.getRole());
+        account.setRole(role);
+        String password = passwordEncoder.encode(accountRequest.getPassword());
+        account.setPassword(password);
+        account.setAvatar(accountRequest.getAvatar());
+        account.setDateOfBirth(accountRequest.getDateOfBirth());
+        accountRepository.save(account);
+        return accountMapper.toAccountResponse(account);
     }
 
     @Override
@@ -64,5 +91,4 @@ public class AccountService implements IAccountService {
         );
         return accountMapper.toAccountResponse(account);
     }
-
 }

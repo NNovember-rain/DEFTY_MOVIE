@@ -64,10 +64,10 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("@requiredPermission.checkPermission('DELETE_ROLE')")
-    public ResponseEntity<?> deleteRole(@PathVariable("id") Integer id) {
-        roleService.deleteRole(id);
+    @DeleteMapping("/{ids}")
+    @PreAuthorize("@requiredPermission.checkPermission('DELETE_ROLES')")
+    public ResponseEntity<?> deleteRole(@PathVariable("ids") List<Integer> ids) {
+        roleService.deleteRole(ids);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
