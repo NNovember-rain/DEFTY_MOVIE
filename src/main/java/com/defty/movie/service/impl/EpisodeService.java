@@ -1,7 +1,7 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.EpisodeRequest;
-import com.defty.movie.dto.response.EpisodeResponseDTO;
+import com.defty.movie.dto.response.EpisodeResponse;
 import com.defty.movie.service.IEpisodeService;
 import com.defty.movie.validation.EpisodeValidation;
 import lombok.AccessLevel;
@@ -24,7 +24,7 @@ public class EpisodeService implements IEpisodeService {
     }
 
     @Override
-    public List<EpisodeResponseDTO> getEpisodes() {
+    public List<EpisodeResponse> getEpisodes() {
         return null;
     }
 

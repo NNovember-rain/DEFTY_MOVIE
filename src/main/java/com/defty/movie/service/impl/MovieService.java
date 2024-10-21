@@ -2,7 +2,7 @@ package com.defty.movie.service.impl;
 
 import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.dto.request.MovieRequest;
-import com.defty.movie.dto.response.MovieResponseDTO;
+import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.entity.MovieEntity;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.MovieMapper;
@@ -44,9 +44,9 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieResponseDTO> getMovies() {
+    public List<MovieResponse> getMovies() {
         List<MovieEntity> movieEntities = movieRepository.findAll();
-        List<MovieResponseDTO> movieResponseDTOS = new ArrayList<>();
+        List<MovieResponse> movieResponseDTOS = new ArrayList<>();
         for(MovieEntity movie : movieEntities){
             movieResponseDTOS.add(movieMapper.toMovieResponseDTO(movie));
         }

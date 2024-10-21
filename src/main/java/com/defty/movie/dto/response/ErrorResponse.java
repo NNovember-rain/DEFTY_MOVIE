@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ErrorResponseDTO {
+public class ErrorResponse {
     private List<String> detailMessage = new ArrayList<>();
     Date timestamp;
     int status;

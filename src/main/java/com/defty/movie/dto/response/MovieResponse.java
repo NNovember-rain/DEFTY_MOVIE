@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MovieResponseDTO {
+public class MovieResponse {
     Integer id;
 
     String title;

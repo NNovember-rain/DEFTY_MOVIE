@@ -1,7 +1,7 @@
 package com.defty.movie.mapper;
 
 import com.defty.movie.dto.request.MovieRequest;
-import com.defty.movie.dto.response.MovieResponseDTO;
+import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.entity.MovieEntity;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,8 +16,8 @@ public class MovieMapper {
         MovieEntity movie = modelMapper.map(movieRequest, MovieEntity.class);
         return movie;
     }
-    public MovieResponseDTO toMovieResponseDTO(MovieEntity movie){
-        MovieResponseDTO movieResponseDTO = modelMapper.map(movie, MovieResponseDTO.class);
+    public MovieResponse toMovieResponseDTO(MovieEntity movie){
+        MovieResponse movieResponseDTO = modelMapper.map(movie, MovieResponse.class);
         return movieResponseDTO;
     }
 }

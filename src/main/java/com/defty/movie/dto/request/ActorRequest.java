@@ -1,0 +1,25 @@
+package com.defty.movie.dto.request;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ActorRequest {
+    String fullName;
+
+    String gender;
+
+    String dateOfBirth;
+
+    Integer weight;
+
+    Integer height;
+
+    String nationality;
+
+    String description;
+
+    MultipartFile avatar;
+}

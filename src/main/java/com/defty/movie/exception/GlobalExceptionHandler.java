@@ -1,16 +1,14 @@
 package com.defty.movie.exception;
 
-import com.defty.movie.dto.response.ErrorResponseDTO;
+import com.defty.movie.dto.response.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,8 +22,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ConstraintViolationException.class,
             MissingServletRequestParameterException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(BAD_REQUEST)
-    public ErrorResponse handleValidationException(Exception e, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse();
+    public com.defty.movie.exception.ErrorResponse handleValidationException(Exception e, WebRequest request) {
+        com.defty.movie.exception.ErrorResponse errorResponse = new com.defty.movie.exception.ErrorResponse();
         errorResponse.setTimestamp(new Date());
         errorResponse.setStatus(BAD_REQUEST.value());
         errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
@@ -54,8 +52,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class, RuntimeException.class})
     @ResponseStatus(OK)
-    public ErrorResponse handleIllegalArgumentException(Exception e, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse();
+    public com.defty.movie.exception.ErrorResponse handleIllegalArgumentException(Exception e, WebRequest request) {
+        com.defty.movie.exception.ErrorResponse errorResponse = new com.defty.movie.exception.ErrorResponse();
         errorResponse.setTimestamp(new Date());
         errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
         errorResponse.setStatus(BAD_REQUEST.value());
@@ -67,8 +65,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleNullPointerException(NullPointerException e, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse();
+    public com.defty.movie.exception.ErrorResponse handleNullPointerException(NullPointerException e, WebRequest request) {
+        com.defty.movie.exception.ErrorResponse errorResponse = new com.defty.movie.exception.ErrorResponse();
         errorResponse.setTimestamp(new Date());
         errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
         errorResponse.setStatus(INTERNAL_SERVER_ERROR.value());
@@ -79,8 +77,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleGeneralException(Exception e, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse();
+    public com.defty.movie.exception.ErrorResponse handleGeneralException(Exception e, WebRequest request) {
+        com.defty.movie.exception.ErrorResponse errorResponse = new com.defty.movie.exception.ErrorResponse();
         errorResponse.setTimestamp(new Date());
         errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
         errorResponse.setStatus(INTERNAL_SERVER_ERROR.value());
@@ -92,8 +90,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FieldRequiredException.class)
     @ResponseStatus(OK)
-    public ErrorResponseDTO handleFieldRequiredException(FieldRequiredException e, WebRequest request) {
-        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+    public ErrorResponse handleFieldRequiredException(FieldRequiredException e, WebRequest request) {
+        ErrorResponse errorResponseDTO = new ErrorResponse();
         errorResponseDTO.setTimestamp(new Date());
         errorResponseDTO.setPath(request.getDescription(false).replace("uri=", ""));
         errorResponseDTO.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -110,8 +108,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponseDTO handleNotFoundException(NotFoundException e, WebRequest request) {
-        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+    public ErrorResponse handleNotFoundException(NotFoundException e, WebRequest request) {
+        ErrorResponse errorResponseDTO = new ErrorResponse();
         errorResponseDTO.setTimestamp(new Date());
         errorResponseDTO.setPath(request.getDescription(false).replace("uri=", ""));
         errorResponseDTO.setStatus(HttpStatus.NOT_FOUND.value());
@@ -124,8 +122,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ImageUploadException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleImageUploadException(ImageUploadException e, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse();
+    public com.defty.movie.exception.ErrorResponse handleImageUploadException(ImageUploadException e, WebRequest request) {
+        com.defty.movie.exception.ErrorResponse errorResponse = new com.defty.movie.exception.ErrorResponse();
         errorResponse.setTimestamp(new Date());
         errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());

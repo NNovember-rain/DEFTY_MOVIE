@@ -1,14 +1,11 @@
 package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.MovieRequest;
-import com.defty.movie.dto.response.MovieResponseDTO;
+import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.service.impl.MovieService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,8 +28,9 @@ public class MovieController {
         public Object getMovie(@PathVariable Integer id){
         return movieService.getMovie(id);
     }
+
     @GetMapping("")
-    public List<MovieResponseDTO> getMovies(){
+    public List<MovieResponse> getMovies(){
         return movieService.getMovies();
     }
 
