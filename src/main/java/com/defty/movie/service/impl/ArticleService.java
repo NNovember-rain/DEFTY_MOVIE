@@ -31,7 +31,7 @@ public class ArticleService implements IArticleService {
 
     ArticleMapper articleMapper;
     IAriticleRepository ariticleRepository;
-    AccountService accountService;
+    AuthService authService;
     UploadImageUtil uploadImageUtil;
     SlugUtil slugUtil;
 
@@ -40,7 +40,7 @@ public class ArticleService implements IArticleService {
         if(articleRequest.getTitle() == null || articleRequest.getTitle().trim().equals("")) throw new RuntimeException("Some fields are missing");
         Article article = articleMapper.toArticleEntity(articleRequest);
 
-        Optional<Account> accountOptional= accountService.getCurrentAccount();
+        Optional<Account> accountOptional= authService.getCurrentAccount();
         article.setAccount(accountOptional.get());
 
         Article articleSave=ariticleRepository.save(article);
