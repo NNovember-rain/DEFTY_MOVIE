@@ -8,6 +8,7 @@ import java.util.Random;
 @Component
 public class SlugUtil {
 
+
     // Create Slug
     public String createSlug(String name,Integer id) {
         //Chuyển chuỗi thành dạng không dấu

@@ -3,6 +3,7 @@ package com.defty.movie.security;
 import com.defty.movie.entity.Account;
 import com.defty.movie.entity.Permission;
 import com.defty.movie.repository.IPermissionRepository;
+import com.defty.movie.service.IAuthService;
 import com.defty.movie.service.impl.AccountService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +17,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RequiredPermission {
-    AccountService accountService;
+    IAuthService authService;
     IPermissionRepository permissionRepository;
 
     public boolean checkPermission(String permissionCheck){
-        Optional<Account> account = accountService.getCurrentAccount();
+        Optional<Account> account = authService.getCurrentAccount();
         if(account.isPresent()){
             Set<Permission> permissions = permissionRepository.findPermissionsByRoleId(account.get().getRole().getId());
             for(Permission permission : permissions){
