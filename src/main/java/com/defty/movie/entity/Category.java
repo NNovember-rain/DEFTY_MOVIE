@@ -1,14 +1,16 @@
 package com.defty.movie.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "category")
-public class CategoryEntity extends BaseEntity {
+public class Category extends BaseEntity {
     @Column(name = "name")
     private String name;
 
@@ -17,11 +19,11 @@ public class CategoryEntity extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "parent_category_id")
-    private CategoryEntity parentCategory;
+    private Category parentCategory;
 
     @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
-    private Set<CategoryEntity> subCategories;
+    private Set<Category> subCategories;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private Set<MovieCategoryEntity> movieCategories;
+    private Set<MovieCategory> movieCategories;
 }

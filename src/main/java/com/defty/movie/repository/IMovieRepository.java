@@ -1,7 +1,7 @@
 package com.defty.movie.repository;
 
-import com.defty.movie.entity.MovieEntity;
+import com.defty.movie.entity.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IMovieRepository extends JpaRepository<MovieEntity, Integer> {
+public interface IMovieRepository extends JpaRepository<Movie, Integer> {
 }

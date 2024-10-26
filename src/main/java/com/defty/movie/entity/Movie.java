@@ -1,15 +1,17 @@
 package com.defty.movie.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "movie")
-public class MovieEntity extends BaseEntity{
+public class Movie extends BaseEntity{
     @Column(name = "title")
     private String title;
 
@@ -44,11 +46,11 @@ public class MovieEntity extends BaseEntity{
     private Integer membershipType;
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
-    private Set<MovieCategoryEntity> movieCategories;
+    private Set<MovieCategory> movieCategories;
 
     @ManyToOne
     @JoinColumn(name = "director_id", nullable = false)
-    private DirectorEntity director;
+    private Director director;
 
     @ManyToMany
     @JoinTable(
@@ -56,8 +58,14 @@ public class MovieEntity extends BaseEntity{
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
-    private Set<ActorEntity> actors;
+    private Set<Actor> actors;
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<EpisodeEntity> episodes;
+    private Set<Episode> episodes;
+
+    @OneToMany(mappedBy = "movie")
+    private Set<AccountMovie> accountMovies;
+
+    @OneToMany(mappedBy = "movie")
+    private Set<UserMovie> userMovies;
 }

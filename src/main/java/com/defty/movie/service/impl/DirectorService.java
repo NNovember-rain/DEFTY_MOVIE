@@ -3,7 +3,7 @@ package com.defty.movie.service.impl;
 import com.defty.movie.dto.request.DirectorRequest;
 import com.defty.movie.dto.response.DirectorResponse;
 import com.defty.movie.dto.response.PageableResponse;
-import com.defty.movie.entity.DirectorEntity;
+import com.defty.movie.entity.Director;
 import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.DirectorMapper;
@@ -37,7 +37,7 @@ public class DirectorService implements IDirectorService {
     @Override
     public ResponseEntity<String> addDirector(DirectorRequest directorRequest) {
         directorValidation.fieldValidation(directorRequest);
-        DirectorEntity directorEntity = directorMapper.toDirectorEntity(directorRequest);
+        Director directorEntity = directorMapper.toDirectorEntity(directorRequest);
         try {
             directorEntity.setAvatar(uploadImageUtil.upload(directorRequest.getAvatar()));
         }
@@ -56,9 +56,9 @@ public class DirectorService implements IDirectorService {
     @Override
     public ResponseEntity<String> updateDirector(Integer id, DirectorRequest directorRequest) {
         directorValidation.fieldValidation(directorRequest);
-        Optional<DirectorEntity> director = directorRepository.findById(id);
+        Optional<Director> director = directorRepository.findById(id);
         if(director.isPresent()){
-            DirectorEntity updatedDirector = director.get();
+            Director updatedDirector = director.get();
 
             BeanUtils.copyProperties(directorRequest, updatedDirector, "id");
             try {
@@ -88,13 +88,13 @@ public class DirectorService implements IDirectorService {
     @Override
     public PageableResponse<DirectorResponse> getAllDirectors(Pageable pageable) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-        Page<DirectorEntity> directorEntities = directorRepository.findAll(pageable);
+        Page<Director> directorEntities = directorRepository.findAll(pageable);
         List<DirectorResponse> directorResponseDTOS = new ArrayList<>();
         if (directorEntities.isEmpty()){
             throw new NotFoundException("Not found exception");
         }
         else {
-            for(DirectorEntity d : directorEntities){
+            for(Director d : directorEntities){
                 directorResponseDTOS.add(directorMapper.toDirectorResponseDTO(d));
             }
 
@@ -105,7 +105,7 @@ public class DirectorService implements IDirectorService {
 
     @Override
     public Object getDirector(Integer id) {
-        Optional<DirectorEntity> directorEntity = directorRepository.findById(id);
+        Optional<Director> directorEntity = directorRepository.findById(id);
         if(directorEntity.isPresent()){
             return directorMapper.toDirectorResponseDTO(directorEntity.get());
         }

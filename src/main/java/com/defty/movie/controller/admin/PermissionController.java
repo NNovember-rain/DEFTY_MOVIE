@@ -26,7 +26,7 @@ import java.util.List;
 public class PermissionController {
     IPermissionService permissionService;
 
-    @GetMapping("/")
+    @GetMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ALL_PERMISSIONS')")
     public ResponseEntity<?> getAllPermissions(@RequestParam(value = "page", defaultValue = "0") int page,
                                                @RequestParam(value = "size", defaultValue = "10") int size,

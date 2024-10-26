@@ -4,7 +4,6 @@ import com.defty.movie.entity.Account;
 import com.defty.movie.entity.Permission;
 import com.defty.movie.repository.IPermissionRepository;
 import com.defty.movie.service.IAuthService;
-import com.defty.movie.service.impl.AccountService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

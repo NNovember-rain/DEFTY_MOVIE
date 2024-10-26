@@ -2,7 +2,7 @@ package com.defty.movie.mapper;
 
 import com.defty.movie.dto.request.CategoryRequest;
 import com.defty.movie.dto.response.CategoryResponse;
-import com.defty.movie.entity.CategoryEntity;
+import com.defty.movie.entity.Category;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CategoryMapper {
     private final ModelMapper modelMapper;
-    public CategoryEntity toCategoryEntity(CategoryRequest categoryRequest){
-        return modelMapper.map(categoryRequest, CategoryEntity.class);
+    public Category toCategoryEntity(CategoryRequest categoryRequest){
+        return modelMapper.map(categoryRequest, Category.class);
     }
-    public CategoryResponse toCategoryResponse(CategoryEntity categoryEntity){
+    public CategoryResponse toCategoryResponse(Category categoryEntity){
         return modelMapper.map(categoryEntity, CategoryResponse.class);
     }
 }

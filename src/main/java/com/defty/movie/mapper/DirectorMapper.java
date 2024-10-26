@@ -2,7 +2,7 @@ package com.defty.movie.mapper;
 
 import com.defty.movie.dto.request.DirectorRequest;
 import com.defty.movie.dto.response.DirectorResponse;
-import com.defty.movie.entity.DirectorEntity;
+import com.defty.movie.entity.Director;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DirectorMapper {
     private final ModelMapper modelMapper;
-    public DirectorEntity toDirectorEntity(DirectorRequest directorRequest){
-        return modelMapper.map(directorRequest, DirectorEntity.class);
+    public Director toDirectorEntity(DirectorRequest directorRequest){
+        return modelMapper.map(directorRequest, Director.class);
     }
-    public DirectorResponse toDirectorResponseDTO(DirectorEntity directorEntity){
+    public DirectorResponse toDirectorResponseDTO(Director directorEntity){
         return modelMapper.map(directorEntity, DirectorResponse.class);
     }
 }

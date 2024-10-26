@@ -1,14 +1,16 @@
 package com.defty.movie.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "director")
-public class DirectorEntity extends BaseEntity{
+public class Director extends BaseEntity{
     @Column(name = "full_name")
     private String fullName;
 
@@ -34,5 +36,5 @@ public class DirectorEntity extends BaseEntity{
     private String avatar;
 
     @OneToMany(mappedBy = "director", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MovieEntity> movies;
+    private Set<Movie> movies;
 }

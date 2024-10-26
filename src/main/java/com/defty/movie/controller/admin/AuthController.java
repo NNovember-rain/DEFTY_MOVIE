@@ -1,24 +1,20 @@
 package com.defty.movie.controller.admin;
 
-import com.defty.movie.dto.request.AccountRequest;
-import com.defty.movie.service.IAuthService;
-import com.defty.movie.utils.CookieUtil;
 import com.defty.movie.dto.request.LoginRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.LoginResponse;
 import com.defty.movie.dto.response.RefreshTokenResponse;
-import com.defty.movie.service.IAccountService;
+import com.defty.movie.service.IAuthService;
+import com.defty.movie.utils.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -68,6 +68,18 @@ public class Account extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     Set<RefreshToken> tokens;
 
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    Set<AccountMovie> accountMovies;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    Set<EpisodeAccount> episodeAccounts;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    Set<AccountUser> accountUsers;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    Set<Article> articles;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
