@@ -54,6 +54,7 @@ public class RoleService implements IRoleService {
         Role role = Role.builder()
                 .name(roleRequest.getName())
                 .description(roleRequest.getDescription())
+                .status(1)
                 .build();
         roleRepository.save(role);
         return new RoleResponse(role.getId(), role.getName(), role.getDescription(), null);
