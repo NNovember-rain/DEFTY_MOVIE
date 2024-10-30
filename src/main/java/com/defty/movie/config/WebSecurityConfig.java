@@ -48,8 +48,10 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults());
-
+                .cors(Customizer.withDefaults())
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+        );
         return http.build();
     }
 
