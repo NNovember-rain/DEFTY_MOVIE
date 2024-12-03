@@ -29,14 +29,14 @@ public class AccountController {
 
     @PostMapping("/create-account")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_ACCOUNT')")
-    public ResponseEntity<?> createAccount(@Valid @RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<?> createAccount(@ModelAttribute AccountRequest accountRequest) {
         AccountResponse accountResponse = accountService.createAccount(accountRequest);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
                 .message(HttpStatus.CREATED.getReasonPhrase())
                 .data(accountResponse)
                 .build();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("")

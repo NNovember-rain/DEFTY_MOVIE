@@ -24,4 +24,5 @@ public interface IPermissionRepository extends JpaRepository<Permission, Integer
     Page<Permission> findPermission(@Param("name") String name, Pageable pageable);
 
     void deleteByIdIn(List<Integer> permissionIds);
+    Permission findByName(String name);
 }

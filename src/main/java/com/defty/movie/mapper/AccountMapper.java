@@ -4,7 +4,9 @@ import com.defty.movie.dto.request.AccountRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.entity.Account;
 import com.defty.movie.entity.Role;
+import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.repository.IRoleRepository;
+import com.defty.movie.utils.UploadImageUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,6 +21,7 @@ public class AccountMapper {
     ModelMapper modelMapper;
     IRoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
+    UploadImageUtil uploadImageUtil;
 
     public AccountResponse toAccountResponse(Account account) {
         AccountResponse accountResponse = modelMapper.map(account, AccountResponse.class);
@@ -32,6 +35,11 @@ public class AccountMapper {
         account.setRole(role);
         account.setStatus(1);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
+        try {
+            account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
+        }catch (Exception e){
+            throw new ImageUploadException("Could not upload the image, please try again later !");
+        }
         return account;
     }
 }

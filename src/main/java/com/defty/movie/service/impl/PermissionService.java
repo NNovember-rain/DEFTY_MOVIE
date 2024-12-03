@@ -3,6 +3,7 @@ package com.defty.movie.service.impl;
 import com.defty.movie.dto.request.PermissionRequest;
 import com.defty.movie.dto.response.PermissionResponse;
 import com.defty.movie.entity.Permission;
+import com.defty.movie.exception.AlreadyExitException;
 import com.defty.movie.mapper.PermissionMapper;
 import com.defty.movie.repository.IPermissionRepository;
 import com.defty.movie.service.IPermissionService;
@@ -25,6 +26,9 @@ public class PermissionService implements IPermissionService {
 
     @Override
     public PermissionResponse createPermission(PermissionRequest permissionRequest) {
+        if(permissionRepository.findByName(permissionRequest.getName()) != null){
+            throw new AlreadyExitException("Permission already exist");
+        }
         Permission permission = permissionMapper.toPermission(permissionRequest);
         permissionRepository.save(permission);
         return permissionMapper.toPermissionResponse(permission);

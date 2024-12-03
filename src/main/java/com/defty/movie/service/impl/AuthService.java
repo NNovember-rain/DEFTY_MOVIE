@@ -1,12 +1,12 @@
 package com.defty.movie.service.impl;
 
-import com.defty.movie.dto.request.AccountRequest;
 import com.defty.movie.dto.request.LoginRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.dto.response.LoginResponse;
 import com.defty.movie.dto.response.RefreshTokenResponse;
 import com.defty.movie.entity.Account;
 import com.defty.movie.entity.RefreshToken;
+import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.AccountMapper;
 import com.defty.movie.repository.IAccountRepository;
 import com.defty.movie.repository.IRefreshTokenRepository;
@@ -46,7 +46,7 @@ public class AuthService implements IAuthService {
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
         Optional<Account> accountOptional = accountRepository.findByUsername(loginRequest.getUsername());
         if (accountOptional.isEmpty()) {
-            throw new RuntimeException("Account not found");
+            throw new NotFoundException("Account not found");
         }
         Account account = accountOptional.get();
         if (!passwordEncoder.matches(loginRequest.getPassword(), account.getPassword())) {
@@ -69,7 +69,7 @@ public class AuthService implements IAuthService {
     public void logout(String token) {
         String username = jwtTokenUtil.extractUsername(token);
         Account account = accountRepository.findByUsername(username).orElseThrow(
-                () -> new RuntimeException("Account not found")
+                () -> new NotFoundException("Account not found")
         );
         if(account != null) {
             refreshTokenService.deleteRefreshToken(account.getId());
@@ -84,7 +84,7 @@ public class AuthService implements IAuthService {
         String username = jwtTokenUtil.extractUsername(token);
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
         if (accountOptional.isEmpty()) {
-            throw new RuntimeException("Account not found");
+            throw new NotFoundException("Account not found");
         }
         Account account = accountOptional.get();
         return accountMapper.toAccountResponse(account);
@@ -104,7 +104,7 @@ public class AuthService implements IAuthService {
     public RefreshTokenResponse refreshToken(String refreshToken, HttpServletResponse response) {
         Optional<RefreshToken> exitRefreshToken = refreshTokenRepository.findByRefreshToken(refreshToken);
         if (exitRefreshToken.isEmpty()) {
-            throw new RuntimeException("Refresh token not found");
+            throw new NotFoundException("Refresh token not found");
         }
         Account account = exitRefreshToken.get().getAccount();
         String newToken = jwtTokenUtil.generateToken(account);

@@ -2,6 +2,7 @@ package com.defty.movie.service.impl;
 
 import com.defty.movie.entity.Account;
 import com.defty.movie.entity.RefreshToken;
+import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.repository.IAccountRepository;
 import com.defty.movie.repository.IRefreshTokenRepository;
 import com.defty.movie.service.IRefreshTokenService;
@@ -31,7 +32,7 @@ public class RefreshTokenService implements IRefreshTokenService {
         String refreshToken = UUID.randomUUID().toString();
         Instant expiresAt = Instant.now().plusMillis(expirationRefreshToken * 1000L);
         Account account = accountRepository.findById(accountId).orElseThrow(
-                () -> new RuntimeException("Account not found")
+                () -> new NotFoundException("Account not found")
         );
         RefreshToken existingToken = refreshTokenRepository.findByAccountId(accountId);
         if (existingToken != null) {
