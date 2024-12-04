@@ -15,12 +15,12 @@ public class CategoryEntity extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_category_id")
-    private CategoryEntity parentCategory;
-
-    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
-    private Set<CategoryEntity> subCategories;
+//    @ManyToOne
+//    @JoinColumn(name = "parent_category_id")
+//    private CategoryEntity parentCategory;
+//
+//    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
+//    private Set<CategoryEntity> subCategories;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private Set<MovieCategoryEntity> movieCategories;
