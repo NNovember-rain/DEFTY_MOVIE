@@ -8,7 +8,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "category")
-public class CategoryEntity extends BaseEntity {
+public class Category extends BaseEntity {
     @Column(name = "name")
     private String name;
 
@@ -23,5 +23,5 @@ public class CategoryEntity extends BaseEntity {
 //    private Set<CategoryEntity> subCategories;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private Set<MovieCategoryEntity> movieCategories;
+    private Set<MovieCategory> movieCategories;
 }
