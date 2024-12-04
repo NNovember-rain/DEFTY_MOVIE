@@ -3,7 +3,7 @@ package com.defty.movie.service.impl;
 import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.dto.request.MovieRequest;
 import com.defty.movie.dto.response.MovieResponse;
-import com.defty.movie.entity.MovieEntity;
+import com.defty.movie.entity.Movie;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.MovieMapper;
 import com.defty.movie.repository.IMovieRepository;
@@ -35,8 +35,8 @@ public class MovieService implements IMovieService {
         /*check field*/
         movieValidation.fieldValidation(movieRequest);
 
-        MovieEntity movie = movieMapper.toMovieEntity(movieRequest);
-        MovieEntity newMovie = movieRepository.save(movie);
+        Movie movie = movieMapper.toMovieEntity(movieRequest);
+        Movie newMovie = movieRepository.save(movie);
         newMovie.setSlug(slugUtil.createSlug(newMovie.getTitle(), newMovie.getId()));
         movieRepository.save(newMovie);
 
@@ -45,9 +45,9 @@ public class MovieService implements IMovieService {
 
     @Override
     public List<MovieResponse> getMovies() {
-        List<MovieEntity> movieEntities = movieRepository.findAll();
+        List<Movie> movieEntities = movieRepository.findAll();
         List<MovieResponse> movieResponseDTOS = new ArrayList<>();
-        for(MovieEntity movie : movieEntities){
+        for(Movie movie : movieEntities){
             movieResponseDTOS.add(movieMapper.toMovieResponseDTO(movie));
         }
         return movieResponseDTOS;
@@ -57,9 +57,9 @@ public class MovieService implements IMovieService {
     public ResponseEntity<String> updateMovie(Integer id, MovieRequest movieRequest) {
         /*check field*/
         movieValidation.fieldValidation(movieRequest);
-        Optional<MovieEntity> movie = movieRepository.findById(id);
+        Optional<Movie> movie = movieRepository.findById(id);
         if(movie.isPresent()){
-            MovieEntity updatedMovie = movie.get();
+            Movie updatedMovie = movie.get();
             /*copy different fields from movieRequest to updatedMovie*/
             BeanUtils.copyProperties(movieRequest, updatedMovie, "id");
             updatedMovie.setSlug(slugUtil.createSlug(movieRequest.getTitle(), id));
@@ -74,9 +74,9 @@ public class MovieService implements IMovieService {
 
     @Override
     public ResponseEntity<String> deleteMovie(List<Integer> ids) {
-        List<MovieEntity> movieEntities = movieRepository.findAllById(ids);
+        List<Movie> movieEntities = movieRepository.findAllById(ids);
         if(movieEntities.size() == 0) throw new NotFoundException("Not found exception");
-        for(MovieEntity movie : movieEntities){
+        for(Movie movie : movieEntities){
             movie.setStatus(0);
         }
         movieRepository.saveAll(movieEntities);
@@ -88,7 +88,7 @@ public class MovieService implements IMovieService {
 
     @Override
     public Object getMovie(Integer id) {
-        Optional<MovieEntity> movie = movieRepository.findById(id);
+        Optional<Movie> movie = movieRepository.findById(id);
         if(movie.isPresent()){
             return movieMapper.toMovieResponseDTO(movie.get());
         }

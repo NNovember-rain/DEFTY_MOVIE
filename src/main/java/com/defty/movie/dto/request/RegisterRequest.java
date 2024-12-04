@@ -1,8 +1,7 @@
-package com.defty.movie.dto.response;
+package com.defty.movie.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -11,16 +10,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountResponse {
-    Integer id;
+public class RegisterRequest {
     String username;
     String email;
     String fullName;
     String phone;
     String gender;
     String address;
-    MultipartFile avatar;
-    Integer status;
     LocalDate dateOfBirth;
-    String role;
+    String password;
 }

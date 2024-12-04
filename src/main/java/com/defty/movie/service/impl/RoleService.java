@@ -6,6 +6,8 @@ import com.defty.movie.dto.response.RoleResponse;
 import com.defty.movie.entity.Permission;
 import com.defty.movie.entity.Role;
 import com.defty.movie.entity.RolePermission;
+import com.defty.movie.exception.AlreadyExitException;
+import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.PermissionMapper;
 import com.defty.movie.repository.IPermissionRepository;
 import com.defty.movie.repository.IRolePermissionRepository;
@@ -14,7 +16,6 @@ import com.defty.movie.service.IRoleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -51,9 +52,13 @@ public class RoleService implements IRoleService {
 
     @Override
     public RoleResponse createRole(RoleRequest roleRequest) {
+        if(roleRepository.findByName(roleRequest.getName()) != null) {
+            throw new AlreadyExitException("Role already exist");
+        }
         Role role = Role.builder()
                 .name(roleRequest.getName())
                 .description(roleRequest.getDescription())
+                .status(1)
                 .build();
         roleRepository.save(role);
         return new RoleResponse(role.getId(), role.getName(), role.getDescription(), null);
@@ -82,7 +87,7 @@ public class RoleService implements IRoleService {
     @Override
     public RoleResponse assignPermissionToRole(Integer roleId, List<Integer> permissionIds) {
         Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
+                .orElseThrow(() -> new NotFoundException("Role not found with id: " + roleId));
         List<Permission> permissions = permissionRepository.findAllById(permissionIds);
         Set<Permission> existPermissions = permissionRepository.findPermissionsByRoleId(roleId);
         List<RolePermission> newRolePermissions = new ArrayList<>();
@@ -107,7 +112,7 @@ public class RoleService implements IRoleService {
     @Override
     public RoleResponse unassignPermissionFromRole(Integer roleId, List<Integer> permissionIds) {
         Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
+                .orElseThrow(() -> new NotFoundException("Role not found with id: " + roleId));
         List<Permission> permissions = permissionRepository.findAllById(permissionIds);
         List<RolePermission> rolePermissions = new ArrayList<>();
         for (Permission permission : permissions) {
@@ -127,7 +132,7 @@ public class RoleService implements IRoleService {
     @Override
     public RoleResponse updateRole(Integer id, RoleRequest roleRequest) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() -> new NotFoundException("Role not found"));
         role.setName(roleRequest.getName());
         role.setDescription(roleRequest.getDescription());
         roleRepository.save(role);

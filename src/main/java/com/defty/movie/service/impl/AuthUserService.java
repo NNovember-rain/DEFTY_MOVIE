@@ -1,17 +1,24 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.LoginRequest;
+import com.defty.movie.dto.request.RegisterRequest;
+import com.defty.movie.dto.request.UserRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.dto.response.LoginResponse;
 import com.defty.movie.dto.response.RefreshTokenResponse;
+import com.defty.movie.dto.response.UserResponse;
 import com.defty.movie.entity.Account;
 import com.defty.movie.entity.RefreshToken;
+import com.defty.movie.entity.User;
+import com.defty.movie.exception.AlreadyExitException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.AccountMapper;
+import com.defty.movie.mapper.UserMapper;
 import com.defty.movie.repository.IAccountRepository;
 import com.defty.movie.repository.IRefreshTokenRepository;
+import com.defty.movie.repository.IUserRepository;
 import com.defty.movie.security.JwtTokenUtil;
-import com.defty.movie.service.IAuthService;
+import com.defty.movie.service.IAuthUserService;
 import com.defty.movie.service.IRefreshTokenService;
 import com.defty.movie.utils.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,9 +26,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,34 +33,32 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService implements IAuthService {
+public class AuthUserService implements IAuthUserService {
     @Value("${jwt.expiration}")
     private Integer expirationAccessToken;
     @Value("${jwt.expiration-refresh-token}")
     private Integer expirationRefreshToken;
     private final IAccountRepository accountRepository;
-    private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
     private final IRefreshTokenService refreshTokenService;
     private final IRefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
-    private final AccountMapper accountMapper;
+    private final IUserRepository userRepository;
+
 
     @Override
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
-        Optional<Account> accountOptional = accountRepository.findByUsername(loginRequest.getUsername());
-        if (accountOptional.isEmpty()) {
-            throw new NotFoundException("Account not found");
+        Optional<User> userOptional = userRepository.findByUsername(loginRequest.getUsername());
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("User not found");
         }
-        Account account = accountOptional.get();
-        if (!passwordEncoder.matches(loginRequest.getPassword(), account.getPassword())) {
+        User user = userOptional.get();
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new RuntimeException("Wrong username or password");
         }
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(), loginRequest.getPassword(), account.getAuthorities());
-        authenticationManager.authenticate(authenticationToken);
-        String accessToken = jwtTokenUtil.generateToken(account);
-        String refreshToken = refreshTokenService.createRefreshToken(account.getId(), true);
+        String accessToken = jwtTokenUtil.generateToken(user);
+        String refreshToken = refreshTokenService.createRefreshToken(user.getId(), false);
         CookieUtil.create(response, "access_token", accessToken, true, true, expirationAccessToken, "/");
         CookieUtil.create(response, "refresh_token", refreshToken, true, true, expirationRefreshToken, "/");
         return LoginResponse.builder()
@@ -68,36 +70,56 @@ public class AuthService implements IAuthService {
     @Override
     public void logout(String token) {
         String username = jwtTokenUtil.extractUsername(token);
-        Account account = accountRepository.findByUsername(username).orElseThrow(
-                () -> new NotFoundException("Account not found")
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("User not found")
         );
-        if(account != null) {
-            refreshTokenService.deleteRefreshToken(account.getId(), true);
+        if(user != null) {
+            refreshTokenService.deleteRefreshToken(user.getId(), false);
         }
     }
 
     @Override
-    public AccountResponse getAccountFromToken(String token) {
+    public UserResponse getUserFromToken(String token) {
         if(jwtTokenUtil.isTokenExpired(token)) {
             throw new RuntimeException("Token is expired");
         }
         String username = jwtTokenUtil.extractUsername(token);
-        Optional<Account> accountOptional = accountRepository.findByUsername(username);
-        if (accountOptional.isEmpty()) {
-            throw new NotFoundException("Account not found");
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("User not found");
         }
-        Account account = accountOptional.get();
-        return accountMapper.toAccountResponse(account);
+        User user = userOptional.get();
+        return userMapper.toUserResponse(user);
     }
 
     @Override
-    public Optional<Account> getCurrentAccount() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
-            return Optional.empty();
+    public UserResponse register(RegisterRequest registerRequest) {
+        if (userRepository.findByUsername(registerRequest.getUsername()).isPresent()) {
+            throw new AlreadyExitException("Username already exists");
         }
-        String username = ((UserDetails) auth.getPrincipal()).getUsername();
-        return accountRepository.findByUsername(username);
+        if(accountRepository.findByUsername(registerRequest.getUsername()).isPresent()){
+            throw new AlreadyExitException("Username already exits");
+        }
+        if(userRepository.findByEmail(registerRequest.getEmail()).isPresent()){
+            throw new AlreadyExitException("Email already exit");
+        }
+        if(userRepository.findByPhone(registerRequest.getPhone()).isPresent()){
+            throw new AlreadyExitException("Phone already exit");
+        }
+        String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
+        User user = User.builder()
+                .phone(registerRequest.getPhone())
+                .username(registerRequest.getUsername())
+                .fullName(registerRequest.getFullName())
+                .gender(registerRequest.getGender())
+                .dateOfBirth(registerRequest.getDateOfBirth())
+                .address(registerRequest.getAddress())
+                .email(registerRequest.getEmail())
+                .password(encodedPassword)
+                .build();
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+        return userMapper.toUserResponse(user);
     }
 
     @Override
@@ -106,9 +128,9 @@ public class AuthService implements IAuthService {
         if (exitRefreshToken.isEmpty()) {
             throw new NotFoundException("Refresh token not found");
         }
-        Account account = exitRefreshToken.get().getAccount();
-        String newToken = jwtTokenUtil.generateToken(account);
-        String newRefreshToken = refreshTokenService.createRefreshToken(account.getId(), true);
+        User user = exitRefreshToken.get().getUser();
+        String newToken = jwtTokenUtil.generateToken(user);
+        String newRefreshToken = refreshTokenService.createRefreshToken(user.getId(), false);
         CookieUtil.create(response, "access_token", newToken, true, true, expirationAccessToken, "/");
         CookieUtil.create(response, "refresh_token", newRefreshToken, true, true, expirationRefreshToken, "/");
         return RefreshTokenResponse.builder()

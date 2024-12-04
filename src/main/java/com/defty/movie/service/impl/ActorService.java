@@ -2,10 +2,8 @@ package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.ActorRequest;
 import com.defty.movie.dto.response.ActorResponse;
-import com.defty.movie.dto.response.ActorResponse;
 import com.defty.movie.dto.response.PageableResponse;
-import com.defty.movie.entity.ActorEntity;
-import com.defty.movie.entity.ActorEntity;
+import com.defty.movie.entity.Actor;
 import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.ActorMapper;
@@ -39,7 +37,7 @@ public class ActorService implements IActorService {
     @Override
     public ResponseEntity<String> addActor(ActorRequest actorRequest) {
         actorValidation.fieldValidation(actorRequest);
-        ActorEntity actorEntity = actorMapper.toActorEntity(actorRequest);
+        Actor actorEntity = actorMapper.toActorEntity(actorRequest);
         try {
             actorEntity.setAvatar(uploadImageUtil.upload(actorRequest.getAvatar()));
         }
@@ -58,9 +56,9 @@ public class ActorService implements IActorService {
     @Override
     public ResponseEntity<String> updateActor(Integer id, ActorRequest actorRequest) {
         actorValidation.fieldValidation(actorRequest);
-        Optional<ActorEntity> actor = actorRepository.findById(id);
+        Optional<Actor> actor = actorRepository.findById(id);
         if(actor.isPresent()){
-            ActorEntity updatedActor = actor.get();
+            Actor updatedActor = actor.get();
 
             BeanUtils.copyProperties(actorRequest, updatedActor, "id");
             try {
@@ -90,13 +88,13 @@ public class ActorService implements IActorService {
     @Override
     public PageableResponse<ActorResponse> getAllActors(Pageable pageable) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-        Page<ActorEntity> actorEntities = actorRepository.findAll(pageable);
+        Page<Actor> actorEntities = actorRepository.findAll(pageable);
         List<ActorResponse> actorResponseDTOS = new ArrayList<>();
         if (actorEntities.isEmpty()){
             throw new NotFoundException("Not found exception");
         }
         else {
-            for(ActorEntity d : actorEntities){
+            for(Actor d : actorEntities){
                 actorResponseDTOS.add(actorMapper.toActorResponse(d));
             }
 
@@ -107,7 +105,7 @@ public class ActorService implements IActorService {
 
     @Override
     public Object getActor(Integer id) {
-        Optional<ActorEntity> actorEntity = actorRepository.findById(id);
+        Optional<Actor> actorEntity = actorRepository.findById(id);
         if(actorEntity.isPresent()){
             return actorMapper.toActorResponse(actorEntity.get());
         }

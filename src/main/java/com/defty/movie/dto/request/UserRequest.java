@@ -1,4 +1,4 @@
-package com.defty.movie.dto.response;
+package com.defty.movie.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,8 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountResponse {
-    Integer id;
+public class UserRequest {
     String username;
     String email;
     String fullName;
@@ -20,7 +19,6 @@ public class AccountResponse {
     String gender;
     String address;
     MultipartFile avatar;
-    Integer status;
     LocalDate dateOfBirth;
-    String role;
+    String password;
 }

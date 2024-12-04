@@ -4,11 +4,13 @@ import com.defty.movie.dto.request.AccountRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.entity.Account;
 import com.defty.movie.entity.Role;
+import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.AccountMapper;
 import com.defty.movie.repository.IAccountRepository;
 import com.defty.movie.repository.IRoleRepository;
 import com.defty.movie.service.IAccountService;
+import com.defty.movie.utils.UploadImageUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +29,7 @@ public class AccountService implements IAccountService {
     AccountMapper accountMapper;
     PasswordEncoder passwordEncoder;
     IRoleRepository roleRepository;
+    UploadImageUtil uploadImageUtil;
 
     @Override
     public AccountResponse createAccount(AccountRequest accountRequest) {
@@ -78,7 +81,11 @@ public class AccountService implements IAccountService {
         account.setRole(role);
         String password = passwordEncoder.encode(accountRequest.getPassword());
         account.setPassword(password);
-        account.setAvatar(accountRequest.getAvatar());
+        try {
+            account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
+        }catch (Exception e){
+            throw new ImageUploadException("Could not upload the image, please try again later !");
+        }
         account.setDateOfBirth(accountRequest.getDateOfBirth());
         accountRepository.save(account);
         return accountMapper.toAccountResponse(account);

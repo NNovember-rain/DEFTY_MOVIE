@@ -1,13 +1,19 @@
 package com.defty.movie.entity;
-import jakarta.persistence.*;
-import lombok.Data;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "actor")
-public class ActorEntity extends BaseEntity{
+public class Actor extends BaseEntity{
     @Column(name = "full_name")
     private String fullName;
 
@@ -33,5 +39,5 @@ public class ActorEntity extends BaseEntity{
     private String description;
 
     @ManyToMany(mappedBy = "actors")
-    private Set<MovieEntity> movies;
+    private Set<Movie> movies;
 }

@@ -45,11 +45,15 @@ public class WebSecurityConfig {
                         .requestMatchers(POST, String.format("%s/admin/auth/logout", apiPrefix)).permitAll()
                         .requestMatchers(POST, String.format("%s/admin/auth/refresh-token", apiPrefix)).permitAll()
                         .requestMatchers(GET, String.format("%s/admin/auth/check-account", apiPrefix)).permitAll()
+                        .requestMatchers(POST, String.format("%s/user/auth/**", apiPrefix)).permitAll()
+                        .requestMatchers(GET, String.format("%s/user/auth/check-account", apiPrefix)).permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults());
-
+                .cors(Customizer.withDefaults())
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+        );
         return http.build();
     }
 

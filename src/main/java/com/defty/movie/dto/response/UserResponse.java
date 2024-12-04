@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountResponse {
+public class UserResponse {
     Integer id;
     String username;
     String email;
@@ -22,5 +22,4 @@ public class AccountResponse {
     MultipartFile avatar;
     Integer status;
     LocalDate dateOfBirth;
-    String role;
 }
