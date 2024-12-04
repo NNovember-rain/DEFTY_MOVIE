@@ -11,8 +11,7 @@ import java.util.Optional;
 public interface IRefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
     Optional<RefreshToken> findByRefreshToken(String refreshToken);
     RefreshToken findByAccountId(Integer accountId);
+    RefreshToken findByUserId(Integer userId);
     void deleteByAccountId(Integer accountId);
-    @Modifying
-    @Query("DELETE FROM RefreshToken t WHERE t.expiresAt < :now")
-    void deleteAllByExpiresAtBefore(Instant now);
+    void deleteByUserId(Integer userId);
 }

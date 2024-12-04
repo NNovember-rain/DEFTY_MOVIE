@@ -1,6 +1,7 @@
 package com.defty.movie.security;
 
 import com.defty.movie.entity.Account;
+import com.defty.movie.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -27,12 +28,24 @@ public class JwtTokenUtil {
     @Value("${jwt.secretKey}")
     private String secretKey;
 
-    public String generateToken(Account account){
+    public String generateToken(Object entity) {
+        if (entity == null) {
+            throw new IllegalArgumentException("Entity must not be null");
+        }
         Map<String, Object> claims = new HashMap<>();
-        claims.put("username", account.getUsername());
+        String username;
+        if (entity instanceof User user) {
+            username = user.getUsername();
+        } else if (entity instanceof Account account) {
+            username = account.getUsername();
+        } else {
+            throw new IllegalArgumentException("Entity must be of type User or Account");
+        }
+
+        claims.put("username", username);
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(account.getUsername())
+                .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();

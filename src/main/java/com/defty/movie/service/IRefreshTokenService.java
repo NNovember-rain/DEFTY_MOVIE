@@ -1,6 +1,6 @@
 package com.defty.movie.service;
 
 public interface IRefreshTokenService {
-    String createRefreshToken(Integer accountId);
-    void deleteRefreshToken(Integer accountId);
+    String createRefreshToken(Integer accountId, boolean isAccount);
+    void deleteRefreshToken(Integer accountId, boolean isActive);
 }
