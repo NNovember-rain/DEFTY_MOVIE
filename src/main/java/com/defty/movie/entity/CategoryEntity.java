@@ -8,7 +8,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "category")
-public class Category extends BaseEntity {
+public class CategoryEntity extends BaseEntity {
     @Column(name = "name")
     private String name;
 

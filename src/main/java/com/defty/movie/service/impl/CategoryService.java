@@ -3,7 +3,7 @@ package com.defty.movie.service.impl;
 import com.defty.movie.dto.request.CategoryRequest;
 import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.dto.response.PageableResponse;
-import com.defty.movie.entity.Category;
+import com.defty.movie.entity.CategoryEntity;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.CategoryMapper;
 import com.defty.movie.repository.ICategoryRepository;
@@ -31,7 +31,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public ResponseEntity<String> addCategory(CategoryRequest categoryRequest) {
         categoryValidation.fieldValidation(categoryRequest);
-        Category categoryEntity = categoryMapper.toCategoryEntity(categoryRequest);
+        CategoryEntity categoryEntity = categoryMapper.toCategoryEntity(categoryRequest);
         try {
             categoryRepository.save(categoryEntity);
         }
@@ -44,9 +44,9 @@ public class CategoryService implements ICategoryService {
     @Override
     public ResponseEntity<String> updateCategory(Integer id, CategoryRequest categoryRequest) {
         categoryValidation.fieldValidation(categoryRequest);
-        Optional<Category> categoryEntity = categoryRepository.findById(id);
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(id);
         if(categoryEntity.isPresent()){
-            Category updatedCategory = categoryEntity.get();
+            CategoryEntity updatedCategory = categoryEntity.get();
             BeanUtils.copyProperties(categoryRequest, updatedCategory, "id");
             try {
                 categoryRepository.save(updatedCategory);
