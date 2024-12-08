@@ -9,5 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface IArticleRepositoryCustom {
-    Page<Article> findArticles(Map<String, Object> params, Pageable pageable);
+    List<Article> findArticles(Pageable pageable, Map<String, Object> params);
+    Long countArticles(Map<String, Object> params);
 }

@@ -22,32 +22,34 @@ public class IArticleRepositoryCustomImpl implements IArticleRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public Page<Article> findArticles(Map<String, Object> params, Pageable pageable) {
+    public List<Article> findArticles(Pageable pageable, Map<String, Object> params) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT a.* FROM article a ");
         StringBuilder where=new StringBuilder(" WHERE 1=1 ");
         addQuerryNomal(where,params);
         sql.append(where);
+        sql.append(" ORDER BY a.createdDate DESC ");
         Query query=entityManager.createNativeQuery(sql.toString(), Article.class);
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
         List<Article> articles= query.getResultList();
-        Long n=countArticleByRequest(params);
-        return new PageImpl<>(articles, pageable,n);
+        return articles;
     }
-
 
     public void addQuerryNomal(StringBuilder where,Map<String, Object> params) {
         for(String x:params.keySet()){
             if(NumberUtil.isNumber(params.get(x).toString())){
-                where.append(" AND a."+x+" = '"+params.get(x).toString()+"' ");
+                if(!x.equals("page") && !x.equals("size")) {
+                    where.append(" AND a." + x + " = '" + params.get(x).toString() + "' ");
+                }
             }else{
                 where.append(" AND a."+x+" LIKE '%"+params.get(x)+"%' ");
             }
         }
     }
 
-    public Long countArticleByRequest(Map<String, Object> params){
+    @Override
+    public Long countArticles(Map<String, Object> params) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT COUNT(*) FROM article a ");
         StringBuilder where=new StringBuilder(" WHERE 1=1 ");
@@ -56,4 +58,5 @@ public class IArticleRepositoryCustomImpl implements IArticleRepositoryCustom {
         Query query=entityManager.createNativeQuery(sql.toString());
         return (Long) query.getSingleResult();
     }
+
 }

@@ -5,9 +5,12 @@ import com.defty.movie.utils.ApiResponeUtil;
 import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.service.impl.ArticleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -58,8 +61,9 @@ public class ArticleController {
 
     @GetMapping("/articles")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLE')")
-    public ResponseEntity<?> getArticles(Pageable pageable) {
-
+    public ResponseEntity<?> getArticles(@Valid @RequestParam(value = "page", defaultValue = "0") int page,
+                                         @RequestParam(value = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         PageableResponse<ArticleResponse> articlePageableResponse=articleService.getAllArticles(pageable);
         return ApiResponeUtil.ResponseOK(articlePageableResponse);
     }

@@ -1,6 +1,7 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.response.PageableResponse;
+import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.entity.Account;
@@ -105,44 +106,37 @@ public class ArticleService implements IArticleService {
 
     @Override
     public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable) {
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-        Optional<Page<Article>> articles= Optional.ofNullable(ariticleRepository.findAllByStatus(1,sortedPageable));
+        Page<Article> articles= ariticleRepository.findAllByStatus(1,pageable);
         List<ArticleResponse> articleResponses=new ArrayList<>();
-        if(!articles.get().isEmpty()) {
-            for(Article article:articles.get()) {
+        if(!articles.isEmpty()) {
+            for(Article article:articles) {
                 articleResponses.add(articleMapper.toArticleResponse(article));
             }
             return PageableResponse.<ArticleResponse>builder()
                     .responses(articleResponses)
                     .totalElements(getArticleCount())
                     .build();
-        }else throw new RuntimeException(" Article not found !");
+        }else throw new NotFoundException(" Article not found !");
+    }
+
+
+    @Override
+    public PageableResponse<ArticleResponse> findArticles(Pageable pageable, Map<String, Object> params) {
+        List<Article> articles= ariticleRepository.findArticles(pageable,params);
+        List<ArticleResponse> articleResponses=new ArrayList<>();
+        if(!articles.isEmpty()) {
+            for(Article article:articles) {
+                articleResponses.add(articleMapper.toArticleResponse(article));
+            }
+            return PageableResponse.<ArticleResponse>builder()
+                    .responses(articleResponses)
+                    .totalElements(ariticleRepository.countArticles(params))
+                    .build();
+        }else throw new NotFoundException(" Article not found !");
     }
 
     @Override
     public Long getArticleCount() {
         return ariticleRepository.countByStatus(1);
-    }
-
-    @Override
-    public PageableResponse<ArticleResponse> findArticles(Pageable pageable, Map<String, Object> params) {
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-        if(params.containsKey("page")) {
-            params.remove("page");
-        }
-        if(params.containsKey("size")) {
-            params.remove("size");
-        }
-        Optional<Page<Article>> articles= Optional.ofNullable(ariticleRepository.findArticles(params,sortedPageable));
-        List<ArticleResponse> articleResponses=new ArrayList<>();
-        if(!articles.get().isEmpty()) {
-            for(Article article:articles.get()) {
-                articleResponses.add(articleMapper.toArticleResponse(article));
-            }
-            return PageableResponse.<ArticleResponse>builder()
-                    .responses(articleResponses)
-                    .totalElements(getArticleCount())
-                    .build();
-        }else throw new RuntimeException(" Article not found !");
     }
 }

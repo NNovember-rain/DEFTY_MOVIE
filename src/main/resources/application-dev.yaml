@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/defty_movie_dev
+    url: jdbc:mysql://localhost:3306/movie
     username: root
-    password: 12345
+    password: Hoanghiep2003@
 
   jpa:
     hibernate:
