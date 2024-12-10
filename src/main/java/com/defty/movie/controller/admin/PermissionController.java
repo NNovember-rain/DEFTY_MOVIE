@@ -28,16 +28,26 @@ public class PermissionController {
 
     @GetMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('GET_ALL_PERMISSIONS')")
-    public ResponseEntity<?> getAllPermissions(@RequestParam(value = "page", defaultValue = "0") int page,
-                                               @RequestParam(value = "size", defaultValue = "10") int size,
-                                               @RequestParam(value = "name", required = false) String name) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<PermissionResponse> permissionResponses = permissionService.getAllPermissions(name, pageable);
-        ApiResponse<?> response = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(permissionResponses)
-                .build();
+    public ResponseEntity<?> getPermissions(@RequestParam(value = "page", required = false) Integer page,
+                                            @RequestParam(value = "size", required = false) Integer size,
+                                            @RequestParam(value = "name", required = false) String name) {
+        ApiResponse<?> response;
+        if (page == null || size == null) {
+            List<PermissionResponse> permissionResponses = permissionService.getAllPermissions();
+            response = ApiResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.getReasonPhrase())
+                    .data(permissionResponses)
+                    .build();
+        } else {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<PermissionResponse> permissionResponses = permissionService.getAllPermissions(name, pageable);
+            response = ApiResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.getReasonPhrase())
+                    .data(permissionResponses)
+                    .build();
+        }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +52,12 @@ public class PermissionService implements IPermissionService {
             permissions = permissionRepository.findAll(pageable);
         }
         return permissions.map(permissionMapper::toPermissionResponse);
+    }
+
+    @Override
+    public List<PermissionResponse> getAllPermissions() {
+        List<Permission> permissions = permissionRepository.findAll();
+        return permissions.stream().map(permissionMapper::toPermissionResponse).collect(Collectors.toList());
     }
 
     @Override

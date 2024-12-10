@@ -39,11 +39,11 @@ public class AuthUserController {
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest){
         UserResponse userResponse = authUserService.register(registerRequest);
         ApiResponse<?> response = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
+                .status(HttpStatus.CREATED.value())
+                .message(HttpStatus.CREATED.getReasonPhrase())
                 .data(userResponse)
                 .build();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/check-account")

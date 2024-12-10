@@ -4,7 +4,6 @@ import com.defty.movie.dto.request.UserRequest;
 import com.defty.movie.dto.response.UserResponse;
 import com.defty.movie.entity.User;
 import com.defty.movie.exception.ImageUploadException;
-import com.defty.movie.repository.IRoleRepository;
 import com.defty.movie.utils.UploadImageUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserMapper {
     ModelMapper modelMapper;
-    IRoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
     UploadImageUtil uploadImageUtil;
 
