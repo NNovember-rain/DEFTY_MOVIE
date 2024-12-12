@@ -1,4 +1,7 @@
 package com.defty.movie.repository;
 
-public interface ICategoryRepository {
+import com.defty.movie.entity.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ICategoryRepository extends JpaRepository<Category, Integer> {
 }

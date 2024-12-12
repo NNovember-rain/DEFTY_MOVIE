@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController {
     private final CategoryService  categoryService;
     @PostMapping("")
-    public ResponseEntity<String> addCategory(@ModelAttribute CategoryRequest  categoryRequest){
+    public ResponseEntity<String> addCategory(@RequestBody CategoryRequest  categoryRequest){
         return  categoryService.addCategory( categoryRequest);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> patchCategory(@PathVariable Integer id, @ModelAttribute CategoryRequest  categoryRequest) {
+    public ResponseEntity<String> patchCategory(@PathVariable Integer id, @RequestBody CategoryRequest  categoryRequest) {
         return  categoryService.updateCategory(id,  categoryRequest);
     }
 
