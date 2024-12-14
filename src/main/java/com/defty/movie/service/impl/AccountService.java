@@ -4,6 +4,7 @@ import com.defty.movie.dto.request.AccountRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.entity.Account;
 import com.defty.movie.entity.Role;
+import com.defty.movie.exception.AlreadyExitException;
 import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.AccountMapper;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,13 +36,13 @@ public class AccountService implements IAccountService {
     @Override
     public AccountResponse createAccount(AccountRequest accountRequest) {
         if(accountRepository.findByUsername(accountRequest.getUsername()).isPresent()) {
-            throw new RuntimeException("Account already exists");
+            throw new AlreadyExitException("Account already exists");
         }
-        if(accountRepository.findByEmail(accountRequest.getUsername()).isPresent()) {
-            throw new RuntimeException("Account already exists");
+        if(accountRepository.findByEmail(accountRequest.getEmail()).isPresent()) {
+            throw new AlreadyExitException("Account already exists");
         }
-        if (accountRepository.findByPhone(accountRequest.getUsername()).isPresent()) {
-            throw new RuntimeException("Account already exists");
+        if (accountRepository.findByPhone(accountRequest.getPhone()).isPresent()) {
+            throw new AlreadyExitException("Account already exists");
         }
         Account account = accountMapper.toAccount(accountRequest);
         accountRepository.save(account);
@@ -71,20 +73,41 @@ public class AccountService implements IAccountService {
         Account account = accountRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Account not found")
         );
+        accountRepository.findByUsername(accountRequest.getUsername()).ifPresent(existingAccount -> {
+            if (!existingAccount.getId().equals(id)) {
+                throw new AlreadyExitException("Username already exists");
+            }
+        });
+        accountRepository.findByEmail(accountRequest.getEmail()).ifPresent(existingAccount -> {
+            if (!existingAccount.getId().equals(id)) {
+                throw new AlreadyExitException("Email already exists");
+            }
+        });
+        accountRepository.findByPhone(accountRequest.getPhone()).ifPresent(existingAccount -> {
+            if (!existingAccount.getId().equals(id)) {
+                throw new AlreadyExitException("Phone already exists");
+            }
+        });
         account.setUsername(accountRequest.getUsername());
         account.setFullName(accountRequest.getFullName());
         account.setEmail(accountRequest.getEmail());
         account.setPhone(accountRequest.getPhone());
         account.setAddress(accountRequest.getAddress());
         account.setGender(accountRequest.getGender());
+        if (accountRequest.getPassword() != null && !accountRequest.getPassword().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(accountRequest.getPassword());
+            account.setPassword(encodedPassword);
+        }
         Role role = roleRepository.findByName(accountRequest.getRole());
         account.setRole(role);
         String password = passwordEncoder.encode(accountRequest.getPassword());
         account.setPassword(password);
-        try {
-            account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
-        }catch (Exception e){
-            throw new ImageUploadException("Could not upload the image, please try again later !");
+        if(accountRequest.getAvatar() != null) {
+            try {
+                account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
+            }catch (Exception e){
+                throw new ImageUploadException("Could not upload the image, please try again later !");
+            }
         }
         account.setDateOfBirth(accountRequest.getDateOfBirth());
         accountRepository.save(account);

@@ -57,7 +57,7 @@ public class AccountController {
     @PatchMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_ACCOUNT')")
     public ResponseEntity<?> updateAccount(@Valid @PathVariable Integer id,
-                                           @RequestBody AccountRequest accountRequest) {
+                                           @ModelAttribute AccountRequest accountRequest) {
         AccountResponse accountResponse = accountService.updateAccount(id, accountRequest);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())

@@ -35,10 +35,15 @@ public class AccountMapper {
         account.setRole(role);
         account.setStatus(1);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        try {
-            account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
-        }catch (Exception e){
-            throw new ImageUploadException("Could not upload the image, please try again later !");
+        if(accountRequest.getAvatar() == null) {
+            account.setAvatar(null);
+        }
+        else{
+            try {
+                account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
+            }catch (Exception e){
+                throw new ImageUploadException("Could not upload the image, please try again later !");
+            }
         }
         return account;
     }

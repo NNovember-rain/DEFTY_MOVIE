@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/movie")
+@RequestMapping("${api.prefix}/admin/movie")
 //@RequestMapping("/movie")
 public class MovieController {
 
