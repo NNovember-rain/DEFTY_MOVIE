@@ -22,7 +22,7 @@ public interface IDirectorRepository extends JpaRepository<Director, Integer> {
             countQuery = "SELECT count(m) FROM Director m WHERE " +
                     "(:name IS NULL OR m.fullName LIKE %:name%) AND " +
                     "(:gender IS NULL OR m.gender LIKE %:gender%) AND " +
-                    "(:releaseDate IS NULL OR DATE(m.dateOfBirth) = :date_of_birth) AND " +
+                    "(:date_of_birth IS NULL OR DATE(m.dateOfBirth) = :date_of_birth) AND " +
                     "(:nationality IS NULL OR m.nationality LIKE %:nationality%) AND " +
                     "(:status IS NULL OR m.status = :status)",
             nativeQuery = false)
