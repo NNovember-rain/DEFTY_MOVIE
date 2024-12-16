@@ -22,9 +22,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -81,14 +81,28 @@ public class DirectorService implements IDirectorService {
     }
 
     @Override
-    public ResponseEntity<String> deleteDirector(List<Integer> ids) {
-        return null;
-    }
-
-    @Override
-    public PageableResponse<DirectorResponse> getAllDirectors(Pageable pageable) {
+    public PageableResponse<DirectorResponse> getAllDirectors(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-        Page<Director> directorEntities = directorRepository.findAll(sortedPageable);
+
+        Date sqlDate_of_birth = null;
+        if (date_of_birth != null && !date_of_birth.isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date utilDate = sdf.parse(date_of_birth);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(utilDate);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+
+                sqlDate_of_birth = calendar.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Page<Director> directorEntities = directorRepository.findDirectors(name, gender, sqlDate_of_birth, nationality, status, sortedPageable);
         List<DirectorResponse> directorResponseDTOS = new ArrayList<>();
         if (directorEntities.isEmpty()){
             throw new NotFoundException("Not found exception");
@@ -110,5 +124,19 @@ public class DirectorService implements IDirectorService {
             return directorMapper.toDirectorResponseDTO(directorEntity.get());
         }
         return "Director doesn't exist";
+    }
+
+    @Override
+    public ResponseEntity<String> deleteDirector(List<Integer> ids) {
+        List<Director> directors = directorRepository.findAllById(ids);
+        if(directors.size() == 0) throw new NotFoundException("Not found exception");
+        for(Director director : directors){
+            director.setStatus(0);
+        }
+        directorRepository.saveAll(directors);
+        if(ids.size() > 1){
+            return ResponseEntity.ok("Update directors successfully");
+        }
+        return ResponseEntity.ok("Update director successfully");
     }
 }

@@ -24,6 +24,9 @@ public class Episode extends BaseEntity{
     @Column(name = "link")
     private String link;
 
+    @Column(name = "status")
+    private Integer status;
+
     @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;

@@ -15,6 +15,9 @@ public class Category extends BaseEntity {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "status")
+    private Integer status = 1;
+
 //    @ManyToOne
 //    @JoinColumn(name = "parent_category_id")
 //    private CategoryEntity parentCategory;

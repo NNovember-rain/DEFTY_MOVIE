@@ -29,6 +29,9 @@ public class Actor extends BaseEntity{
     @Column(name = "height")
     private Integer height;
 
+    @Column(name = "status")
+    private Integer status = 1;
+
     @Column(name = "nationality")
     private String nationality;
 

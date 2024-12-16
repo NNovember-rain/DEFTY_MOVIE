@@ -4,6 +4,7 @@ import com.defty.movie.dto.request.ActorRequest;
 import com.defty.movie.dto.response.ActorResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Actor;
+import com.defty.movie.entity.Director;
 import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.ActorMapper;
@@ -22,9 +23,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -86,9 +87,27 @@ public class ActorService implements IActorService {
     }
 
     @Override
-    public PageableResponse<ActorResponse> getAllActors(Pageable pageable) {
+    public PageableResponse<ActorResponse> getAllActors(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-        Page<Actor> actorEntities = actorRepository.findAll(pageable);
+
+        Date sqlDate_of_birth = null;
+        if (date_of_birth != null && !date_of_birth.isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date utilDate = sdf.parse(date_of_birth);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(utilDate);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+
+                sqlDate_of_birth = calendar.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        Page<Actor> actorEntities = actorRepository.findActors(name, gender, sqlDate_of_birth, nationality, status, sortedPageable);
         List<ActorResponse> actorResponseDTOS = new ArrayList<>();
         if (actorEntities.isEmpty()){
             throw new NotFoundException("Not found exception");

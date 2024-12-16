@@ -12,6 +12,6 @@ public interface ICategoryService {
     ResponseEntity<String> addCategory(CategoryRequest categoryRequest);
     ResponseEntity<String> updateCategory(Integer id, CategoryRequest categoryRequest);
     ResponseEntity<String> deleteCategory(List<Integer> ids);
-    PageableResponse<CategoryResponse> getAllCategorys(Pageable pageable);
+    PageableResponse<CategoryResponse> getAllCategories(Pageable pageable, String name, Integer status);
     Object getCategory(Integer id);
 }
