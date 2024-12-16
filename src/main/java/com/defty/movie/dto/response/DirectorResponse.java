@@ -7,6 +7,8 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DirectorResponse {
+    Integer id;
+
     String fullName;
 
     String gender;
