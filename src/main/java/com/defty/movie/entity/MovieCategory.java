@@ -18,5 +18,5 @@ public class MovieCategory extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category category;
+    private CategoryEntity category;
 }

@@ -1,14 +1,15 @@
 package com.defty.movie.service.impl;
 
+import com.defty.movie.dto.response.PageableResponse;
+import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.utils.SlugUtil;
-import com.defty.movie.dto.response.ArticlePageableResponse;
 import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.entity.Account;
 import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.mapper.ArticleMapper;
 import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.entity.Article;
-import com.defty.movie.repository.IAriticleRepository;
+import com.defty.movie.repository.IArticleRepository;
 import com.defty.movie.service.IArticleService;
 import com.defty.movie.utils.UploadImageUtil;
 import lombok.AccessLevel;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -30,7 +32,7 @@ import java.util.Optional;
 public class ArticleService implements IArticleService {
 
     ArticleMapper articleMapper;
-    IAriticleRepository ariticleRepository;
+    IArticleRepository ariticleRepository;
     AuthService authService;
     UploadImageUtil uploadImageUtil;
     SlugUtil slugUtil;
@@ -68,6 +70,12 @@ public class ArticleService implements IArticleService {
         article.setSlug(slugUtil.createSlug(articleRequest.getTitle(),id));
         article.setId(id);
 
+        try {
+            article.setThumbnail(uploadImageUtil.upload(articleRequest.getThumbnail()));
+        }catch (Exception e){
+            throw new ImageUploadException("Could not upload the image, please try again later !");
+        }
+
         ariticleRepository.save(article);
     }
 
@@ -97,24 +105,38 @@ public class ArticleService implements IArticleService {
 
 
     @Override
-    public ArticlePageableResponse getAllArticles(Pageable pageable) {
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-        Optional<Page<Article>> articles= Optional.ofNullable(ariticleRepository.findAllByStatus(1,sortedPageable));
+    public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable) {
+        Page<Article> articles= ariticleRepository.findAllByStatus(1,pageable);
         List<ArticleResponse> articleResponses=new ArrayList<>();
-        if(!articles.get().isEmpty()) {
-            for(Article article:articles.get()) {
+        if(!articles.isEmpty()) {
+            for(Article article:articles) {
                 articleResponses.add(articleMapper.toArticleResponse(article));
             }
-
-            return ArticlePageableResponse.builder()
-                    .articleResponses(articleResponses)
-                    .totalElements(ariticleRepository.count())
+            return PageableResponse.<ArticleResponse>builder()
+                    .responses(articleResponses)
+                    .totalElements(getArticleCount())
                     .build();
-        }else throw new RuntimeException(" Article not found !");
+        }else throw new NotFoundException(" Article not found !");
+    }
+
+
+    @Override
+    public PageableResponse<ArticleResponse> findArticles(Pageable pageable, Map<String, Object> params) {
+        List<Article> articles= ariticleRepository.findArticles(pageable,params);
+        List<ArticleResponse> articleResponses=new ArrayList<>();
+        if(!articles.isEmpty()) {
+            for(Article article:articles) {
+                articleResponses.add(articleMapper.toArticleResponse(article));
+            }
+            return PageableResponse.<ArticleResponse>builder()
+                    .responses(articleResponses)
+                    .totalElements(ariticleRepository.countArticles(params))
+                    .build();
+        }else throw new NotFoundException(" Article not found !");
     }
 
     @Override
     public Long getArticleCount() {
-        return ariticleRepository.count();
+        return ariticleRepository.countByStatus(1);
     }
 }
