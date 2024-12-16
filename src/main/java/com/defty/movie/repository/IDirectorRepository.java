@@ -28,7 +28,7 @@ public interface IDirectorRepository extends JpaRepository<Director, Integer> {
             nativeQuery = false)
     Page<Director> findDirectors(
             @Param("name") String name,
-            @Param("nation") String gender,
+            @Param("gender") String gender,
             @Param("releaseDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date_of_birth,
             @Param("nationality") String nationality,
             @Param("status") Integer status,
