@@ -88,7 +88,7 @@ public class DirectorService implements IDirectorService {
     @Override
     public PageableResponse<DirectorResponse> getAllDirectors(Pageable pageable) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-        Page<Director> directorEntities = directorRepository.findAll(pageable);
+        Page<Director> directorEntities = directorRepository.findAll(sortedPageable);
         List<DirectorResponse> directorResponseDTOS = new ArrayList<>();
         if (directorEntities.isEmpty()){
             throw new NotFoundException("Not found exception");

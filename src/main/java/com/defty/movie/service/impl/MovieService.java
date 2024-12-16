@@ -1,5 +1,7 @@
 package com.defty.movie.service.impl;
 
+import com.defty.movie.dto.response.PageableResponse;
+import com.defty.movie.specication.MovieSpecification;
 import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.dto.request.MovieRequest;
 import com.defty.movie.dto.response.MovieResponse;
@@ -13,12 +15,17 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @Service
@@ -44,13 +51,38 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieResponse> getMovies() {
-        List<Movie> movieEntities = movieRepository.findAll();
-        List<MovieResponse> movieResponseDTOS = new ArrayList<>();
-        for(Movie movie : movieEntities){
-            movieResponseDTOS.add(movieMapper.toMovieResponseDTO(movie));
+    public PageableResponse<MovieResponse> getMovies(Pageable pageable, String title, String nation, String releaseDate, Integer ranking, Integer directorId, Integer status) {
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
+        Date sqlReleaseDate = null;
+        if (releaseDate != null && !releaseDate.isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date utilDate = sdf.parse(releaseDate);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(utilDate);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+
+                sqlReleaseDate = calendar.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-        return movieResponseDTOS;
+        Page<Movie> movies = movieRepository.findMovies(title, nation, sqlReleaseDate, ranking, directorId, status, sortedPageable);
+        List<MovieResponse> movieResponseDTOS = new ArrayList<>();
+        if (movies.isEmpty()){
+            throw new NotFoundException("Not found exception");
+        }
+        else {
+            for(Movie m : movies){
+                movieResponseDTOS.add(movieMapper.toMovieResponseDTO(m));
+            }
+
+            PageableResponse<MovieResponse> pageableResponse = new PageableResponse<>(movieResponseDTOS, movieRepository.count());
+            return pageableResponse;
+        }
     }
 
     @Override
