@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -38,5 +40,11 @@ public class DirectorController {
     @PreAuthorize("@requiredPermission.checkPermission('GET_DIRECTOR')")
     public Object getDirector(@PathVariable Integer id){
         return directorService.getDirector(id);
+    }
+
+    @DeleteMapping("/{ids}")
+    @PreAuthorize("@requiredPermission.checkPermission('DELETE_DIRECTOR')")
+    public ResponseEntity<String> deleteDirector(@PathVariable List<Integer> ids) {
+        return directorService.deleteDirector(ids);
     }
 }

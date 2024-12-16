@@ -81,11 +81,6 @@ public class DirectorService implements IDirectorService {
     }
 
     @Override
-    public ResponseEntity<String> deleteDirector(List<Integer> ids) {
-        return null;
-    }
-
-    @Override
     public PageableResponse<DirectorResponse> getAllDirectors(Pageable pageable) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
         Page<Director> directorEntities = directorRepository.findAll(sortedPageable);
@@ -110,5 +105,19 @@ public class DirectorService implements IDirectorService {
             return directorMapper.toDirectorResponseDTO(directorEntity.get());
         }
         return "Director doesn't exist";
+    }
+
+    @Override
+    public ResponseEntity<String> deleteDirector(List<Integer> ids) {
+        List<Director> directors = directorRepository.findAllById(ids);
+        if(directors.size() == 0) throw new NotFoundException("Not found exception");
+        for(Director director : directors){
+            director.setStatus(0);
+        }
+        directorRepository.saveAll(directors);
+        if(ids.size() > 1){
+            return ResponseEntity.ok("Update directors successfully");
+        }
+        return ResponseEntity.ok("Update director successfully");
     }
 }
