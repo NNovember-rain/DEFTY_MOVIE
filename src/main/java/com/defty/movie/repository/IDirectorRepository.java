@@ -29,7 +29,7 @@ public interface IDirectorRepository extends JpaRepository<Director, Integer> {
     Page<Director> findDirectors(
             @Param("name") String name,
             @Param("gender") String gender,
-            @Param("releaseDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date_of_birth,
+            @Param("date_of_birth") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date_of_birth,
             @Param("nationality") String nationality,
             @Param("status") Integer status,
             Pageable pageable);
