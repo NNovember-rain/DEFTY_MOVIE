@@ -13,6 +13,7 @@ import java.util.Date;
 
 public interface IEpisodeRepository extends JpaRepository<Episode, Integer> {
     @Query(value = "SELECT e FROM Episode e WHERE " +
+            "(:number IS NULL OR e.number = :number) AND " +
             "(:status IS NULL OR e.status = :status) AND " +
             "(:movieId IS NULL OR e.movie.id = :movieId) " +
             "ORDER BY e.createdDate DESC",

@@ -30,7 +30,7 @@ public interface IDirectorRepository extends JpaRepository<Director, Integer> {
             @Param("name") String name,
             @Param("nation") String gender,
             @Param("releaseDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date_of_birth,
-            @Param("ranking") String nationality,
+            @Param("nationality") String nationality,
             @Param("status") Integer status,
             Pageable pageable);
 }
