@@ -12,6 +12,6 @@ public interface IDirectorService {
     ResponseEntity<String> addDirector(DirectorRequest directorRequest);
     ResponseEntity<String> updateDirector(Integer id, DirectorRequest directorRequest);
     ResponseEntity<String> deleteDirector(List<Integer> ids);
-    PageableResponse<DirectorResponse> getAllDirectors(Pageable pageable);
+    PageableResponse<DirectorResponse> getAllDirectors(Pageable pageable,String name, String gender, String date_of_birth, String nationality, Integer status);
     Object getDirector(Integer id);
 }

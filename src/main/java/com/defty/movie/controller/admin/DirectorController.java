@@ -32,8 +32,13 @@ public class DirectorController {
 
     @GetMapping("/all")
     @PreAuthorize("@requiredPermission.checkPermission('GET_DIRECTORS')")
-    public  Object getDirectors(Pageable pageable) {
-        return directorService.getAllDirectors(pageable);
+    public  Object getDirectors(Pageable pageable,
+                                @RequestParam(name = "name", required = false) String name,
+                                @RequestParam(name = "gender", required = false) String gender,
+                                @RequestParam(name = "date_of_birth", required = false) String date_of_birth,
+                                @RequestParam(name = "nationality", required = false) String nationality,
+                                @RequestParam(name = "status", required = false) Integer status) {
+        return directorService.getAllDirectors(pageable, name, gender, date_of_birth, nationality, status);
     }
 
     @GetMapping("/{id}")
