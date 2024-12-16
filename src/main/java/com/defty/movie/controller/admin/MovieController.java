@@ -5,16 +5,19 @@ import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.service.impl.MovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/movie")
+@RequestMapping("${api.prefix}/admin/movie")
 //@RequestMapping("/movie")
 public class MovieController {
 
@@ -34,8 +37,14 @@ public class MovieController {
 
     @GetMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('GET_MOVIES')")
-    public List<MovieResponse> getMovies(){
-        return movieService.getMovies();
+    public Object getMovies(Pageable pageable,
+                            @RequestParam(name = "title", required = false) String title,
+                            @RequestParam(name = "nation", required = false) String nation,
+                            @RequestParam(name = "releaseDate", required = false) String releaseDate,
+                            @RequestParam(name = "ranking", required = false) Integer ranking,
+                            @RequestParam(name = "directorId", required = false) Integer directorId,
+                            @RequestParam(name = "status", required = false) Integer status){
+        return movieService.getMovies(pageable, title, nation, releaseDate, ranking, directorId, status);
     }
 
     @PatchMapping("/{id}")
