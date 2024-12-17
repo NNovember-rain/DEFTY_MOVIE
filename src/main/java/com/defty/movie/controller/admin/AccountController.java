@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +28,7 @@ import java.util.List;
 public class AccountController {
     IAccountService accountService;
 
-    @PostMapping("/create-account")
+    @PostMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_ACCOUNT')")
     public ResponseEntity<?> createAccount(@ModelAttribute AccountRequest accountRequest) {
         AccountResponse accountResponse = accountService.createAccount(accountRequest);
@@ -44,7 +45,7 @@ public class AccountController {
     public ResponseEntity<?> getAllAccount(@Valid @RequestParam(value = "page", defaultValue = "0") int page,
                                            @RequestParam(value = "size", defaultValue = "10") int size,
                                            @RequestParam(value = "username", required = false) String username) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<AccountResponse> accountResponses = accountService.findAccount(username, pageable);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -86,7 +87,7 @@ public class AccountController {
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data("deleted successfully")
+                .data("success")
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

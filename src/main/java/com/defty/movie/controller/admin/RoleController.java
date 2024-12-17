@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,11 +30,11 @@ public class RoleController {
     public ResponseEntity<?> getAllRoles(@RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(value = "size", defaultValue = "10") int size,
                                          @RequestParam(value = "name", required = false) String name) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<RoleResponse> roleResponses = roleService.getAllRoles(name, pageable);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message("Roles retrieved successfully")
+                .message(HttpStatus.OK.getReasonPhrase())
                 .data(roleResponses)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -82,7 +83,7 @@ public class RoleController {
         RoleResponse roleResponse = roleService.updateRole(id, roleRequest);
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message("Role updated successfully")
+                .message(HttpStatus.OK.getReasonPhrase())
                 .data(roleResponse)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
