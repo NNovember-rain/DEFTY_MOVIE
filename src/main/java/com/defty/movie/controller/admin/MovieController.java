@@ -1,7 +1,9 @@
 package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.MovieRequest;
+import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.MovieResponse;
+import com.defty.movie.service.IMovieService;
 import com.defty.movie.service.impl.MovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +23,11 @@ import java.util.List;
 //@RequestMapping("/movie")
 public class MovieController {
 
-    private final MovieService movieService;
+    private final IMovieService movieService;
 
     @PostMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_MOVIE')")
-    public ResponseEntity<String> addMovie(@RequestBody MovieRequest movieRequest) {
+    public ApiResponse<Integer> addMovie(@RequestBody MovieRequest movieRequest) {
          return movieService.addMovie(movieRequest);
     }
 
@@ -49,13 +51,13 @@ public class MovieController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_MOVIE')")
-    public ResponseEntity<String> patchMovie(@PathVariable Integer id, @RequestBody MovieRequest movieRequest) {
+    public ApiResponse<Integer> patchMovie(@PathVariable Integer id, @RequestBody MovieRequest movieRequest) {
         return movieService.updateMovie(id, movieRequest);
     }
 
     @DeleteMapping("/{ids}")
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_MOVIE')")
-    public ResponseEntity<String> deleteMovie(@PathVariable List<Integer> ids) {
+    public ApiResponse<List<Integer>> deleteMovie(@PathVariable List<Integer> ids) {
         return movieService.deleteMovie(ids);
     }
 }

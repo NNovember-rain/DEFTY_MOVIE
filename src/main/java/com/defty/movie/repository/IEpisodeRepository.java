@@ -18,6 +18,7 @@ public interface IEpisodeRepository extends JpaRepository<Episode, Integer> {
             "(:movieId IS NULL OR e.movie.id = :movieId) " +
             "ORDER BY e.createdDate DESC",
             countQuery = "SELECT count(e) FROM Episode e WHERE " +
+                    "(:number IS NULL OR e.number = :number) AND " +
                     "(:status IS NULL OR e.status = :status) AND " +
                     "(:movieId IS NULL OR e.movie.id = :movieId) ",
             nativeQuery = false)

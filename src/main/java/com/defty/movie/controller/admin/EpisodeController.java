@@ -1,7 +1,9 @@
 package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.EpisodeRequest;
+import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.EpisodeResponse;
+import com.defty.movie.service.IEpisodeService;
 import com.defty.movie.service.impl.EpisodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +19,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/movie/episode")
 public class EpisodeController {
-    private final EpisodeService episodeService;
+    private final IEpisodeService episodeService;
     @PostMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_EPISODE')")
-    public ResponseEntity<String> addEpisode(@RequestBody EpisodeRequest episodeRequest) {
+    public ApiResponse<Integer> addEpisode(@RequestBody EpisodeRequest episodeRequest) {
         return episodeService.addEpisode(episodeRequest);
     }
     @GetMapping("/{id}")
@@ -39,13 +41,13 @@ public class EpisodeController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_EPISODE')")
-    public ResponseEntity<String> patchEpisode(@PathVariable Integer id, @RequestBody EpisodeRequest episodeRequest) {
+    public ApiResponse<Integer> patchEpisode(@PathVariable Integer id, @RequestBody EpisodeRequest episodeRequest) {
         return episodeService.updateEpisode(id, episodeRequest);
     }
 
     @DeleteMapping("/{ids}")
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_EPISODE')")
-    public ResponseEntity<String> deleteEpisode(@PathVariable List<Integer> ids) {
+    public ApiResponse<List<Integer>> deleteEpisode(@PathVariable List<Integer> ids) {
         return episodeService.deleteEpisode(ids);
     }
 }

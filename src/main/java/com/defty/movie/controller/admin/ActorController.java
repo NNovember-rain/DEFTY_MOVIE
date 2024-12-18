@@ -1,31 +1,39 @@
 package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.ActorRequest;
+import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.service.IActorService;
 import com.defty.movie.service.impl.ActorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-//@RequestMapping("${api.prefix}/movie")
-@RequestMapping("/movie/actor")
+@RequestMapping("${api.prefix}/movie/actor")
+//@RequestMapping("/movie/actor")
 public class ActorController {
-    private final ActorService actorService;
+    private final IActorService actorService;
     @PostMapping("")
-    public ResponseEntity<String> addActor(@ModelAttribute ActorRequest actorRequest){
+    @PreAuthorize("@requiredPermission.checkPermission('CREATE_ACTOR')")
+    public ApiResponse<Integer> addActor(@ModelAttribute ActorRequest actorRequest){
         return actorService.addActor(actorRequest);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> patchActor(@PathVariable Integer id, @ModelAttribute ActorRequest actorRequest) {
+    @PreAuthorize("@requiredPermission.checkPermission('UPDATE_ACTOR')")
+    public ApiResponse<Integer> patchActor(@PathVariable Integer id, @ModelAttribute ActorRequest actorRequest) {
         return actorService.updateActor(id, actorRequest);
     }
 
     @GetMapping("/all")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_ACTORS')")
     public  Object getActors(Pageable pageable,
                              @RequestParam(name = "name", required = false) String name,
                              @RequestParam(name = "gender", required = false) String gender,
@@ -36,8 +44,15 @@ public class ActorController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_ACTOR')")
     public Object getActor(@PathVariable Integer id){
         return actorService.getActor(id);
+    }
+
+    @DeleteMapping("/{ids}")
+    @PreAuthorize("@requiredPermission.checkPermission('DELETE_ACTOR')")
+    public ApiResponse<List<Integer>> deleteActor(@PathVariable List<Integer> ids) {
+        return actorService.deleteActor(ids);
     }
 }
 

@@ -1,6 +1,8 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.DirectorRequest;
+import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.dto.response.DirectorResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Director;
@@ -35,7 +37,7 @@ public class DirectorService implements IDirectorService {
     IDirectorRepository directorRepository;
     UploadImageUtil uploadImageUtil;
     @Override
-    public ResponseEntity<String> addDirector(DirectorRequest directorRequest) {
+    public ApiResponse<Integer> addDirector(DirectorRequest directorRequest) {
         directorValidation.fieldValidation(directorRequest);
         Director directorEntity = directorMapper.toDirectorEntity(directorRequest);
         try {
@@ -48,13 +50,13 @@ public class DirectorService implements IDirectorService {
             directorRepository.save(directorEntity);
         }
         catch (Exception e){
-            e.printStackTrace();
+            return new ApiResponse<>(500, e.getMessage(), directorEntity.getId());
         }
-        return ResponseEntity.ok("Add director successfully");
+        return new ApiResponse<>(201, "Created", directorEntity.getId());
     }
 
     @Override
-    public ResponseEntity<String> updateDirector(Integer id, DirectorRequest directorRequest) {
+    public ApiResponse<Integer> updateDirector(Integer id, DirectorRequest directorRequest) {
         directorValidation.fieldValidation(directorRequest);
         Optional<Director> director = directorRepository.findById(id);
         if(director.isPresent()){
@@ -77,11 +79,11 @@ public class DirectorService implements IDirectorService {
         else {
             throw new NotFoundException("Not found exception");
         }
-        return ResponseEntity.ok("Update director successfully");
+        return new ApiResponse<>(200, "Update director successfully", id);
     }
 
     @Override
-    public PageableResponse<DirectorResponse> getAllDirectors(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status) {
+    public ApiResponse<PageableResponse<DirectorResponse>> getAllDirectors(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
 
         Date sqlDate_of_birth = null;
@@ -112,8 +114,8 @@ public class DirectorService implements IDirectorService {
                 directorResponseDTOS.add(directorMapper.toDirectorResponseDTO(d));
             }
 
-            PageableResponse<DirectorResponse> pageableResponse= new PageableResponse<>(directorResponseDTOS, directorRepository.count());
-            return pageableResponse;
+            PageableResponse<DirectorResponse> pageableResponse= new PageableResponse<>(directorResponseDTOS, directorEntities.getTotalElements());
+            return new ApiResponse<>(200, "OK", pageableResponse);
         }
     }
 
@@ -121,13 +123,13 @@ public class DirectorService implements IDirectorService {
     public Object getDirector(Integer id) {
         Optional<Director> directorEntity = directorRepository.findById(id);
         if(directorEntity.isPresent()){
-            return directorMapper.toDirectorResponseDTO(directorEntity.get());
+            return new ApiResponse<>(200, "OK", directorMapper.toDirectorResponseDTO(directorEntity.get()));
         }
-        return "Director doesn't exist";
+        return new ApiResponse<>(404, "Director doesn't exist", null);
     }
 
     @Override
-    public ResponseEntity<String> deleteDirector(List<Integer> ids) {
+    public ApiResponse<List<Integer>> deleteDirector(List<Integer> ids) {
         List<Director> directors = directorRepository.findAllById(ids);
         if(directors.size() == 0) throw new NotFoundException("Not found exception");
         for(Director director : directors){
@@ -135,8 +137,8 @@ public class DirectorService implements IDirectorService {
         }
         directorRepository.saveAll(directors);
         if(ids.size() > 1){
-            return ResponseEntity.ok("Update directors successfully");
+            return new ApiResponse<>(200, "Delete directors successfully", ids);
         }
-        return ResponseEntity.ok("Update director successfully");
+        return new ApiResponse<>(200, "Delete director successfully", ids);
     }
 }

@@ -1,6 +1,8 @@
 package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.DirectorRequest;
+import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.service.IDirectorService;
 import com.defty.movie.service.impl.DirectorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +19,16 @@ import java.util.List;
 @RequestMapping("${api.prefix}/admin/movie/director")
 //@RequestMapping("/movie/director")
 public class DirectorController {
-    private final DirectorService directorService;
+    private final IDirectorService directorService;
     @PostMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_DIRECTOR')")
-    public ResponseEntity<String> addDirector(@ModelAttribute DirectorRequest directorRequest){
+    public ApiResponse<Integer> addDirector(@ModelAttribute DirectorRequest directorRequest){
         return directorService.addDirector(directorRequest);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_DIRECTOR')")
-    public ResponseEntity<String> patchDirector(@PathVariable Integer id, @ModelAttribute DirectorRequest directorRequest) {
+    public ApiResponse<Integer> patchDirector(@PathVariable Integer id, @ModelAttribute DirectorRequest directorRequest) {
         return directorService.updateDirector(id, directorRequest);
     }
 
@@ -49,7 +51,7 @@ public class DirectorController {
 
     @DeleteMapping("/{ids}")
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_DIRECTOR')")
-    public ResponseEntity<String> deleteDirector(@PathVariable List<Integer> ids) {
+    public ApiResponse<List<Integer>> deleteDirector(@PathVariable List<Integer> ids) {
         return directorService.deleteDirector(ids);
     }
 }

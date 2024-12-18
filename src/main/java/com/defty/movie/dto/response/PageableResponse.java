@@ -12,6 +12,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 public class PageableResponse<T> {
-    private List<T> responses;
+    private List<T> content;
     private Long totalElements;
 }

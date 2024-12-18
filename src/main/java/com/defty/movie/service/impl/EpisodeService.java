@@ -1,6 +1,8 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.EpisodeRequest;
+import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.dto.response.EpisodeResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Episode;
@@ -32,15 +34,21 @@ public class EpisodeService implements IEpisodeService {
     private final IEpisodeRepository episodeRepository;
     private final EpisodeValidation episodeValidation;
     @Override
-    public ResponseEntity<String> addEpisode(EpisodeRequest episodeRequest) {
+    public ApiResponse<Integer> addEpisode(EpisodeRequest episodeRequest) {
         episodeValidation.fieldValidation(episodeRequest);
 
         Episode episode = episodeMapper.toEpisodeEntity(episodeRequest);
-        episodeRepository.save(episode);
-        return ResponseEntity.ok("Add episode successfully");
+
+        try{
+            episodeRepository.save(episode);
+        }
+        catch (Exception e){
+            return new ApiResponse<>(500, e.getMessage(), episode.getId());
+        }
+        return new ApiResponse<>(201, "created", episode.getId());
     }
 
-    public PageableResponse<EpisodeResponse> getEpisodes(Pageable pageable, Integer number, Integer status, Integer movieId) {
+    public ApiResponse<PageableResponse<EpisodeResponse>> getEpisodes(Pageable pageable, Integer number, Integer status, Integer movieId) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
         Page<Episode> episodes = episodeRepository.findEpisodes(number, status, movieId, sortedPageable);
         List<EpisodeResponse> episodeResponseDTOS = new ArrayList<>();
@@ -53,12 +61,12 @@ public class EpisodeService implements IEpisodeService {
             }
 
             PageableResponse<EpisodeResponse> pageableResponse = new PageableResponse<>(episodeResponseDTOS, episodeRepository.count());
-            return pageableResponse;
+            return new ApiResponse<>(200, "OK", pageableResponse);
         }
     }
 
     @Override
-    public ResponseEntity<String> updateEpisode(Integer id, EpisodeRequest episodeRequest) {
+    public ApiResponse<Integer> updateEpisode(Integer id, EpisodeRequest episodeRequest) {
         episodeValidation.fieldValidation(episodeRequest);
         Optional<Episode> episode = episodeRepository.findById(id);
         if(episode.isPresent()){
@@ -70,11 +78,11 @@ public class EpisodeService implements IEpisodeService {
         else {
             throw new NotFoundException("Not found exception");
         }
-        return ResponseEntity.ok("Update episode successfully");
+        return new ApiResponse<>(200, "Update episode successfully", id);
     }
 
     @Override
-    public ResponseEntity<String> deleteEpisode(List<Integer> ids) {
+    public ApiResponse<List<Integer>> deleteEpisode(List<Integer> ids) {
         List<Episode> episodeEntity = episodeRepository.findAllById(ids);
         if(episodeEntity.size() == 0) throw new NotFoundException("Not found exception");
         for(Episode episode : episodeEntity){
@@ -82,17 +90,18 @@ public class EpisodeService implements IEpisodeService {
         }
         episodeRepository.saveAll(episodeEntity);
         if(ids.size() > 1){
-            return ResponseEntity.ok("Update episodes successfully");
+            return new ApiResponse<>(200, "Delete episodes successfully", ids);
         }
-        return ResponseEntity.ok("Update episode successfully");
+        return new ApiResponse<>(200, "Delete episode successfully", ids);
+
     }
 
     @Override
     public Object getEpisode(Integer id) {
         Optional<Episode> movie = episodeRepository.findById(id);
         if(movie.isPresent()){
-            return episodeMapper.toEpisodeResponseDTO(movie.get());
+            return new ApiResponse<>(200, "OK", episodeMapper.toEpisodeResponseDTO(movie.get()));
         }
-        return "Episode doesn't exist";
+        return new ApiResponse<>(404, "Episode doesn't exist", null);
     }
 }
