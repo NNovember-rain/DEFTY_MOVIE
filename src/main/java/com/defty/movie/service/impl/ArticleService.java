@@ -113,7 +113,7 @@ public class ArticleService implements IArticleService {
                 articleResponses.add(articleMapper.toArticleResponse(article));
             }
             return PageableResponse.<ArticleResponse>builder()
-                    .responses(articleResponses)
+                    .content(articleResponses)
                     .totalElements(getArticleCount())
                     .build();
         }else throw new NotFoundException(" Article not found !");
@@ -129,7 +129,7 @@ public class ArticleService implements IArticleService {
                 articleResponses.add(articleMapper.toArticleResponse(article));
             }
             return PageableResponse.<ArticleResponse>builder()
-                    .responses(articleResponses)
+                    .content(articleResponses)
                     .totalElements(ariticleRepository.countArticles(params))
                     .build();
         }else throw new NotFoundException(" Article not found !");

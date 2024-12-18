@@ -1,5 +1,7 @@
 package com.defty.movie.service.impl;
 
+import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.dto.response.DirectorResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.specication.MovieSpecification;
 import com.defty.movie.utils.SlugUtil;
@@ -38,20 +40,24 @@ public class MovieService implements IMovieService {
     private final SlugUtil slugUtil;
 
     @Override
-    public ResponseEntity<String> addMovie(MovieRequest movieRequest) {
+    public ApiResponse<Integer> addMovie(MovieRequest movieRequest) {
         /*check field*/
         movieValidation.fieldValidation(movieRequest);
 
         Movie movie = movieMapper.toMovieEntity(movieRequest);
         Movie newMovie = movieRepository.save(movie);
         newMovie.setSlug(slugUtil.createSlug(newMovie.getTitle(), newMovie.getId()));
-        movieRepository.save(newMovie);
-
-        return ResponseEntity.ok("Add movie successfully");
+        try{
+            movieRepository.save(newMovie);
+        }
+        catch (Exception e){
+            return new ApiResponse<>(500, e.getMessage(), newMovie.getId());
+        }
+        return new ApiResponse<>(201, "created", newMovie.getId());
     }
 
     @Override
-    public PageableResponse<MovieResponse> getMovies(Pageable pageable, String title, String nation, String releaseDate, Integer ranking, Integer directorId, Integer status) {
+    public ApiResponse<PageableResponse<MovieResponse>> getMovies(Pageable pageable, String title, String nation, String releaseDate, Integer ranking, Integer directorId, Integer status) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
         Date sqlReleaseDate = null;
         if (releaseDate != null && !releaseDate.isEmpty()) {
@@ -79,14 +85,13 @@ public class MovieService implements IMovieService {
             for(Movie m : movies){
                 movieResponseDTOS.add(movieMapper.toMovieResponseDTO(m));
             }
-
-            PageableResponse<MovieResponse> pageableResponse = new PageableResponse<>(movieResponseDTOS, movieRepository.count());
-            return pageableResponse;
+            PageableResponse<MovieResponse> pageableResponse = new PageableResponse<>(movieResponseDTOS, movies.getTotalElements());
+            return new ApiResponse<>(200, "OK", pageableResponse);
         }
     }
 
     @Override
-    public ResponseEntity<String> updateMovie(Integer id, MovieRequest movieRequest) {
+    public ApiResponse<Integer> updateMovie(Integer id, MovieRequest movieRequest) {
         /*check field*/
         movieValidation.fieldValidation(movieRequest);
         Optional<Movie> movie = movieRepository.findById(id);
@@ -101,11 +106,11 @@ public class MovieService implements IMovieService {
         else {
             throw new NotFoundException("Not found exception");
         }
-        return ResponseEntity.ok("Update movie successfully");
+        return new ApiResponse<>(200, "Update movie successfully", id);
     }
 
     @Override
-    public ResponseEntity<String> deleteMovie(List<Integer> ids) {
+    public ApiResponse<List<Integer>> deleteMovie(List<Integer> ids) {
         List<Movie> movieEntities = movieRepository.findAllById(ids);
         if(movieEntities.size() == 0) throw new NotFoundException("Not found exception");
         for(Movie movie : movieEntities){
@@ -113,17 +118,17 @@ public class MovieService implements IMovieService {
         }
         movieRepository.saveAll(movieEntities);
         if(ids.size() > 1){
-            return ResponseEntity.ok("Update movies successfully");
+            return new ApiResponse<>(200, "Delete movies successfully", ids);
         }
-        return ResponseEntity.ok("Update movie successfully");
+        return new ApiResponse<>(200, "Delete movie successfully", ids);
     }
 
     @Override
     public Object getMovie(Integer id) {
         Optional<Movie> movie = movieRepository.findById(id);
         if(movie.isPresent()){
-            return movieMapper.toMovieResponseDTO(movie.get());
+            return new ApiResponse<>(200, "OK", movieMapper.toMovieResponseDTO(movie.get()));
         }
-        return "Movie doesn't exist";
+        return new ApiResponse<>(200, "Movie doesn't exist", null);
     }
 }

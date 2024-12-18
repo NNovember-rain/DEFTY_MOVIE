@@ -1,6 +1,8 @@
 package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.CategoryRequest;
+import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.service.ICategoryService;
 import com.defty.movie.service.impl.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,28 +19,28 @@ import java.util.List;
 @RequestMapping("${api.prefix}/movie/category")
 //@RequestMapping("/movie/category")
 public class CategoryController {
-    private final CategoryService  categoryService;
+    private final ICategoryService categoryService;
     @PostMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_CATEGORY')")
-    public ResponseEntity<String> addCategory(@RequestBody CategoryRequest  categoryRequest){
+    public ApiResponse<Integer> addCategory(@RequestBody CategoryRequest  categoryRequest){
         return  categoryService.addCategory( categoryRequest);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_CATEGORY')")
-    public ResponseEntity<String> patchCategory(@PathVariable Integer id, @RequestBody CategoryRequest  categoryRequest) {
+    public ApiResponse<Integer> patchCategory(@PathVariable Integer id, @RequestBody CategoryRequest  categoryRequest) {
         return  categoryService.updateCategory(id,  categoryRequest);
     }
 
     @DeleteMapping("/{ids}")
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_CATEGORY')")
-    public ResponseEntity<String> deleteCategory(@PathVariable List<Integer> ids) {
+    public ApiResponse<List<Integer>> deleteCategory(@PathVariable List<Integer> ids) {
         return categoryService.deleteCategory(ids);
     }
 
     @GetMapping("/all")
     @PreAuthorize("@requiredPermission.checkPermission('GET_CATEGORIES')")
-    public  Object getCategorys(Pageable pageable,
+    public Object getCategorys(Pageable pageable,
                                 @RequestParam(name = "name", required = false) String name,
                                 @RequestParam(name = "status", required = false) Integer status) {
         return categoryService.getAllCategories(pageable, name, status);

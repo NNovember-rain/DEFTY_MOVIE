@@ -1,6 +1,7 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.CategoryRequest;
+import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Actor;
@@ -34,20 +35,20 @@ public class CategoryService implements ICategoryService {
     ICategoryRepository categoryRepository;
 
     @Override
-    public ResponseEntity<String> addCategory(CategoryRequest categoryRequest) {
+    public ApiResponse<Integer> addCategory(CategoryRequest categoryRequest) {
         categoryValidation.fieldValidation(categoryRequest);
         Category categoryEntity = categoryMapper.toCategoryEntity(categoryRequest);
         try {
             categoryRepository.save(categoryEntity);
         }
         catch (Exception e){
-            e.printStackTrace();
+            return new ApiResponse<>(500, e.getMessage(), categoryEntity.getId());
         }
-        return ResponseEntity.ok("Add category successfully");
+        return new ApiResponse<>(201, "created", categoryEntity.getId());
     }
 
     @Override
-    public ResponseEntity<String> updateCategory(Integer id, CategoryRequest categoryRequest) {
+    public ApiResponse<Integer> updateCategory(Integer id, CategoryRequest categoryRequest) {
         categoryValidation.fieldValidation(categoryRequest);
         Optional<Category> categoryEntity = categoryRepository.findById(id);
         if(categoryEntity.isPresent()){
@@ -64,11 +65,11 @@ public class CategoryService implements ICategoryService {
             throw new NotFoundException("Not found exception");
 
         }
-        return ResponseEntity.ok("Update category successfully");
+        return new ApiResponse<>(200, "Update category successfully", id);
     }
 
     @Override
-    public ResponseEntity<String> deleteCategory(List<Integer> ids) {
+    public ApiResponse<List<Integer>> deleteCategory(List<Integer> ids) {
         List<Category> categories = categoryRepository.findAllById(ids);
         if(categories.size() == 0) throw new NotFoundException("Not found exception");
         for(Category category : categories){
@@ -76,13 +77,14 @@ public class CategoryService implements ICategoryService {
         }
         categoryRepository.saveAll(categories);
         if(ids.size() > 1){
-            return ResponseEntity.ok("Update categories successfully");
+            return new ApiResponse<>(200, "Delete categories successfully", ids);
         }
-        return ResponseEntity.ok("Update category successfully");
+        return new ApiResponse<>(200, "Delete categorie successfully", ids);
+
     }
 
     @Override
-    public PageableResponse<CategoryResponse> getAllCategories(Pageable pageable, String name, Integer status) {
+    public ApiResponse<PageableResponse<CategoryResponse>> getAllCategories(Pageable pageable, String name, Integer status) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
         Page<Category> categories = categoryRepository.findCategories(name, status, sortedPageable);
         List<CategoryResponse> categoryResponses = new ArrayList<>();
@@ -94,13 +96,17 @@ public class CategoryService implements ICategoryService {
                 categoryResponses.add(categoryMapper.toCategoryResponse(c));
             }
 
-            PageableResponse<CategoryResponse> pageableResponse= new PageableResponse<>(categoryResponses, categoryRepository.count());
-            return pageableResponse;
+            PageableResponse<CategoryResponse> pageableResponse= new PageableResponse<>(categoryResponses, categories.getTotalElements());
+            return new ApiResponse<>(200, "OK", pageableResponse);
         }
     }
 
     @Override
     public Object getCategory(Integer id) {
-        return null;
+        Optional<Category> category = categoryRepository.findById(id);
+        if(category.isPresent()){
+            return new ApiResponse<>(200, "OK", categoryMapper.toCategoryResponse(category.get()));
+        }
+        return new ApiResponse<>(404, "Category doesn't exist", null);
     }
 }

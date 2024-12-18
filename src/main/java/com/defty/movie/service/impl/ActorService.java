@@ -2,9 +2,9 @@ package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.ActorRequest;
 import com.defty.movie.dto.response.ActorResponse;
+import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Actor;
-import com.defty.movie.entity.Director;
 import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.ActorMapper;
@@ -36,7 +36,7 @@ public class ActorService implements IActorService {
     IActorRepository actorRepository;
     UploadImageUtil uploadImageUtil;
     @Override
-    public ResponseEntity<String> addActor(ActorRequest actorRequest) {
+    public ApiResponse<Integer> addActor(ActorRequest actorRequest) {
         actorValidation.fieldValidation(actorRequest);
         Actor actorEntity = actorMapper.toActorEntity(actorRequest);
         try {
@@ -49,13 +49,13 @@ public class ActorService implements IActorService {
             actorRepository.save(actorEntity);
         }
         catch (Exception e){
-            e.printStackTrace();
+            return new ApiResponse<>(500, e.getMessage(), actorEntity.getId());
         }
-        return ResponseEntity.ok("Add actor successfully");
+        return new ApiResponse<>(201, "created", actorEntity.getId());
     }
 
     @Override
-    public ResponseEntity<String> updateActor(Integer id, ActorRequest actorRequest) {
+    public ApiResponse<Integer> updateActor(Integer id, ActorRequest actorRequest) {
         actorValidation.fieldValidation(actorRequest);
         Optional<Actor> actor = actorRepository.findById(id);
         if(actor.isPresent()){
@@ -72,22 +72,31 @@ public class ActorService implements IActorService {
                 actorRepository.save(updatedActor);
             }
             catch (Exception e){
-                e.printStackTrace();
+                return new ApiResponse<>(500, e.getMessage(), id);
             }
         }
         else {
             throw new NotFoundException("Not found exception");
         }
-        return ResponseEntity.ok("Update actor successfully");
+        return new ApiResponse<>(200, "update actor successfully", id);
     }
 
     @Override
-    public ResponseEntity<String> deleteActor(List<Integer> ids) {
-        return null;
+    public ApiResponse<List<Integer>> deleteActor(List<Integer> ids) {
+        List<Actor> actors = actorRepository.findAllById(ids);
+        if(actors.size() == 0) throw new NotFoundException("Not found exception");
+        for(Actor actor : actors){
+            actor.setStatus(0);
+        }
+        actorRepository.saveAll(actors);
+        if(ids.size() > 1){
+            return new ApiResponse<>(200, "Delete actors successfully", ids);
+        }
+        return new ApiResponse<>(200, "Delete actor successfully", ids);
     }
 
     @Override
-    public PageableResponse<ActorResponse> getAllActors(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status) {
+    public ApiResponse<PageableResponse<ActorResponse>> getAllActors(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
 
         Date sqlDate_of_birth = null;
@@ -117,8 +126,9 @@ public class ActorService implements IActorService {
                 actorResponseDTOS.add(actorMapper.toActorResponse(d));
             }
 
-            PageableResponse<ActorResponse> pageableResponse= new PageableResponse<>(actorResponseDTOS, actorRepository.count());
-            return pageableResponse;
+            PageableResponse<ActorResponse> pageableResponse= new PageableResponse<>(actorResponseDTOS, actorEntities.getTotalElements());
+            ApiResponse<PageableResponse<ActorResponse>> apiResponse = new ApiResponse<>(200, "OK", pageableResponse);
+            return apiResponse;
         }
     }
 
@@ -126,8 +136,8 @@ public class ActorService implements IActorService {
     public Object getActor(Integer id) {
         Optional<Actor> actorEntity = actorRepository.findById(id);
         if(actorEntity.isPresent()){
-            return actorMapper.toActorResponse(actorEntity.get());
+            return new ApiResponse<>(200, "OK", actorMapper.toActorResponse(actorEntity.get()));
         }
-        return "Actor doesn't exist";
+        return new ApiResponse<>(404, "Actor doesn't exist", null);
     }
 }

@@ -28,7 +28,7 @@ public interface IActorRepository extends JpaRepository<Actor, Integer> {
             nativeQuery = false)
     Page<Actor> findActors(
             @Param("name") String name,
-            @Param("nation") String gender,
+            @Param("gender") String gender,
             @Param("date_of_birth") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date_of_birth,
             @Param("nationality") String nationality,
             @Param("status") Integer status,
