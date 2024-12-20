@@ -1,6 +1,9 @@
 package com.defty.movie.security;
 
 import com.defty.movie.entity.Account;
+import com.defty.movie.entity.User;
+import com.defty.movie.repository.IAccountRepository;
+import com.defty.movie.repository.IUserRepository;
 import com.defty.movie.utils.CookieUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Component
@@ -30,6 +34,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
+    private final IUserRepository userRepository;
+    private final IAccountRepository accountRepository;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -47,16 +53,34 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
             final String username = jwtTokenUtil.extractUsername(token);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                Account accountDetails = (Account) userDetailsService.loadUserByUsername(username);
-                if (jwtTokenUtil.validateToken(token, accountDetails)) {
-                    UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(
-                                    accountDetails,
-                                    null,
-                                    accountDetails.getAuthorities()
-                            );
-                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                Optional<Account> account = accountRepository.findByUsername(username);
+                if (account.isPresent()) {
+                    Account accountDetails = (Account) userDetailsService.loadUserByUsername(username);
+                    if (jwtTokenUtil.validateToken(token, accountDetails)) {
+                        UsernamePasswordAuthenticationToken authenticationToken =
+                                new UsernamePasswordAuthenticationToken(
+                                        accountDetails,
+                                        null,
+                                        accountDetails.getAuthorities()
+                                );
+                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    }
+                } else {
+                    Optional<User> user = userRepository.findByUsername(username);
+                    if (user.isPresent()) {
+                        User userDetails = user.get();
+                        if (jwtTokenUtil.validateToken(token, userDetails)) {
+                            UsernamePasswordAuthenticationToken authenticationToken =
+                                    new UsernamePasswordAuthenticationToken(
+                                            userDetails,
+                                            null,
+                                            null
+                                    );
+                            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                        }
+                    }
                 }
             }
             filterChain.doFilter(request, response);

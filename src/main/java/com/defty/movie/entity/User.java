@@ -9,8 +9,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,7 +25,7 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
     @NotBlank(message = "Username cannot be blank")
     @Column(nullable = false, length = 50, unique = true)
     String username;
@@ -81,4 +85,8 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     Set<MovieCommentReaction> movieCommentReactions;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
 }
