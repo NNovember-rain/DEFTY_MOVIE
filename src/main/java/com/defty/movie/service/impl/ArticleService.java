@@ -48,11 +48,12 @@ public class ArticleService implements IArticleService {
         Article articleSave=ariticleRepository.save(article);
 
         articleSave.setSlug(slugUtil.createSlug(articleRequest.getTitle(),articleSave.getId()));
-
-        try {
-            article.setThumbnail(uploadImageUtil.upload(articleRequest.getThumbnail()));
-        }catch (Exception e){
-            throw new ImageUploadException("Could not upload the image, please try again later !");
+        if(!articleRequest.getThumbnail().isEmpty()) {
+            try {
+                article.setThumbnail(uploadImageUtil.upload(articleRequest.getThumbnail()));
+            } catch (Exception e) {
+                throw new ImageUploadException("Could not upload the image, please try again later !");
+            }
         }
 
         ariticleRepository.save(articleSave);
@@ -70,10 +71,12 @@ public class ArticleService implements IArticleService {
         article.setSlug(slugUtil.createSlug(articleRequest.getTitle(),id));
         article.setId(id);
 
-        try {
-            article.setThumbnail(uploadImageUtil.upload(articleRequest.getThumbnail()));
-        }catch (Exception e){
-            throw new ImageUploadException("Could not upload the image, please try again later !");
+        if(!articleRequest.getThumbnail().isEmpty()) {
+            try {
+                article.setThumbnail(uploadImageUtil.upload(articleRequest.getThumbnail()));
+            } catch (Exception e) {
+                throw new ImageUploadException("Could not upload the image, please try again later !");
+            }
         }
 
         ariticleRepository.save(article);
@@ -102,11 +105,9 @@ public class ArticleService implements IArticleService {
         }
     }
 
-
-
     @Override
-    public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable) {
-        Page<Article> articles= ariticleRepository.findAllByStatus(1,pageable);
+    public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable, Map<String, Object> params) {
+        List<Article> articles= ariticleRepository.findArticles(pageable,params);
         List<ArticleResponse> articleResponses=new ArrayList<>();
         if(!articles.isEmpty()) {
             for(Article article:articles) {
@@ -114,7 +115,7 @@ public class ArticleService implements IArticleService {
             }
             return PageableResponse.<ArticleResponse>builder()
                     .content(articleResponses)
-                    .totalElements(getArticleCount())
+                    .totalElements(ariticleRepository.countArticles(params))
                     .build();
         }else throw new NotFoundException(" Article not found !");
     }

@@ -9,6 +9,7 @@ import com.defty.movie.dto.response.LoginResponse;
 import com.defty.movie.dto.response.RefreshTokenResponse;
 import com.defty.movie.dto.response.UserResponse;
 import com.defty.movie.entity.Account;
+import com.defty.movie.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Optional;
@@ -19,4 +20,5 @@ public interface IAuthUserService {
     UserResponse getUserFromToken(String token);
     UserResponse register(RegisterRequest registerRequest);
     RefreshTokenResponse refreshToken(String refreshToken, HttpServletResponse response);
+    Optional<User> getCurrentUser();
 }

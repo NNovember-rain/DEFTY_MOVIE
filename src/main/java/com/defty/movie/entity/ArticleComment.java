@@ -16,6 +16,9 @@ public class ArticleComment extends BaseEntity {
     @Column
     String content;
 
+    @Column
+    int status;
+
     @ManyToOne
     @JoinColumn(name = "parent_articleComment_id")
     ArticleComment parentArticleComment;
