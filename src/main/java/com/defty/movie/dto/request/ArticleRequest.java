@@ -20,6 +20,8 @@ public class ArticleRequest {
 
     String content;
 
+    int status;   // enum 0=đã xóa, 1 hoạt động, 2, chưa duyệt ...
+
     String author;
 
     MultipartFile thumbnail;
