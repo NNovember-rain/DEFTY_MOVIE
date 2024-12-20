@@ -13,14 +13,12 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ArticleRequest {
 
-    Integer id;
-
     @NotNull(message = "required")
     String title;
 
     String content;
 
-    int status;   // enum 0=đã xóa, 1 hoạt động, 2, chưa duyệt ...
+    Integer status;   // enum 0=đã xóa, 1 hoạt động, 2, chưa duyệt ...
 
     String author;
 

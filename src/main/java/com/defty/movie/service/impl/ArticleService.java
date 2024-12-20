@@ -65,8 +65,6 @@ public class ArticleService implements IArticleService {
         Article articleCheck=ariticleRepository.findById(id).orElseThrow(()->new RuntimeException("The article dont exist !"));
         Article article = articleMapper.toArticleEntity(articleRequest);
 
-        article.setSlug(slugUtil.createSlug(articleRequest.getTitle(),id));
-        article.setCreatedDate(articleCheck.getCreatedDate());
         article.setAccount(articleCheck.getAccount());
         article.setSlug(slugUtil.createSlug(articleRequest.getTitle(),id));
         article.setId(id);

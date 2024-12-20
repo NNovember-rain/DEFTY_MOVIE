@@ -13,4 +13,13 @@ public class ApiResponeUtil {
                 .build();
         return (ResponseEntity<T>) ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
+
+    public static <T> ResponseEntity<T> ResponseCreatedSuccess(T data) {
+        ApiResponse<?> apiResponse = ApiResponse.builder()
+                .status(HttpStatus.CREATED.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(data)
+                .build();
+        return (ResponseEntity<T>) ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
 }

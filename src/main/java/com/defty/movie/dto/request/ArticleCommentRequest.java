@@ -7,8 +7,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ArticleCommentRequest {
-    int articleId;
-    int parentId;
-    int userId;
+    Integer articleId;
+    Integer parentArticleCommentId;
     String content;
 }
