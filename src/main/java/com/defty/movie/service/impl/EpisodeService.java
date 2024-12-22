@@ -60,7 +60,7 @@ public class EpisodeService implements IEpisodeService {
                 episodeResponseDTOS.add(episodeMapper.toEpisodeResponseDTO(m));
             }
 
-            PageableResponse<EpisodeResponse> pageableResponse = new PageableResponse<>(episodeResponseDTOS, episodeRepository.count());
+            PageableResponse<EpisodeResponse> pageableResponse = new PageableResponse<>(episodeResponseDTOS, episodes.getTotalElements());
             return new ApiResponse<>(200, "OK", pageableResponse);
         }
     }
