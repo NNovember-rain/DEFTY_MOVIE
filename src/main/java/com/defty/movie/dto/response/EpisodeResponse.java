@@ -13,4 +13,5 @@ public class EpisodeResponse {
     String thumbnail;
     String link;
     Integer movieId;
+    Integer status;
 }

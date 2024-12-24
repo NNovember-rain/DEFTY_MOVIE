@@ -6,10 +6,12 @@ import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.dto.response.EpisodeResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Episode;
+import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.EpisodeMapper;
 import com.defty.movie.repository.IEpisodeRepository;
 import com.defty.movie.service.IEpisodeService;
+import com.defty.movie.utils.UploadImageUtil;
 import com.defty.movie.validation.EpisodeValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,15 +32,21 @@ import java.util.*;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EpisodeService implements IEpisodeService {
-    private final EpisodeMapper episodeMapper;
-    private final IEpisodeRepository episodeRepository;
-    private final EpisodeValidation episodeValidation;
+    EpisodeMapper episodeMapper;
+    IEpisodeRepository episodeRepository;
+    EpisodeValidation episodeValidation;
+    UploadImageUtil uploadImageUtil;
     @Override
     public ApiResponse<Integer> addEpisode(EpisodeRequest episodeRequest) {
         episodeValidation.fieldValidation(episodeRequest);
 
         Episode episode = episodeMapper.toEpisodeEntity(episodeRequest);
-
+        try{
+            episode.setThumbnail(uploadImageUtil.upload(episodeRequest.getThumbnail()));
+        }
+        catch(Exception e){
+            throw new ImageUploadException("Could not upload the image, please try again later!");
+        }
         try{
             episodeRepository.save(episode);
         }
