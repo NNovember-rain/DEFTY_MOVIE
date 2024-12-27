@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="trace">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+	        <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
+        </Console>
+                                 
+        <RollingFile name="movie_service_INFO" filename="logs/movie_service.log"   filepattern="logs/movie_service.${hostName}.%d{YYYY-MM-dd}.log.gz">
+	        <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} %-5p %c{2}.%M %msg%n" />
+                <Policies>
+	                <TimeBasedTriggeringPolicy />
+                </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="logs">
+                    <IfFileName glob="movie_service.*.log.gz" />
+                    <IfLastModified age="P7D" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <RollingFile name="movie_service_ERROR" filename="logs/movie_service_ERROR.log"   filepattern="logs/movie_service_ERROR.%d{YYYY-MM-dd}.log.gz">
+	        <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} %-5p %c{1} %msg%n" />
+                <Policies>
+        	        <SizeBasedTriggeringPolicy size="300 MB" />
+                </Policies>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <DefaultRolloverStrategy>
+                <Delete basePath="logs">
+                    <IfFileName glob="movie_service_ERROR.*.log.gz" />
+                    <IfLastModified age="P7D" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="movie_service_INFO" />
+            <AppenderRef ref="movie_service_ERROR" />
+            <AppenderRef ref="Console"/>
+
+        </Root>
+    </Loggers>
+</Configuration>
+
