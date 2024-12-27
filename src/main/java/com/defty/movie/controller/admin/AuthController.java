@@ -23,11 +23,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${api.prefix}/admin/auth")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthController {
+    String PREFIX_AUTH = "AUTH | ";
     IAuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse res){
         LoginResponse loginResponse = authService.login(loginRequest, res);
+        log.info(PREFIX_AUTH + "Login success");
         ApiResponse<LoginResponse> response = ApiResponse.<LoginResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -40,6 +42,7 @@ public class AuthController {
     public ResponseEntity<?> checkAccount(HttpServletRequest request) {
         String token = CookieUtil.getValue(request, "access_token");
         if (token == null || token.isEmpty()) {
+            log.error(PREFIX_AUTH + "Not logged in or do not have a valid token");
             ApiResponse<?> response = ApiResponse.builder()
                     .status(HttpStatus.UNAUTHORIZED.value())
                     .message("Not logged in or do not have a valid token")
@@ -50,6 +53,7 @@ public class AuthController {
         }
         try {
             AccountResponse accountResponse = authService.getAccountFromToken(token);
+            log.info(PREFIX_AUTH + "Check account success");
             ApiResponse<?> response = ApiResponse.builder()
                     .status(HttpStatus.OK.value())
                     .message(HttpStatus.OK.getReasonPhrase())
@@ -57,6 +61,7 @@ public class AuthController {
                     .build();
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
+            log.error(PREFIX_AUTH + "Token is expired or invalid");
             ApiResponse<?> response = ApiResponse.builder()
                     .status(HttpStatus.UNAUTHORIZED.value())
                     .message("Token is expired or invalid")
@@ -70,6 +75,7 @@ public class AuthController {
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse res) {
         String refreshToken = CookieUtil.getValue(request, "refresh_token");
         RefreshTokenResponse newToken = authService.refreshToken(refreshToken, res);
+        log.info(PREFIX_AUTH + "Refresh token success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -84,6 +90,7 @@ public class AuthController {
         authService.logout(accessToken);
         CookieUtil.clear(response, "access_token");
         CookieUtil.clear(response, "refresh_token");
+        log.info(PREFIX_AUTH + "Logout success");
         ApiResponse<?> responseObj = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

@@ -18,6 +18,7 @@ public class MovieMapper {
     }
     public MovieResponse toMovieResponseDTO(Movie movie){
         MovieResponse movieResponseDTO = modelMapper.map(movie, MovieResponse.class);
+        movieResponseDTO.setDirector(movie.getDirector().getFullName());
         return movieResponseDTO;
     }
 }

@@ -9,8 +9,8 @@ public class MovieValidation {
     public void fieldValidation(MovieRequest movieRequest){
         String message = "";
         if(checknull(movieRequest.getTitle())) message += "Movie name can't be left blank!";
-        if(movieRequest.getDirectorId() == null) message += "DirectorId is null!";
-        if(checknull(movieRequest.getTitle()) || movieRequest.getDirectorId() == null){
+        if(movieRequest.getDirector() == null) message += "DirectorId is null!";
+        if(checknull(movieRequest.getTitle()) || movieRequest.getDirector() == null){
             message = "Field Riquired Exception!" + message;
             throw new FieldRequiredException(message);
         }

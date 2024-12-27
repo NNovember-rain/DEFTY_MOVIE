@@ -3,6 +3,7 @@ package com.defty.movie.dto.response;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -17,7 +18,7 @@ public class MovieResponse {
 
     String trailer;
 
-    String thumbnail;
+    MultipartFile thumbnail;
 
     String coverImage;
 
@@ -27,13 +28,13 @@ public class MovieResponse {
 
     Date releaseDate;
 
-    Boolean membershipType;
+    Integer membershipType;
 
     Integer ranking;
 
     String slug;
 
-    Integer directorId;
+    String director;
 
     Date createdDate;
 

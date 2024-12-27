@@ -7,6 +7,7 @@ import com.defty.movie.service.IRoleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +20,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("${api.prefix}/admin/role")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoleController {
+    String PREFIX_ROLE = "ROLE | ";
     IRoleService roleService;
 
     @GetMapping("")
@@ -32,6 +35,7 @@ public class RoleController {
                                          @RequestParam(value = "name", required = false) String name) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<RoleResponse> roleResponses = roleService.getAllRoles(name, pageable);
+        log.info(PREFIX_ROLE + "Get all roles success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -44,6 +48,7 @@ public class RoleController {
     @PreAuthorize("@requiredPermission.checkPermission('GET_ROLE')")
     public ResponseEntity<?> getRoleId(@PathVariable("roleId") Integer roleId) {
         RoleResponse roleResponse = roleService.getRoleId(roleId);
+        log.info(PREFIX_ROLE + "Get role by id success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -56,6 +61,7 @@ public class RoleController {
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_ROLE')")
     public ResponseEntity<?> createRole(@RequestBody RoleRequest roleRequest) {
         RoleResponse roleResponse = roleService.createRole(roleRequest);
+        log.info(PREFIX_ROLE + "Create role success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
                 .message(HttpStatus.CREATED.getReasonPhrase())
@@ -68,6 +74,7 @@ public class RoleController {
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_ROLES')")
     public ResponseEntity<?> deleteRole(@PathVariable("ids") List<Integer> ids) {
         roleService.deleteRole(ids);
+        log.info(PREFIX_ROLE + "Delete role success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -81,6 +88,7 @@ public class RoleController {
     public ResponseEntity<?> updateRole(@PathVariable Integer id,
                                         @RequestBody RoleRequest roleRequest) {
         RoleResponse roleResponse = roleService.updateRole(id, roleRequest);
+        log.info(PREFIX_ROLE + "Update role success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -94,6 +102,7 @@ public class RoleController {
     public ResponseEntity<?> assignPermissions(@RequestParam Integer roleId,
                                                @PathVariable List<Integer> permissionIds) {
         RoleResponse roleResponse = roleService.assignPermissionToRole(roleId, permissionIds);
+        log.info(PREFIX_ROLE + "Assign permission to role success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -107,6 +116,7 @@ public class RoleController {
     public ResponseEntity<?> unassignPermissions(@RequestParam Integer roleId,
                                                  @PathVariable List<Integer> permissionIds) {
         RoleResponse roleResponse = roleService.unassignPermissionFromRole(roleId, permissionIds);
+        log.info(PREFIX_ROLE + "Unassign permission from role success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

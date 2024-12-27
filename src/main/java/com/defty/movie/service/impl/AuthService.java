@@ -16,6 +16,7 @@ import com.defty.movie.service.IRefreshTokenService;
 import com.defty.movie.utils.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthService implements IAuthService {
     @Value("${jwt.expiration}")
@@ -41,15 +43,18 @@ public class AuthService implements IAuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final AccountMapper accountMapper;
+    String PREFIX_AUTH = "AUTH | ";
 
     @Override
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
         Optional<Account> accountOptional = accountRepository.findByUsername(loginRequest.getUsername());
         if (accountOptional.isEmpty()) {
+            log.error("{}Account not found", PREFIX_AUTH);
             throw new NotFoundException("Account not found");
         }
         Account account = accountOptional.get();
         if (!passwordEncoder.matches(loginRequest.getPassword(), account.getPassword())) {
+            log.error("{}Wrong username or password", PREFIX_AUTH);
             throw new RuntimeException("Wrong username or password");
         }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -79,11 +84,13 @@ public class AuthService implements IAuthService {
     @Override
     public AccountResponse getAccountFromToken(String token) {
         if(jwtTokenUtil.isTokenExpired(token)) {
+            log.error("{}Token is expired", PREFIX_AUTH);
             throw new RuntimeException("Token is expired");
         }
         String username = jwtTokenUtil.extractUsername(token);
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
         if (accountOptional.isEmpty()) {
+            log.error("{}Account not found", PREFIX_AUTH);
             throw new NotFoundException("Account not found");
         }
         Account account = accountOptional.get();
@@ -94,6 +101,7 @@ public class AuthService implements IAuthService {
     public Optional<Account> getCurrentAccount() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
+            log.error("{}Account not found", PREFIX_AUTH);
             return Optional.empty();
         }
         String username = ((UserDetails) auth.getPrincipal()).getUsername();
@@ -104,6 +112,7 @@ public class AuthService implements IAuthService {
     public RefreshTokenResponse refreshToken(String refreshToken, HttpServletResponse response) {
         Optional<RefreshToken> exitRefreshToken = refreshTokenRepository.findByRefreshToken(refreshToken);
         if (exitRefreshToken.isEmpty()) {
+            log.error("{}Refresh token not found", PREFIX_AUTH);
             throw new NotFoundException("Refresh token not found");
         }
         Account account = exitRefreshToken.get().getAccount();

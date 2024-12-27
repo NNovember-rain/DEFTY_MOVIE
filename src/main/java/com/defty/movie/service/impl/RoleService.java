@@ -16,6 +16,7 @@ import com.defty.movie.service.IRoleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoleService implements IRoleService {
@@ -33,14 +35,17 @@ public class RoleService implements IRoleService {
     IPermissionRepository permissionRepository;
     PermissionMapper permissionMapper;
     IRolePermissionRepository rolePermissionRepository;
+    String PREFIX_ROLE = "ROLE | ";
 
     @Override
     public Page<RoleResponse> getAllRoles(String name, Pageable pageable) {
         Page<Role> roles;
         if (name != null && !name.isEmpty()) {
             roles = roleRepository.findRole(name, pageable);
+            log.info("{}Get all roles by name: {}", PREFIX_ROLE, name);
         } else {
             roles = roleRepository.findAllWithStatus(pageable);
+            log.info("{}Get all roles", PREFIX_ROLE);
         }
         return roles.map(role -> new RoleResponse(
                 role.getId(),
@@ -53,6 +58,7 @@ public class RoleService implements IRoleService {
     @Override
     public RoleResponse createRole(RoleRequest roleRequest) {
         if(roleRepository.findByName(roleRequest.getName()) != null) {
+            log.error("{}Role already exist", PREFIX_ROLE);
             throw new AlreadyExitException("Role already exist");
         }
         Role role = Role.builder()
@@ -67,7 +73,11 @@ public class RoleService implements IRoleService {
     @Override
     public RoleResponse getRoleId(Integer roleId) {
         Set<Permission> permissions = permissionRepository.findPermissionsByRoleId(roleId);
-        Set<PermissionResponse> permissionResponses = permissions.stream().map(permissionMapper::toPermissionResponse).collect(Collectors.toSet());
+        log.info("{}Get permission by roleId: {}", PREFIX_ROLE, roleId);
+        Set<PermissionResponse> permissionResponses = permissions.stream()
+                .map(permissionMapper::toPermissionResponse)
+                .collect(Collectors.toSet());
+        log.info("{}Get role by id: {}", PREFIX_ROLE, roleId);
         return RoleResponse.builder()
                 .name(roleRepository.findById(roleId).get().getName())
                 .description(roleRepository.findById(roleId).get().getDescription())
@@ -78,8 +88,11 @@ public class RoleService implements IRoleService {
     @Override
     public void deleteRole(List<Integer> roleId) {
         List<Role> roles = roleRepository.findAllById(roleId);
+        log.info("{}Delete role by id: {}", PREFIX_ROLE, roleId);
         for (Role role : roles) {
             role.setStatus(0);
+            List<RolePermission> rolePermissions = rolePermissionRepository.findByRoleId(role.getId());
+            rolePermissionRepository.deleteAll(rolePermissions);
             roleRepository.save(role);
         }
     }
@@ -100,6 +113,7 @@ public class RoleService implements IRoleService {
             }
         }
         rolePermissionRepository.saveAll(newRolePermissions);
+        log.info("{}Assign permission to role: {}", PREFIX_ROLE, roleId);
         return RoleResponse.builder()
                 .name(role.getName())
                 .description(role.getDescription())
@@ -120,6 +134,7 @@ public class RoleService implements IRoleService {
             rolePermissions.add(rolePermission);
         }
         rolePermissionRepository.deleteAll(rolePermissions);
+        log.info("{}Unassign permission from role: {}", PREFIX_ROLE, roleId);
         return RoleResponse.builder()
                 .name(role.getName())
                 .description(role.getDescription())
@@ -131,15 +146,20 @@ public class RoleService implements IRoleService {
 
     @Override
     public RoleResponse updateRole(Integer id, RoleRequest roleRequest) {
-        Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Role not found"));
-        role.setName(roleRequest.getName());
-        role.setDescription(roleRequest.getDescription());
-        roleRepository.save(role);
-        return RoleResponse.builder()
-                .name(roleRequest.getName())
-                .description(roleRequest.getDescription())
-                .build();
+        try {
+            Role role = roleRepository.findById(id).orElseThrow(
+                    () -> new NotFoundException("Role not found"));
+            role.setName(roleRequest.getName());
+            role.setDescription(roleRequest.getDescription());
+            roleRepository.save(role);
+            log.info("{}Update role by id: {}", PREFIX_ROLE, id);
+            return RoleResponse.builder()
+                    .name(roleRequest.getName())
+                    .description(roleRequest.getDescription())
+                    .build();
+        } catch (NotFoundException e) {
+            log.error("{}Error updating role by id: {}. Exception: {}", PREFIX_ROLE, id, e.getMessage());
+            throw e;
+        }
     }
-
 }

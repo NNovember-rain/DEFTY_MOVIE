@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import lombok.AccessLevel;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Date;
 
 @Data
@@ -18,7 +20,7 @@ public class MovieRequest {
 
     String trailer;
 
-    String thumbnail;
+    MultipartFile thumbnail;
 
     String coverImage;
 
@@ -28,12 +30,12 @@ public class MovieRequest {
 
     Date releaseDate;
 
-    Boolean membershipType;
+    Integer membershipType;
 
     Integer ranking;
 
 //    String slug;
 
-    Integer directorId;
+    String director;
 }
 

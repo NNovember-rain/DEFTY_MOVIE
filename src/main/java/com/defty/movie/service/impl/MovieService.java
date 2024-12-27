@@ -1,17 +1,17 @@
 package com.defty.movie.service.impl;
 
-import com.defty.movie.dto.response.ApiResponse;
-import com.defty.movie.dto.response.DirectorResponse;
-import com.defty.movie.dto.response.PageableResponse;
-import com.defty.movie.specication.MovieSpecification;
-import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.dto.request.MovieRequest;
+import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.MovieResponse;
+import com.defty.movie.dto.response.PageableResponse;
+import com.defty.movie.entity.Director;
 import com.defty.movie.entity.Movie;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.MovieMapper;
+import com.defty.movie.repository.IDirectorRepository;
 import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IMovieService;
+import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.validation.MovieValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -37,6 +35,7 @@ public class MovieService implements IMovieService {
     private final MovieMapper movieMapper;
     private final MovieValidation movieValidation;
     private final IMovieRepository movieRepository;
+    private final IDirectorRepository directorRepository;
     private final SlugUtil slugUtil;
 
     @Override
@@ -45,6 +44,8 @@ public class MovieService implements IMovieService {
         movieValidation.fieldValidation(movieRequest);
 
         Movie movie = movieMapper.toMovieEntity(movieRequest);
+        Optional<Director> director = directorRepository.findByFullName(movieRequest.getDirector());
+        director.ifPresent(movie::setDirector);
         Movie newMovie = movieRepository.save(movie);
         newMovie.setSlug(slugUtil.createSlug(newMovie.getTitle(), newMovie.getId()));
         try{
@@ -100,7 +101,8 @@ public class MovieService implements IMovieService {
             /*copy different fields from movieRequest to updatedMovie*/
             BeanUtils.copyProperties(movieRequest, updatedMovie, "id");
             updatedMovie.setSlug(slugUtil.createSlug(movieRequest.getTitle(), id));
-
+            Optional<Director> director = directorRepository.findByFullName(movieRequest.getDirector());
+            director.ifPresent(updatedMovie::setDirector);
             movieRepository.save(updatedMovie);
         }
         else {
@@ -112,7 +114,7 @@ public class MovieService implements IMovieService {
     @Override
     public ApiResponse<List<Integer>> deleteMovie(List<Integer> ids) {
         List<Movie> movieEntities = movieRepository.findAllById(ids);
-        if(movieEntities.size() == 0) throw new NotFoundException("Not found exception");
+        if(movieEntities.isEmpty()) throw new NotFoundException("Not found exception");
         for(Movie movie : movieEntities){
             movie.setStatus(0);
         }

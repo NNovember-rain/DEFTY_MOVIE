@@ -15,15 +15,16 @@ import com.defty.movie.utils.UploadImageUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountService implements IAccountService {
@@ -32,16 +33,20 @@ public class AccountService implements IAccountService {
     PasswordEncoder passwordEncoder;
     IRoleRepository roleRepository;
     UploadImageUtil uploadImageUtil;
+    String PREFIX_ACCOUNT = "ACCOUNT | ";
 
     @Override
     public AccountResponse createAccount(AccountRequest accountRequest) {
         if(accountRepository.findByUsername(accountRequest.getUsername()).isPresent()) {
+            log.error("{}Account already exists", PREFIX_ACCOUNT);
             throw new AlreadyExitException("Account already exists");
         }
         if(accountRepository.findByEmail(accountRequest.getEmail()).isPresent()) {
+            log.error("{}Account already exists", PREFIX_ACCOUNT);
             throw new AlreadyExitException("Account already exists");
         }
         if (accountRepository.findByPhone(accountRequest.getPhone()).isPresent()) {
+            log.error("{}Account already exists", PREFIX_ACCOUNT);
             throw new AlreadyExitException("Account already exists");
         }
         Account account = accountMapper.toAccount(accountRequest);
@@ -75,16 +80,19 @@ public class AccountService implements IAccountService {
         );
         accountRepository.findByUsername(accountRequest.getUsername()).ifPresent(existingAccount -> {
             if (!existingAccount.getId().equals(id)) {
+                log.error("{}Username already exists", PREFIX_ACCOUNT);
                 throw new AlreadyExitException("Username already exists");
             }
         });
         accountRepository.findByEmail(accountRequest.getEmail()).ifPresent(existingAccount -> {
             if (!existingAccount.getId().equals(id)) {
+                log.error("{}Email already exists", PREFIX_ACCOUNT);
                 throw new AlreadyExitException("Email already exists");
             }
         });
         accountRepository.findByPhone(accountRequest.getPhone()).ifPresent(existingAccount -> {
             if (!existingAccount.getId().equals(id)) {
+                log.error("{}Phone already exists", PREFIX_ACCOUNT);
                 throw new AlreadyExitException("Phone already exists");
             }
         });
@@ -106,6 +114,7 @@ public class AccountService implements IAccountService {
             try {
                 account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
             }catch (Exception e){
+                log.error("{}Could not upload the image", PREFIX_ACCOUNT);
                 throw new ImageUploadException("Could not upload the image, please try again later !");
             }
         }

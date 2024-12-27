@@ -27,7 +27,7 @@ public class MovieController {
 
     @PostMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_MOVIE')")
-    public ApiResponse<Integer> addMovie(@RequestBody MovieRequest movieRequest) {
+    public ApiResponse<Integer> addMovie(@ModelAttribute MovieRequest movieRequest) {
          return movieService.addMovie(movieRequest);
     }
 
@@ -51,7 +51,7 @@ public class MovieController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_MOVIE')")
-    public ApiResponse<Integer> patchMovie(@PathVariable Integer id, @RequestBody MovieRequest movieRequest) {
+    public ApiResponse<Integer> patchMovie(@PathVariable Integer id, @ModelAttribute MovieRequest movieRequest) {
         return movieService.updateMovie(id, movieRequest);
     }
 

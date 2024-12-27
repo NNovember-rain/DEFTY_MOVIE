@@ -25,6 +25,7 @@ import java.util.List;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PermissionController {
+    String PREFIX_PERMISSION = "PERMISSION | ";
     IPermissionService permissionService;
 
     @GetMapping("")
@@ -35,6 +36,7 @@ public class PermissionController {
         ApiResponse<?> response;
         if (page == null || size == null) {
             List<PermissionResponse> permissionResponses = permissionService.getAllPermissions();
+            log.info(PREFIX_PERMISSION + "Get all permissions success without paging");
             response = ApiResponse.builder()
                     .status(HttpStatus.OK.value())
                     .message(HttpStatus.OK.getReasonPhrase())
@@ -43,6 +45,7 @@ public class PermissionController {
         } else {
             Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
             Page<PermissionResponse> permissionResponses = permissionService.getAllPermissions(name, pageable);
+            log.info(PREFIX_PERMISSION + "Get all permissions success");
             response = ApiResponse.builder()
                     .status(HttpStatus.OK.value())
                     .message(HttpStatus.OK.getReasonPhrase())
@@ -56,6 +59,7 @@ public class PermissionController {
     @PreAuthorize("@requiredPermission.checkPermission('GET_PERMISSION')")
     public ResponseEntity<?> getPermissionById(@PathVariable Integer id) {
         PermissionResponse permissionResponse = permissionService.getPermissionById(id);
+        log.info(PREFIX_PERMISSION + "Get permission by id success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -68,6 +72,7 @@ public class PermissionController {
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_PERMISSION')")
     public ResponseEntity<?> createPermission(@RequestBody PermissionRequest permissionRequest) {
         PermissionResponse permissionResponse = permissionService.createPermission(permissionRequest);
+        log.info(PREFIX_PERMISSION + "Create permission success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
                 .message(HttpStatus.CREATED.getReasonPhrase())
@@ -81,6 +86,7 @@ public class PermissionController {
     public ResponseEntity<?> updatePermission(@PathVariable("permissionId") Integer permissionId,
                                               @RequestBody PermissionRequest permissionRequest) {
         permissionService.updatePermission(permissionId, permissionRequest);
+        log.info(PREFIX_PERMISSION + "Update permission success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -93,6 +99,7 @@ public class PermissionController {
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_PERMISSIONS')")
     public ResponseEntity<?> unassignPermission(@PathVariable List<Integer> permissionIds) {
         permissionService.deletePermissions(permissionIds);
+        log.info(PREFIX_PERMISSION + "Delete permission success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

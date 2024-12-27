@@ -26,12 +26,14 @@ import java.util.List;
 @RequestMapping("${api.prefix}/admin/account")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountController {
+    String PREFIX_ACCOUNT = "ACCOUNT | ";
     IAccountService accountService;
 
     @PostMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_ACCOUNT')")
     public ResponseEntity<?> createAccount(@ModelAttribute AccountRequest accountRequest) {
         AccountResponse accountResponse = accountService.createAccount(accountRequest);
+        log.info(PREFIX_ACCOUNT + "Create account success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
                 .message(HttpStatus.CREATED.getReasonPhrase())
@@ -47,6 +49,7 @@ public class AccountController {
                                            @RequestParam(value = "username", required = false) String username) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<AccountResponse> accountResponses = accountService.findAccount(username, pageable);
+        log.info(PREFIX_ACCOUNT + "Get all account success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -60,6 +63,7 @@ public class AccountController {
     public ResponseEntity<?> updateAccount(@Valid @PathVariable Integer id,
                                            @ModelAttribute AccountRequest accountRequest) {
         AccountResponse accountResponse = accountService.updateAccount(id, accountRequest);
+        log.info(PREFIX_ACCOUNT + "Update account success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -72,6 +76,7 @@ public class AccountController {
     @PreAuthorize("@requiredPermission.checkPermission('GET_ACCOUNT')")
     public ResponseEntity<?> getAccount(@PathVariable Integer id) {
         AccountResponse accountResponse = accountService.getAccount(id);
+        log.info(PREFIX_ACCOUNT + "Get account success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -84,6 +89,7 @@ public class AccountController {
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_ACCOUNTS')")
     public ResponseEntity<?> deleteAccount(@PathVariable List<Integer> ids) {
         accountService.deleteAccount(ids);
+        log.info(PREFIX_ACCOUNT + "Delete account success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

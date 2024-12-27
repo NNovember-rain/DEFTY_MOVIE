@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.Optional;
 
 public interface IDirectorRepository extends JpaRepository<Director, Integer> {
     @Query(value = "SELECT m FROM Director m WHERE " +
@@ -33,4 +34,5 @@ public interface IDirectorRepository extends JpaRepository<Director, Integer> {
             @Param("nationality") String nationality,
             @Param("status") Integer status,
             Pageable pageable);
+    Optional<Director> findByFullName(String fullName);
 }

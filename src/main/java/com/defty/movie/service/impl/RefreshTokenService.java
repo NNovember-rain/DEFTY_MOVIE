@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RefreshTokenService implements IRefreshTokenService {
@@ -30,6 +32,8 @@ public class RefreshTokenService implements IRefreshTokenService {
     final IAccountRepository accountRepository;
     final IUserRepository userRepository;
 
+    final String PREFIX_REFRESH = "REFRESH_TOKEN | ";
+
     @Override
     public String createRefreshToken(Integer id, boolean isAccount) {
         String refreshToken = UUID.randomUUID().toString();
@@ -39,6 +43,7 @@ public class RefreshTokenService implements IRefreshTokenService {
                 userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
         deleteExistingToken(entity, isAccount);
         saveRefreshToken(entity, refreshToken, expiresAt, isAccount);
+        log.info("{}Created refresh token for {}", PREFIX_REFRESH, isAccount ? "account" : "user");
         return refreshToken;
     }
 
@@ -47,8 +52,10 @@ public class RefreshTokenService implements IRefreshTokenService {
     public void deleteRefreshToken(Integer id, boolean isAccount) {
         if (isAccount) {
             refreshTokenRepository.deleteByAccountId(id);
+            log.info("{}Deleted refresh token for account {}", PREFIX_REFRESH, id);
         } else {
             refreshTokenRepository.deleteByUserId(id);
+            log.info("{}Deleted refresh token for user {}", PREFIX_REFRESH, id);
         }
     }
 
@@ -58,12 +65,14 @@ public class RefreshTokenService implements IRefreshTokenService {
             RefreshToken existingToken = refreshTokenRepository.findByAccountId(account.getId());
             if (existingToken != null) {
                 refreshTokenRepository.delete(existingToken);
+                log.info("{}Deleted existing refresh token for account {}", PREFIX_REFRESH, account.getUsername());
             }
         } else {
             User user = (User) entity;
             RefreshToken existingToken = refreshTokenRepository.findByUserId(user.getId());
             if (existingToken != null) {
                 refreshTokenRepository.delete(existingToken);
+                log.info("{}Deleted existing refresh token for user {}", PREFIX_REFRESH, user.getUsername());
             }
         }
     }
@@ -80,6 +89,7 @@ public class RefreshTokenService implements IRefreshTokenService {
             token.setUser(user);
         }
         refreshTokenRepository.save(token);
+        log.info("{}Created refresh token for {}", PREFIX_REFRESH, isAccount ? "account" : "user");
     }
 }
 
