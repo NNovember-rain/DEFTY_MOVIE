@@ -107,7 +107,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(OK)
     public ErrorResponse handleNotFoundException(NotFoundException e, WebRequest request) {
         ErrorResponse errorResponseDTO = new ErrorResponse();
         errorResponseDTO.setTimestamp(new Date());
@@ -121,7 +121,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ImageUploadException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.OK)
     public com.defty.movie.exception.ErrorResponse handleImageUploadException(ImageUploadException e, WebRequest request) {
         com.defty.movie.exception.ErrorResponse errorResponse = new com.defty.movie.exception.ErrorResponse();
         errorResponse.setTimestamp(new Date());

@@ -32,7 +32,7 @@ public class ArticleController {
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_ARTICLE')")
     public ResponseEntity<Integer> addArticle( @ModelAttribute ArticleRequest articleRequest) {
         Integer id=articleService.addArticle(articleRequest);
-        return ApiResponeUtil.ResponseOK(id);
+        return ApiResponeUtil.ResponseCreatedSuccess(id);
     }
 
 
