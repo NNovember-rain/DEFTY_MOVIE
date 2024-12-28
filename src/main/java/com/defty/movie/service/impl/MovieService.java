@@ -12,6 +12,7 @@ import com.defty.movie.repository.IDirectorRepository;
 import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IMovieService;
 import com.defty.movie.utils.SlugUtil;
+import com.defty.movie.utils.UploadImageUtil;
 import com.defty.movie.validation.MovieValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class MovieService implements IMovieService {
     private final IMovieRepository movieRepository;
     private final IDirectorRepository directorRepository;
     private final SlugUtil slugUtil;
+    UploadImageUtil uploadImageUtil;
 
     @Override
     public ApiResponse<Integer> addMovie(MovieRequest movieRequest) {
@@ -49,6 +51,8 @@ public class MovieService implements IMovieService {
         Movie newMovie = movieRepository.save(movie);
         newMovie.setSlug(slugUtil.createSlug(newMovie.getTitle(), newMovie.getId()));
         try{
+            newMovie.setThubnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
+            newMovie.setCoverImage(uploadImageUtil.upload(movieRequest.getCoverImage()));
             movieRepository.save(newMovie);
         }
         catch (Exception e){
@@ -113,6 +117,32 @@ public class MovieService implements IMovieService {
 
     @Override
     public ApiResponse<List<Integer>> deleteMovie(List<Integer> ids) {
+        List<Movie> movieEntities = movieRepository.findAllById(ids);
+        if(movieEntities.isEmpty()) throw new NotFoundException("Not found exception");
+        for(Movie movie : movieEntities){
+            movie.setStatus(-1);
+        }
+        movieRepository.saveAll(movieEntities);
+        if(ids.size() > 1){
+            return new ApiResponse<>(200, "Delete movies successfully", ids);
+        }
+        return new ApiResponse<>(200, "Delete movie successfully", ids);
+    }
+    @Override
+    public ApiResponse<List<Integer>> enableMovie(List<Integer> ids) {
+        List<Movie> movieEntities = movieRepository.findAllById(ids);
+        if(movieEntities.isEmpty()) throw new NotFoundException("Not found exception");
+        for(Movie movie : movieEntities){
+            movie.setStatus(1);
+        }
+        movieRepository.saveAll(movieEntities);
+        if(ids.size() > 1){
+            return new ApiResponse<>(200, "Delete movies successfully", ids);
+        }
+        return new ApiResponse<>(200, "Delete movie successfully", ids);
+    }
+    @Override
+    public ApiResponse<List<Integer>> disableMovie(List<Integer> ids) {
         List<Movie> movieEntities = movieRepository.findAllById(ids);
         if(movieEntities.isEmpty()) throw new NotFoundException("Not found exception");
         for(Movie movie : movieEntities){

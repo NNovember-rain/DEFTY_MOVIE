@@ -54,4 +54,16 @@ public class DirectorController {
     public ApiResponse<List<Integer>> deleteDirector(@PathVariable List<Integer> ids) {
         return directorService.deleteDirector(ids);
     }
+
+    @PatchMapping("/do-enable/{ids}")
+    @PreAuthorize("@requiredPermission.checkPermission('ENABLE_DIRECTOR')")
+    public ApiResponse<List<Integer>> enableDirector(@PathVariable List<Integer> ids) {
+        return directorService.enableDirector(ids);
+    }
+
+    @PatchMapping("/do-disable/{ids}")
+    @PreAuthorize("@requiredPermission.checkPermission('DISABLE_DIRECTOR')")
+    public ApiResponse<List<Integer>> disableDirector(@PathVariable List<Integer> ids) {
+        return directorService.disableDirector(ids);
+    }
 }

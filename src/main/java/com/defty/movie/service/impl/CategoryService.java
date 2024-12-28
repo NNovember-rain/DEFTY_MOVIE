@@ -73,13 +73,43 @@ public class CategoryService implements ICategoryService {
         List<Category> categories = categoryRepository.findAllById(ids);
         if(categories.size() == 0) throw new NotFoundException("Not found exception");
         for(Category category : categories){
-            category.setStatus(0);
+            category.setStatus(-1);
         }
         categoryRepository.saveAll(categories);
         if(ids.size() > 1){
             return new ApiResponse<>(200, "Delete categories successfully", ids);
         }
         return new ApiResponse<>(200, "Delete categorie successfully", ids);
+
+    }
+
+    @Override
+    public ApiResponse<List<Integer>> enableCategory(List<Integer> ids) {
+        List<Category> categories = categoryRepository.findAllById(ids);
+        if(categories.size() == 0) throw new NotFoundException("Not found exception");
+        for(Category category : categories){
+            category.setStatus(1);
+        }
+        categoryRepository.saveAll(categories);
+        if(ids.size() > 1){
+            return new ApiResponse<>(200, "Enable categories successfully", ids);
+        }
+        return new ApiResponse<>(200, "Enable categorie successfully", ids);
+
+    }
+
+    @Override
+    public ApiResponse<List<Integer>> disableCategory(List<Integer> ids) {
+        List<Category> categories = categoryRepository.findAllById(ids);
+        if(categories.size() == 0) throw new NotFoundException("Not found exception");
+        for(Category category : categories){
+            category.setStatus(0);
+        }
+        categoryRepository.saveAll(categories);
+        if(ids.size() > 1){
+            return new ApiResponse<>(200, "Disable categories successfully", ids);
+        }
+        return new ApiResponse<>(200, "Disable categorie successfully", ids);
 
     }
 

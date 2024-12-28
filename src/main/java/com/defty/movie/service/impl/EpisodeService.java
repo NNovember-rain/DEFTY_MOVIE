@@ -94,7 +94,37 @@ public class EpisodeService implements IEpisodeService {
         List<Episode> episodeEntity = episodeRepository.findAllById(ids);
         if(episodeEntity.size() == 0) throw new NotFoundException("Not found exception");
         for(Episode episode : episodeEntity){
+            episode.setStatus(-1);
+        }
+        episodeRepository.saveAll(episodeEntity);
+        if(ids.size() > 1){
+            return new ApiResponse<>(200, "Delete episodes successfully", ids);
+        }
+        return new ApiResponse<>(200, "Delete episode successfully", ids);
+
+    }
+
+    @Override
+    public ApiResponse<List<Integer>> enableEpisode(List<Integer> ids) {
+        List<Episode> episodeEntity = episodeRepository.findAllById(ids);
+        if(episodeEntity.size() == 0) throw new NotFoundException("Not found exception");
+        for(Episode episode : episodeEntity){
             episode.setStatus(0);
+        }
+        episodeRepository.saveAll(episodeEntity);
+        if(ids.size() > 1){
+            return new ApiResponse<>(200, "Delete episodes successfully", ids);
+        }
+        return new ApiResponse<>(200, "Delete episode successfully", ids);
+
+    }
+
+    @Override
+    public ApiResponse<List<Integer>> disableEpisode(List<Integer> ids) {
+        List<Episode> episodeEntity = episodeRepository.findAllById(ids);
+        if(episodeEntity.size() == 0) throw new NotFoundException("Not found exception");
+        for(Episode episode : episodeEntity){
+            episode.setStatus(1);
         }
         episodeRepository.saveAll(episodeEntity);
         if(ids.size() > 1){

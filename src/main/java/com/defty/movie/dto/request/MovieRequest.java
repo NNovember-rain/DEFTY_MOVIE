@@ -22,7 +22,7 @@ public class MovieRequest {
 
     MultipartFile thumbnail;
 
-    String coverImage;
+    MultipartFile coverImage;
 
 //    Integer status;
 

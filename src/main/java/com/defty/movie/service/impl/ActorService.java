@@ -86,13 +86,41 @@ public class ActorService implements IActorService {
         List<Actor> actors = actorRepository.findAllById(ids);
         if(actors.size() == 0) throw new NotFoundException("Not found exception");
         for(Actor actor : actors){
-            actor.setStatus(0);
+            actor.setStatus(-1);
         }
         actorRepository.saveAll(actors);
         if(ids.size() > 1){
             return new ApiResponse<>(200, "Delete actors successfully", ids);
         }
         return new ApiResponse<>(200, "Delete actor successfully", ids);
+    }
+
+    @Override
+    public ApiResponse<List<Integer>> disableActor(List<Integer> ids) {
+        List<Actor> actors = actorRepository.findAllById(ids);
+        if(actors.size() == 0) throw new NotFoundException("Not found exception");
+        for(Actor actor : actors){
+            actor.setStatus(0);
+        }
+        actorRepository.saveAll(actors);
+        if(ids.size() > 1){
+            return new ApiResponse<>(200, "Enable actors successfully", ids);
+        }
+        return new ApiResponse<>(200, "Enable actor successfully", ids);
+    }
+
+    @Override
+    public ApiResponse<List<Integer>> enableActor(List<Integer> ids) {
+        List<Actor> actors = actorRepository.findAllById(ids);
+        if(actors.size() == 0) throw new NotFoundException("Not found exception");
+        for(Actor actor : actors){
+            actor.setStatus(1);
+        }
+        actorRepository.saveAll(actors);
+        if(ids.size() > 1){
+            return new ApiResponse<>(200, "Disable actors successfully", ids);
+        }
+        return new ApiResponse<>(200, "Disable actor successfully", ids);
     }
 
     @Override

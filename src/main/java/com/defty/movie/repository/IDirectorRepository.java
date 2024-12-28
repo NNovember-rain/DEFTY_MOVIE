@@ -18,6 +18,7 @@ public interface IDirectorRepository extends JpaRepository<Director, Integer> {
             "(:gender IS NULL OR m.gender LIKE %:gender%) AND " +
             "(:date_of_birth IS NULL OR DATE(m.dateOfBirth) = :date_of_birth) AND " +
             "(:nationality IS NULL OR m.nationality LIKE %:nationality%) AND " +
+            "(m.status != -1) AND " +
             "(:status IS NULL OR m.status = :status) " +
             "ORDER BY m.createdDate DESC",
             countQuery = "SELECT count(m) FROM Director m WHERE " +
@@ -25,6 +26,7 @@ public interface IDirectorRepository extends JpaRepository<Director, Integer> {
                     "(:gender IS NULL OR m.gender LIKE %:gender%) AND " +
                     "(:date_of_birth IS NULL OR DATE(m.dateOfBirth) = :date_of_birth) AND " +
                     "(:nationality IS NULL OR m.nationality LIKE %:nationality%) AND " +
+                    "(m.status != -1) AND " +
                     "(:status IS NULL OR m.status = :status)",
             nativeQuery = false)
     Page<Director> findDirectors(

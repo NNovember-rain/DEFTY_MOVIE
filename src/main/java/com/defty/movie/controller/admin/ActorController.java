@@ -54,5 +54,17 @@ public class ActorController {
     public ApiResponse<List<Integer>> deleteActor(@PathVariable List<Integer> ids) {
         return actorService.deleteActor(ids);
     }
+
+    @PatchMapping("/do-enable/{ids}")
+    @PreAuthorize("@requiredPermission.checkPermission('ENABLE_ACTOR')")
+    public ApiResponse<List<Integer>> enableActor(@PathVariable List<Integer> ids) {
+        return actorService.enableActor(ids);
+    }
+
+    @PatchMapping("/do-disable/{ids}")
+    @PreAuthorize("@requiredPermission.checkPermission('DISABLE_ACTOR')")
+    public ApiResponse<List<Integer>> disableActor(@PathVariable List<Integer> ids) {
+        return actorService.disableActor(ids);
+    }
 }
 

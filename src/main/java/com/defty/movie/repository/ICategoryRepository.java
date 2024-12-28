@@ -14,10 +14,12 @@ import java.util.Date;
 public interface ICategoryRepository extends JpaRepository<Category, Integer> {
     @Query(value = "SELECT m FROM Category m WHERE " +
             "(:name IS NULL OR m.name LIKE %:name%) AND" +
+            "(m.status != -1) AND " +
             "(:status IS NULL OR m.status = :status) " +
             "ORDER BY m.createdDate DESC",
             countQuery = "SELECT count(m) FROM Category m WHERE " +
                     "(:name IS NULL OR m.name LIKE %:name%) AND " +
+                    "(m.status != -1) AND " +
                     "(:status IS NULL OR m.status = :status)",
             nativeQuery = false)
     Page<Category> findCategories(

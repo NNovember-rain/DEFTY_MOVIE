@@ -13,6 +13,8 @@ public interface ICategoryService {
     ApiResponse<Integer> addCategory(CategoryRequest categoryRequest);
     ApiResponse<Integer> updateCategory(Integer id, CategoryRequest categoryRequest);
     ApiResponse<List<Integer>> deleteCategory(List<Integer> ids);
+    ApiResponse<List<Integer>> enableCategory(List<Integer> ids);
+    ApiResponse<List<Integer>> disableCategory(List<Integer> ids);
     ApiResponse<PageableResponse<CategoryResponse>> getAllCategories(Pageable pageable, String name, Integer status);
     Object getCategory(Integer id);
 }

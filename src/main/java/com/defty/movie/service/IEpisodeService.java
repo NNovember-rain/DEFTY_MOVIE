@@ -15,5 +15,7 @@ public interface IEpisodeService {
     ApiResponse<PageableResponse<EpisodeResponse>> getEpisodes(Pageable pageable, Integer number, Integer status, Integer movieId);
     ApiResponse<Integer> updateEpisode(Integer id, EpisodeRequest movieRequest);
     ApiResponse<List<Integer>> deleteEpisode(List<Integer> ids);
+    ApiResponse<List<Integer>> disableEpisode(List<Integer> ids);
+    ApiResponse<List<Integer>> enableEpisode(List<Integer> ids);
     Object getEpisode(Integer id);
 }

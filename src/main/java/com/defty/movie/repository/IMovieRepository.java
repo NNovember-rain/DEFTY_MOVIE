@@ -20,6 +20,7 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
             "(:releaseDate IS NULL OR DATE(m.releaseDate) = :releaseDate) AND " +
             "(:ranking IS NULL OR m.ranking = :ranking) AND " +
             "(:directorId IS NULL OR m.director.id = :directorId) AND " +
+            "(m.status != -1) AND " +
             "(:status IS NULL OR m.status = :status) " +
             "ORDER BY m.createdDate DESC",
             countQuery = "SELECT count(m) FROM Movie m WHERE " +
@@ -28,6 +29,7 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
                     "(:releaseDate IS NULL OR DATE(m.releaseDate) = :releaseDate) AND " +
                     "(:ranking IS NULL OR m.ranking = :ranking) AND " +
                     "(:directorId IS NULL OR m.director.id = :directorId) AND " +
+                    "(m.status != -1) AND " +
                     "(:status IS NULL OR m.status = :status)",
             nativeQuery = false)
     Page<Movie> findMovies(
