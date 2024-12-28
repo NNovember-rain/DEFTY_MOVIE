@@ -42,7 +42,6 @@ public class AuthController {
     public ResponseEntity<?> checkAccount(HttpServletRequest request) {
         String token = CookieUtil.getValue(request, "access_token");
         if (token == null || token.isEmpty()) {
-            log.error(PREFIX_AUTH + "Not logged in or do not have a valid token");
             ApiResponse<?> response = ApiResponse.builder()
                     .status(HttpStatus.UNAUTHORIZED.value())
                     .message("Not logged in or do not have a valid token")

@@ -16,4 +16,5 @@ public interface IRoleService{
     void deleteRole(List<Integer> roleId);
     RoleResponse assignPermissionToRole(Integer roleId, List<Integer> permissionIds);
     RoleResponse unassignPermissionFromRole(Integer roleId, List<Integer> permissionIds);
+    Integer checkStatusRole(Integer roleId);
 }

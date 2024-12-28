@@ -40,16 +40,19 @@ public class DirectorService implements IDirectorService {
     public ApiResponse<Integer> addDirector(DirectorRequest directorRequest) {
         directorValidation.fieldValidation(directorRequest);
         Director directorEntity = directorMapper.toDirectorEntity(directorRequest);
-        try {
-            directorEntity.setAvatar(uploadImageUtil.upload(directorRequest.getAvatar()));
+        if (directorRequest.getAvatar() != null && !directorRequest.getAvatar().isEmpty()) {
+            try {
+                directorEntity.setAvatar(uploadImageUtil.upload(directorRequest.getAvatar()));
+            } catch (Exception e) {
+                throw new ImageUploadException("Could not upload the image, please try again later!");
+            }
         }
-        catch (Exception e){
-            throw new ImageUploadException("Could not upload the image, please try again later!");
+        else{
+            directorEntity.setAvatar(null);
         }
         try {
             directorRepository.save(directorEntity);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return new ApiResponse<>(500, e.getMessage(), directorEntity.getId());
         }
         return new ApiResponse<>(201, "Created", directorEntity.getId());

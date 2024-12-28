@@ -58,6 +58,19 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PostMapping("/status/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('STATUS_ACCOUNT')")
+    public ResponseEntity<?> switchStatus(@PathVariable("id") Integer roleId) {
+        Integer status = accountService.switchStatus(roleId);
+        log.info(PREFIX_ACCOUNT + "Switch status account success");
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(status)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PatchMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_ACCOUNT')")
     public ResponseEntity<?> updateAccount(@Valid @PathVariable Integer id,

@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -57,7 +58,8 @@ public class AccountService implements IAccountService {
     @Override
     public Page<AccountResponse> findAccount(String username, Pageable pageable) {
         if (username == null || username.isEmpty()) {
-            return accountRepository.findAllWithStatus(pageable).map(accountMapper::toAccountResponse);
+            return accountRepository.findAllWithStatus(pageable)
+                    .map(accountMapper::toAccountResponse);
         } else {
             return accountRepository.findAccount(username, pageable)
                     .map(accountMapper::toAccountResponse);
@@ -75,9 +77,12 @@ public class AccountService implements IAccountService {
 
     @Override
     public AccountResponse updateAccount(Integer id, AccountRequest accountRequest) {
-        Account account = accountRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Account not found")
-        );
+        Optional<Account> accountOptional = accountRepository.findById(id);
+        if (accountOptional.isEmpty()) {
+            log.error("{}Account not found", PREFIX_ACCOUNT);
+            throw new NotFoundException("Account not found");
+        }
+        Account account = accountOptional.get();
         accountRepository.findByUsername(accountRequest.getUsername()).ifPresent(existingAccount -> {
             if (!existingAccount.getId().equals(id)) {
                 log.error("{}Username already exists", PREFIX_ACCOUNT);
@@ -125,9 +130,29 @@ public class AccountService implements IAccountService {
 
     @Override
     public AccountResponse getAccount(Integer id) {
-        Account account = accountRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Account not found")
-        );
+        Optional<Account> accountOptional = accountRepository.findById(id);
+        if (accountOptional.isEmpty()) {
+            log.error("{}Account not found with id: {}", PREFIX_ACCOUNT, id);
+            throw new NotFoundException("Account not found");
+        }
+        Account account = accountOptional.get();
         return accountMapper.toAccountResponse(account);
+    }
+
+    @Override
+    public Integer switchStatus(Integer id) {
+        Optional<Account> accountOptional = accountRepository.findById(id);
+        if (accountOptional.isEmpty()) {
+            log.error("{}Account not found with id: {}", PREFIX_ACCOUNT, id);
+            throw new NotFoundException("Account not found with id: " + id);
+        }
+        Account account = accountOptional.get();
+        if(account.getStatus() == 1) {
+            account.setStatus(0);
+        } else {
+            account.setStatus(1);
+        }
+        accountRepository.save(account);
+        return account.getStatus();
     }
 }

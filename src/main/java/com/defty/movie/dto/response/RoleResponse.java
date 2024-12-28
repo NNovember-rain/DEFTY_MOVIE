@@ -14,5 +14,6 @@ public class RoleResponse {
     Integer id;
     String name;
     String description;
+    Integer status;
     Set<PermissionResponse> rolePermissions;
 }
