@@ -94,8 +94,8 @@ public class ArticleCommentService implements IArticleCommentService {
     }
 
     @Override
-    public List<ArticleCommentResponse> getArticleComment(Integer ariticleId) {
-        Optional<List<ArticleComment>> articleComments = articleCommentRepository.findByArticleIdAndStatus(ariticleId, 1);
+    public List<ArticleCommentResponse> getArticleComment(Integer articleId) {
+        Optional<List<ArticleComment>> articleComments = articleCommentRepository.findByArticleIdAndStatus(articleId, 1);
         if(articleComments.isPresent() && articleComments.get().size()>0) {
             List<ArticleComment> articleCommentList = articleComments.get();
             List<ArticleCommentResponse> articleCommentResponses = new ArrayList<>();

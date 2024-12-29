@@ -16,6 +16,9 @@ public class MovieComment extends BaseEntity {
     @Column
     String content;
 
+    @Column
+    int status;
+
     @ManyToOne
     @JoinColumn(name = "parent_movieComment_id")
     MovieComment parentMovieComment;

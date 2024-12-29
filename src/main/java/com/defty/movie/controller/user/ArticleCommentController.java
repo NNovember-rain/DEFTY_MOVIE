@@ -40,9 +40,9 @@ public class ArticleCommentController {
         return ApiResponeUtil.ResponseOK(massage);
     }
 
-    @GetMapping("/{id}")
-    public Object getArticleComment(@PathVariable Integer id) {
-        List<ArticleCommentResponse> articleComments= articleCommentService.getArticleComment(id);
+    @GetMapping("/{articleid}")
+    public Object getArticleComment(@PathVariable Integer articleid) {
+        List<ArticleCommentResponse> articleComments= articleCommentService.getArticleComment(articleid);
         return ApiResponeUtil.ResponseOK(articleComments);
     }
 }
