@@ -66,5 +66,11 @@ public class ActorController {
     public ApiResponse<List<Integer>> disableActor(@PathVariable List<Integer> ids) {
         return actorService.disableActor(ids);
     }
+
+    @PatchMapping("/status/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('CHANGE_ACTOR_STATUS')")
+    public ApiResponse<Integer> changeStatus(@PathVariable Integer id) {
+        return actorService.changeStatus(id);
+    }
 }
 
