@@ -28,10 +28,13 @@ public class ArticleController {
 
     private final IArticleService articleService;
 
+    String PREFIX_ARTICLE = "ARTICLE | ";
+
     @PostMapping()
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_ARTICLE')")
     public ResponseEntity<Integer> addArticle( @ModelAttribute ArticleRequest articleRequest) {
         Integer id=articleService.addArticle(articleRequest);
+        log.info(PREFIX_ARTICLE + "Add Aritcle successfully");
         return ApiResponeUtil.ResponseCreatedSuccess(id);
     }
 
@@ -41,6 +44,7 @@ public class ArticleController {
     public ResponseEntity<String> updateArticle( @PathVariable Integer id,
                                                  @ModelAttribute ArticleRequest articleRequest) {
         articleService.updateArticle(id,articleRequest);
+        log.info(PREFIX_ARTICLE + "Update Aritcle successfully");
         String responseMessage="Updated successful";
         return ApiResponeUtil.ResponseOK(responseMessage);
     }
@@ -49,6 +53,7 @@ public class ArticleController {
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_ARTICLE')")
     public ResponseEntity<String> deleteArticle(@PathVariable List<Integer> ids) {
         articleService.deleteArticle(ids);
+        log.info(PREFIX_ARTICLE + "Delete Aritcles successfully");
         String responseMessage="Delete successful";
         return ApiResponeUtil.ResponseOK(responseMessage);
     }
@@ -57,6 +62,7 @@ public class ArticleController {
     @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLE')")
     public ResponseEntity<?> getArticle(@PathVariable Integer id) {
         ArticleResponse articleResponse=articleService.getArticle(id);
+        log.info(PREFIX_ARTICLE + "Get Aritcle detail successfully");
         return ApiResponeUtil.ResponseOK(articleResponse);
     }
 
@@ -67,6 +73,7 @@ public class ArticleController {
                                          @RequestParam Map<String, Object> params) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         PageableResponse<ArticleResponse> articlePageableResponse = articleService.getAllArticles(pageable, params);
+        log.info(PREFIX_ARTICLE + "Get all Aritcles successfully");
         return ApiResponeUtil.ResponseOK(articlePageableResponse);
     }
 

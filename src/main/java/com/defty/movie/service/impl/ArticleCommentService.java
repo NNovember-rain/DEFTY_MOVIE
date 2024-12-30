@@ -15,6 +15,7 @@ import com.defty.movie.service.IArticleService;
 import com.defty.movie.service.IAuthService;
 import com.defty.movie.service.IAuthUserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ArticleCommentService implements IArticleCommentService {
 
@@ -31,24 +33,38 @@ public class ArticleCommentService implements IArticleCommentService {
     private final IArticleCommentRepository articleCommentRepository;
     private final ArticleCommentMapper articleCommentMapper;
 
+    String PREFIX_ARTICLE_COMMENT= "ARTICLE_COMMENT | ";
+
     @Override
     public Integer addArticleComment(ArticleCommentRequest articleCommentRequest) {
         ArticleComment articleComment = new ArticleComment();
         Optional<User> user = authUserService.getCurrentUser();
         if(user.isPresent()) {
+            log.info(PREFIX_ARTICLE_COMMENT + "Get current user success");
             articleComment.setUser(user.get());
-        }else throw new NotFoundException("User not found");
+        }else{
+            log.error("{}User not found", PREFIX_ARTICLE_COMMENT);
+            throw new NotFoundException("User not found");
+        }
 
         Optional<Article> article = articleRepository.findById(articleCommentRequest.getArticleId());
         if(article.isPresent()) {
             articleComment.setArticle(article.get());
-        }else throw new NotFoundException("Article not found");
+            log.info(PREFIX_ARTICLE_COMMENT + "Get article by articleId="+articleCommentRequest.getArticleId()+ " success");
+        }else {
+            log.error("{}Article not found", PREFIX_ARTICLE_COMMENT);
+            throw new NotFoundException("Article not found");
+        }
 
         if(articleCommentRequest.getParentArticleCommentId()!=null) {
             Optional<ArticleComment> articleCommentParent= articleCommentRepository.findById(articleCommentRequest.getParentArticleCommentId());
             if(articleCommentParent.isPresent()) {
+                log.info(PREFIX_ARTICLE_COMMENT + "Get ArticleCommentParent by articleCommentParentId="+articleCommentRequest.getParentArticleCommentId()+ " success");
                 articleComment.setParentArticleComment(articleCommentParent.get());
-            }else throw new NotFoundException("Parent article comment not found");
+            }else {
+                log.error("{}Parent article comment not found", PREFIX_ARTICLE_COMMENT);
+                throw new NotFoundException("Parent article comment not found");
+            }
         }
 
         articleComment.setStatus(1);
@@ -64,21 +80,29 @@ public class ArticleCommentService implements IArticleCommentService {
     public void updateArticleComment(Integer id, ArticleCommentRequest articleCommentRequest) {
         Optional<ArticleComment> articleComment = articleCommentRepository.findById(id);
         if(articleComment.isPresent()) {
+            log.info(PREFIX_ARTICLE_COMMENT + "Get article comment by articleId="+articleCommentRequest.getArticleId()+ " success");
             ArticleComment articleCommentUpdate = articleComment.get();
             BeanUtils.copyProperties(articleCommentRequest,articleCommentUpdate);
             articleCommentRepository.save(articleCommentUpdate);
-        }else throw new NotFoundException("Article Comment not found");
+        }else {
+            log.error("{}Article Comment not found", PREFIX_ARTICLE_COMMENT);
+            throw new NotFoundException("Article Comment not found");
+        }
     }
 
     @Override
     public void deleteArticleComment(List<Integer> ids) {
         List<ArticleComment> articleComments = articleCommentRepository.findAllById(ids);
-        if(articleComments.size()!=ids.size()) throw new NotFoundException("Some Article Comment not found");
+        if(articleComments.size()!=ids.size()) {
+            log.error("{}Some Article Comment not found", PREFIX_ARTICLE_COMMENT);
+            throw new NotFoundException("Some Article Comment not found");
+        }
         else {
             // xoa "cmt" bao gom ca "cmt con"
             for(ArticleComment articleComment:articleComments) {
                 if(articleComment.getParentArticleComment()==null) { // check xem cmt nay la cha hay con
                     Optional<List<ArticleComment>> articleCommentSub= articleCommentRepository.findByParentArticleComment_Id(articleComment.getId());
+                    log.info(PREFIX_ARTICLE_COMMENT + "Get article comment by articleId="+articleComment.getId()+ " success");
                     if(articleCommentSub.isPresent() && articleCommentSub.get().size()>0) {
                         List<ArticleComment> articleCommentSubUpdates = articleCommentSub.get();
                         for(ArticleComment articleCommentUpdate:articleCommentSubUpdates) {
@@ -103,7 +127,10 @@ public class ArticleCommentService implements IArticleCommentService {
                 articleCommentResponses.add(articleCommentMapper.toArticleCommentReSponse(articleComment));
             }
             return articleCommentResponses;
-        }throw new NotFoundException("ArticleComment not found");
+        }else {
+            log.error("{}Article Comment not found", PREFIX_ARTICLE_COMMENT);
+            throw new NotFoundException("ArticleComment not found");
+        }
 
     }
 }

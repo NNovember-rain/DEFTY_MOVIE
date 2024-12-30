@@ -231,3 +231,6 @@
 2025-12-29 18:27:24 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
 2025-12-29 18:27:52 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
 2025-12-29 18:27:52 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
+2025-12-29 18:32:04 INFO  jpa.LocalContainerEntityManagerFactoryBean.destroy Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-29 18:32:04 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown initiated...
+2025-12-29 18:32:04 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown completed.

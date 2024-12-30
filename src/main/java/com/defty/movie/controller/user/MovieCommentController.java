@@ -19,10 +19,12 @@ import java.util.List;
 public class MovieCommentController {
 
     private final IMovieCommentService movieCommentService;
+    String PREFIX_MOVIE_COMMENT = "MOVIE_COMMENT | ";
 
     @PostMapping()
     public Object addMovieComment(@RequestBody MovieCommentRequest movieCommentRequest) {
         Integer commentId = movieCommentService.addMovieComment(movieCommentRequest);
+        log.info(PREFIX_MOVIE_COMMENT + "Add Episode Comment successfully");
         return ApiResponeUtil.ResponseCreatedSuccess(commentId);
     }
 
@@ -30,6 +32,7 @@ public class MovieCommentController {
     public Object updateMovieComment(@PathVariable Integer id,@RequestBody MovieCommentRequest movieCommentRequest) {
         movieCommentService.updateMovieComment(id, movieCommentRequest);
         String massage="Updated episode comment";
+        log.info(PREFIX_MOVIE_COMMENT + "Updated Episode Comment successfully");
         return ApiResponeUtil.ResponseOK(massage);
     }
 
@@ -37,12 +40,14 @@ public class MovieCommentController {
     public Object deletarMovieComment(@PathVariable List<Integer> ids) {
         movieCommentService.deleteMovieComment(ids);
         String massage="Deleted episode comment";
+        log.info(PREFIX_MOVIE_COMMENT + "Deleted Episode Comment successfully");
         return ApiResponeUtil.ResponseOK(massage);
     }
 
     @GetMapping("/{movieid}")
     public Object getMovieComment(@PathVariable Integer movieid) {
         List<MovieCommentResponse> movieComments= movieCommentService.getMovieComment(movieid);
+        log.info(PREFIX_MOVIE_COMMENT + "Get all Episode Comment by movieId successfully");
         return ApiResponeUtil.ResponseOK(movieComments);
     }
 }
