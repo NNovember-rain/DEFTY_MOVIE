@@ -15,6 +15,7 @@ public interface ICategoryService {
     ApiResponse<List<Integer>> deleteCategory(List<Integer> ids);
     ApiResponse<List<Integer>> enableCategory(List<Integer> ids);
     ApiResponse<List<Integer>> disableCategory(List<Integer> ids);
+    ApiResponse<Integer> changeStatus(Integer id);
     ApiResponse<PageableResponse<CategoryResponse>> getAllCategories(Pageable pageable, String name, Integer status);
     Object getCategory(Integer id);
 }

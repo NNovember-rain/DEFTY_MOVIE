@@ -63,4 +63,10 @@ public class CategoryController {
     public ApiResponse<List<Integer>> disableCategory(@PathVariable List<Integer> ids) {
         return categoryService.disableCategory(ids);
     }
+
+    @PatchMapping("/status/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('CHANGE_CATEGORY_STATUS')")
+    public ApiResponse<Integer> changeStatus(@PathVariable Integer id) {
+        return categoryService.changeStatus(id);
+    }
 }

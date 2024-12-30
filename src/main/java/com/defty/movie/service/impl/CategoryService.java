@@ -4,7 +4,7 @@ import com.defty.movie.dto.request.CategoryRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.dto.response.PageableResponse;
-import com.defty.movie.entity.Actor;
+import com.defty.movie.entity.Category;
 import com.defty.movie.entity.Category;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.CategoryMapper;
@@ -81,6 +81,25 @@ public class CategoryService implements ICategoryService {
         }
         return new ApiResponse<>(200, "Delete categorie successfully", ids);
 
+    }
+
+    @Override
+    public ApiResponse<Integer> changeStatus(Integer id) {
+        Optional<Category> actor = categoryRepository.findById(id);
+        if(actor.get() != null){
+            String message = "";
+            if(actor.get().getStatus() == 0){
+                actor.get().setStatus(1);
+                message += "Enable actors successfully";
+            }
+            else{
+                actor.get().setStatus(0);
+                message += "Disable actors successfully";
+            }
+            categoryRepository.save(actor.get());
+            return new ApiResponse<>(200, message, id);
+        }
+        else throw new NotFoundException("Not found exception");
     }
 
     @Override
