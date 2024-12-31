@@ -16,6 +16,9 @@ public class MovieComment extends BaseEntity {
     @Column
     String content;
 
+    @Column
+    Integer status;
+
     @ManyToOne
     @JoinColumn(name = "parent_movieComment_id")
     MovieComment parentMovieComment;
@@ -27,6 +30,8 @@ public class MovieComment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
+
 
     @OneToMany(mappedBy = "movieComment", fetch = FetchType.LAZY)
     Set<MovieCommentReaction> movieCommentReactions;
