@@ -129,30 +129,22 @@ public class MovieService implements IMovieService {
         return new ApiResponse<>(200, "Delete movie successfully", ids);
     }
     @Override
-    public ApiResponse<List<Integer>> enableMovie(List<Integer> ids) {
-        List<Movie> movieEntities = movieRepository.findAllById(ids);
-        if(movieEntities.isEmpty()) throw new NotFoundException("Not found exception");
-        for(Movie movie : movieEntities){
-            movie.setStatus(1);
+    public ApiResponse<Integer> changeStatus(Integer id) {
+        Optional<Movie> movie = movieRepository.findById(id);
+        if(movie.get() != null){
+            String message = "";
+            if(movie.get().getStatus() == 0){
+                movie.get().setStatus(1);
+                message += "Enable movies successfully";
+            }
+            else{
+                movie.get().setStatus(0);
+                message += "Disable movies successfully";
+            }
+            movieRepository.save(movie.get());
+            return new ApiResponse<>(200, message, id);
         }
-        movieRepository.saveAll(movieEntities);
-        if(ids.size() > 1){
-            return new ApiResponse<>(200, "Delete movies successfully", ids);
-        }
-        return new ApiResponse<>(200, "Delete movie successfully", ids);
-    }
-    @Override
-    public ApiResponse<List<Integer>> disableMovie(List<Integer> ids) {
-        List<Movie> movieEntities = movieRepository.findAllById(ids);
-        if(movieEntities.isEmpty()) throw new NotFoundException("Not found exception");
-        for(Movie movie : movieEntities){
-            movie.setStatus(0);
-        }
-        movieRepository.saveAll(movieEntities);
-        if(ids.size() > 1){
-            return new ApiResponse<>(200, "Delete movies successfully", ids);
-        }
-        return new ApiResponse<>(200, "Delete movie successfully", ids);
+        else throw new NotFoundException("Not found exception");
     }
 
     @Override
