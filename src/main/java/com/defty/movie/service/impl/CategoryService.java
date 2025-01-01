@@ -4,7 +4,7 @@ import com.defty.movie.dto.request.CategoryRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.dto.response.PageableResponse;
-import com.defty.movie.entity.Actor;
+import com.defty.movie.entity.Category;
 import com.defty.movie.entity.Category;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.CategoryMapper;
@@ -84,33 +84,22 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public ApiResponse<List<Integer>> enableCategory(List<Integer> ids) {
-        List<Category> categories = categoryRepository.findAllById(ids);
-        if(categories.size() == 0) throw new NotFoundException("Not found exception");
-        for(Category category : categories){
-            category.setStatus(1);
+    public ApiResponse<Integer> changeStatus(Integer id) {
+        Optional<Category> category = categoryRepository.findById(id);
+        if(category.get() != null){
+            String message = "";
+            if(category.get().getStatus() == 0){
+                category.get().setStatus(1);
+                message += "Enable categorys successfully";
+            }
+            else{
+                category.get().setStatus(0);
+                message += "Disable categorys successfully";
+            }
+            categoryRepository.save(category.get());
+            return new ApiResponse<>(200, message, id);
         }
-        categoryRepository.saveAll(categories);
-        if(ids.size() > 1){
-            return new ApiResponse<>(200, "Enable categories successfully", ids);
-        }
-        return new ApiResponse<>(200, "Enable categorie successfully", ids);
-
-    }
-
-    @Override
-    public ApiResponse<List<Integer>> disableCategory(List<Integer> ids) {
-        List<Category> categories = categoryRepository.findAllById(ids);
-        if(categories.size() == 0) throw new NotFoundException("Not found exception");
-        for(Category category : categories){
-            category.setStatus(0);
-        }
-        categoryRepository.saveAll(categories);
-        if(ids.size() > 1){
-            return new ApiResponse<>(200, "Disable categories successfully", ids);
-        }
-        return new ApiResponse<>(200, "Disable categorie successfully", ids);
-
+        else throw new NotFoundException("Not found exception");
     }
 
     @Override

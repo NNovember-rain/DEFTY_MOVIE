@@ -5,6 +5,7 @@ import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.dto.response.DirectorResponse;
 import com.defty.movie.dto.response.PageableResponse;
+import com.defty.movie.entity.Actor;
 import com.defty.movie.entity.Director;
 import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
@@ -142,29 +143,21 @@ public class DirectorService implements IDirectorService {
         return new ApiResponse<>(200, "Delete director successfully", ids);
     }
     @Override
-    public ApiResponse<List<Integer>> disableDirector(List<Integer> ids) {
-        List<Director> directors = directorRepository.findAllById(ids);
-        if(directors.size() == 0) throw new NotFoundException("Not found exception");
-        for(Director director : directors){
-            director.setStatus(0);
+    public ApiResponse<Integer> changeStatus(Integer id) {
+        Optional<Director> director = directorRepository.findById(id);
+        if(director.get() != null){
+            String message = "";
+            if(director.get().getStatus() == 0){
+                director.get().setStatus(1);
+                message += "Enable directors successfully";
+            }
+            else{
+                director.get().setStatus(0);
+                message += "Disable directors successfully";
+            }
+            directorRepository.save(director.get());
+            return new ApiResponse<>(200, message, id);
         }
-        directorRepository.saveAll(directors);
-        if(ids.size() > 1){
-            return new ApiResponse<>(200, "Disable directors successfully", ids);
-        }
-        return new ApiResponse<>(200, "Disable director successfully", ids);
-    }
-    @Override
-    public ApiResponse<List<Integer>> enableDirector(List<Integer> ids) {
-        List<Director> directors = directorRepository.findAllById(ids);
-        if(directors.size() == 0) throw new NotFoundException("Not found exception");
-        for(Director director : directors){
-            director.setStatus(1);
-        }
-        directorRepository.saveAll(directors);
-        if(ids.size() > 1){
-            return new ApiResponse<>(200, "Enable directors successfully", ids);
-        }
-        return new ApiResponse<>(200, "Enable director successfully", ids);
+        else throw new NotFoundException("Not found exception");
     }
 }

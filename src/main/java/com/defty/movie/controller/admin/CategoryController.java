@@ -52,15 +52,10 @@ public class CategoryController {
         return  categoryService.getCategory(id);
     }
 
-    @PatchMapping("/do-enable/{ids}")
-    @PreAuthorize("@requiredPermission.checkPermission('ENABLE_CATEGORY')")
-    public ApiResponse<List<Integer>> enableCategory(@PathVariable List<Integer> ids) {
-        return categoryService.enableCategory(ids);
-    }
 
-    @PatchMapping("/do-disable/{ids}")
-    @PreAuthorize("@requiredPermission.checkPermission('DISABLE_CATEGORY')")
-    public ApiResponse<List<Integer>> disableCategory(@PathVariable List<Integer> ids) {
-        return categoryService.disableCategory(ids);
+    @PatchMapping("/status/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('CHANGE_CATEGORY_STATUS')")
+    public ApiResponse<Integer> changeStatus(@PathVariable Integer id) {
+        return categoryService.changeStatus(id);
     }
 }

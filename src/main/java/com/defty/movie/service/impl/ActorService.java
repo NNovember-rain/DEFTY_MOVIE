@@ -96,6 +96,25 @@ public class ActorService implements IActorService {
     }
 
     @Override
+    public ApiResponse<Integer> changeStatus(Integer id) {
+        Optional<Actor> actor = actorRepository.findById(id);
+        if(actor.get() != null){
+            String message = "";
+            if(actor.get().getStatus() == 0){
+                actor.get().setStatus(1);
+                message += "Enable actors successfully";
+            }
+            else{
+                actor.get().setStatus(0);
+                message += "Disable actors successfully";
+            }
+            actorRepository.save(actor.get());
+            return new ApiResponse<>(200, message, id);
+        }
+        else throw new NotFoundException("Not found exception");
+    }
+
+    @Override
     public ApiResponse<List<Integer>> disableActor(List<Integer> ids) {
         List<Actor> actors = actorRepository.findAllById(ids);
         if(actors.size() == 0) throw new NotFoundException("Not found exception");

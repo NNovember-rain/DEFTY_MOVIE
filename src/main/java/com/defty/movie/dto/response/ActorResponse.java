@@ -7,6 +7,8 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ActorResponse {
+    Integer id;
+
     String fullName;
 
     String gender;
@@ -22,4 +24,6 @@ public class ActorResponse {
     String description;
 
     String avatar;
+
+    Integer status;
 }

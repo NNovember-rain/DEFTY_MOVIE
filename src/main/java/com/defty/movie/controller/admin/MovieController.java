@@ -60,16 +60,9 @@ public class MovieController {
     public ApiResponse<List<Integer>> deleteMovie(@PathVariable List<Integer> ids) {
         return movieService.deleteMovie(ids);
     }
-
-    @PatchMapping("/do-enable/{ids}")
-    @PreAuthorize("@requiredPermission.checkPermission('ENABLE_MOVIE')")
-    public ApiResponse<List<Integer>> enableMovie(@PathVariable List<Integer> ids) {
-        return movieService.enableMovie(ids);
-    }
-
-    @PatchMapping("/do-disable/{ids}")
-    @PreAuthorize("@requiredPermission.checkPermission('DISABLE_MOVIE')")
-    public ApiResponse<List<Integer>> disableMovie(@PathVariable List<Integer> ids) {
-        return movieService.disableMovie(ids);
+    @PatchMapping("/status/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('CHANGE_MOVIE_STATUS')")
+    public ApiResponse<Integer> changeStatus(@PathVariable Integer id) {
+        return movieService.changeStatus(id);
     }
 }

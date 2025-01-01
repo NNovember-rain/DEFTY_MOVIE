@@ -22,7 +22,7 @@ public class MovieResponse {
 
     String coverImage;
 
-//    Integer status;
+    Integer status;
 
     String nation;
 

@@ -16,6 +16,7 @@ public interface IActorService {
     ApiResponse<List<Integer>> deleteActor(List<Integer> ids);
     ApiResponse<List<Integer>> disableActor(List<Integer> ids);
     ApiResponse<List<Integer>> enableActor(List<Integer> ids);
+    ApiResponse<Integer> changeStatus(Integer id);
     ApiResponse<PageableResponse<ActorResponse>> getAllActors(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status);
     Object getActor(Integer id);
 }

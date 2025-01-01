@@ -13,8 +13,7 @@ public interface IDirectorService {
     ApiResponse<Integer> addDirector(DirectorRequest directorRequest);
     ApiResponse<Integer> updateDirector(Integer id, DirectorRequest directorRequest);
     ApiResponse<List<Integer>> deleteDirector(List<Integer> ids);
-    ApiResponse<List<Integer>> disableDirector(List<Integer> ids);
-    ApiResponse<List<Integer>> enableDirector(List<Integer> ids);
+    ApiResponse<Integer> changeStatus(Integer id);
     ApiResponse<PageableResponse<DirectorResponse>> getAllDirectors(Pageable pageable,String name, String gender, String date_of_birth, String nationality, Integer status);
     Object getDirector(Integer id);
 }

@@ -15,7 +15,6 @@ public interface IMovieService {
     ApiResponse<PageableResponse<MovieResponse>> getMovies(Pageable pageable, String title, String nation, String releaseDate, Integer ranking, Integer directorId, Integer status);
     ApiResponse<Integer> updateMovie(Integer id, MovieRequest movieRequest);
     ApiResponse<List<Integer>> deleteMovie(List<Integer> ids);
-    ApiResponse<List<Integer>> disableMovie(List<Integer> ids);
-    ApiResponse<List<Integer>> enableMovie(List<Integer> ids);
+    ApiResponse<Integer> changeStatus(Integer id);
     Object getMovie(Integer id);
 }

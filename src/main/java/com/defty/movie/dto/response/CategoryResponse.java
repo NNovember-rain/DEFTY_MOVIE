@@ -7,6 +7,8 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryResponse {
+    Integer id;
     String name;
     String description;
+    Integer status;
 }
