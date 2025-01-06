@@ -124,7 +124,7 @@ public class ArticleCommentService implements IArticleCommentService {
             List<ArticleComment> articleCommentList = articleComments.get();
             List<ArticleCommentResponse> articleCommentResponses = new ArrayList<>();
             for(ArticleComment articleComment:articleCommentList) {
-                articleCommentResponses.add(articleCommentMapper.toArticleCommentReSponse(articleComment));
+                articleCommentResponses.add(articleCommentMapper.toArticleCommentResponse(articleComment));
             }
             return articleCommentResponses;
         }else {
@@ -132,5 +132,10 @@ public class ArticleCommentService implements IArticleCommentService {
             throw new NotFoundException("ArticleComment not found");
         }
 
+    }
+
+    @Override
+    public ArticleComment getArticleCommentById(Integer id) {
+        return articleCommentRepository.findById(id).orElseThrow(() -> new RuntimeException("Article Commnent not found"));
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/user/articlecomment")
+@RequestMapping("${api.prefix}/user/article-comment")
 public class ArticleCommentController {
 
     private final IArticleCommentService articleCommentService;

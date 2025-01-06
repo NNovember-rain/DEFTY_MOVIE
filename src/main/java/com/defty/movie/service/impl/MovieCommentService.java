@@ -131,4 +131,9 @@ public class MovieCommentService implements IMovieCommentService {
             throw new NotFoundException("Episode Comment not found");
         }
     }
+
+    @Override
+    public MovieComment getMovieCommentById(Integer id) {
+        return movieCommentRepository.findById(id).orElseThrow(() -> new NotFoundException("Movie Comment not found"));
+    }
 }

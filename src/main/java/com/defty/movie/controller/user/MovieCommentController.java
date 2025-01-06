@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/user/moviecomment")
+@RequestMapping("${api.prefix}/user/movie-comment")
 public class MovieCommentController {
 
     private final IMovieCommentService movieCommentService;
