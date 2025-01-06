@@ -6,11 +6,13 @@ import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Director;
 import com.defty.movie.entity.Movie;
+import com.defty.movie.exception.CustomDateException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.MovieMapper;
 import com.defty.movie.repository.IDirectorRepository;
 import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IMovieService;
+import com.defty.movie.utils.DateUtil;
 import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.utils.UploadImageUtil;
 import com.defty.movie.validation.MovieValidation;
@@ -39,6 +41,7 @@ public class MovieService implements IMovieService {
     private final IDirectorRepository directorRepository;
     private final SlugUtil slugUtil;
     UploadImageUtil uploadImageUtil;
+    DateUtil dateUtil;
 
     @Override
     public ApiResponse<Integer> addMovie(MovieRequest movieRequest) {
@@ -64,24 +67,27 @@ public class MovieService implements IMovieService {
     @Override
     public ApiResponse<PageableResponse<MovieResponse>> getMovies(Pageable pageable, String title, String nation, String releaseDate, Integer ranking, Integer directorId, Integer status) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-        Date sqlReleaseDate = null;
+        Date startReleaseDate = null;
+        Date endReleaseDate = null;
         if (releaseDate != null && !releaseDate.isEmpty()) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date utilDate = sdf.parse(releaseDate);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(utilDate);
-                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-
-                sqlReleaseDate = calendar.getTime();
-            } catch (ParseException e) {
+            try{
+                String[] dates = releaseDate.split(" - ");
+                if (dates.length == 2) {
+                    startReleaseDate = dateUtil.stringToSqlDate(dates[0]);
+                    endReleaseDate = dateUtil.stringToSqlDate(dates[1]);
+                }
+                else{
+                    throw new CustomDateException("please enter the right date format: dd/MM/yyyy - dd/MM/yyyy");
+                }
+            }
+            catch (Exception e){
                 e.printStackTrace();
             }
         }
-        Page<Movie> movies = movieRepository.findMovies(title, nation, sqlReleaseDate, ranking, directorId, status, sortedPageable);
+        Page<Movie> movies = movieRepository.findMovies(
+                title, nation, startReleaseDate, endReleaseDate, ranking, directorId, status, sortedPageable
+        );
+
         List<MovieResponse> movieResponseDTOS = new ArrayList<>();
         if (movies.isEmpty()){
             throw new NotFoundException("Not found exception");

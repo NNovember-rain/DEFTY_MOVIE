@@ -17,7 +17,8 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
     @Query(value = "SELECT m FROM Movie m WHERE " +
             "(:title IS NULL OR m.title LIKE %:title%) AND " +
             "(:nation IS NULL OR m.nation LIKE %:nation%) AND " +
-            "(:releaseDate IS NULL OR DATE(m.releaseDate) = :releaseDate) AND " +
+            "((:startReleaseDate IS NULL AND :endReleaseDate IS NULL) OR " +
+            "(DATE(m.releaseDate) BETWEEN DATE(:startReleaseDate) AND DATE(:endReleaseDate))) AND " +
             "(:ranking IS NULL OR m.ranking = :ranking) AND " +
             "(:directorId IS NULL OR m.director.id = :directorId) AND " +
             "(m.status != -1) AND " +
@@ -26,7 +27,8 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
             countQuery = "SELECT count(m) FROM Movie m WHERE " +
                     "(:title IS NULL OR m.title LIKE %:title%) AND " +
                     "(:nation IS NULL OR m.nation LIKE %:nation%) AND " +
-                    "(:releaseDate IS NULL OR DATE(m.releaseDate) = :releaseDate) AND " +
+                    "((:startReleaseDate IS NULL AND :endReleaseDate IS NULL) OR " +
+                    "(DATE(m.releaseDate) BETWEEN DATE(:startReleaseDate) AND DATE(:endReleaseDate))) AND " +
                     "(:ranking IS NULL OR m.ranking = :ranking) AND " +
                     "(:directorId IS NULL OR m.director.id = :directorId) AND " +
                     "(m.status != -1) AND " +
@@ -35,9 +37,11 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
     Page<Movie> findMovies(
             @Param("title") String title,
             @Param("nation") String nation,
-            @Param("releaseDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date releaseDate,
+            @Param("startReleaseDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startReleaseDate,
+            @Param("endReleaseDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endReleaseDate,
             @Param("ranking") Integer ranking,
             @Param("directorId") Integer directorId,
             @Param("status") Integer status,
             Pageable pageable);
+
 }
