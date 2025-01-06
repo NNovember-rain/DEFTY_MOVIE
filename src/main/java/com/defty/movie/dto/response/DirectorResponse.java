@@ -24,4 +24,6 @@ public class DirectorResponse {
     String description;
 
     String avatar;
+
+    Integer status;
 }

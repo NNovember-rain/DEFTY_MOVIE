@@ -10,4 +10,5 @@ public class CategoryResponse {
     Integer id;
     String name;
     String description;
+    Integer status;
 }

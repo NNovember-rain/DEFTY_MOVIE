@@ -17,7 +17,6 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/movie/actor")
-//@RequestMapping("/movie/actor")
 public class ActorController {
     private final IActorService actorService;
     @PostMapping("")
@@ -53,18 +52,6 @@ public class ActorController {
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_ACTOR')")
     public ApiResponse<List<Integer>> deleteActor(@PathVariable List<Integer> ids) {
         return actorService.deleteActor(ids);
-    }
-
-    @PatchMapping("/do-enable/{ids}")
-    @PreAuthorize("@requiredPermission.checkPermission('ENABLE_ACTOR')")
-    public ApiResponse<List<Integer>> enableActor(@PathVariable List<Integer> ids) {
-        return actorService.enableActor(ids);
-    }
-
-    @PatchMapping("/do-disable/{ids}")
-    @PreAuthorize("@requiredPermission.checkPermission('DISABLE_ACTOR')")
-    public ApiResponse<List<Integer>> disableActor(@PathVariable List<Integer> ids) {
-        return actorService.disableActor(ids);
     }
 
     @PatchMapping("/status/{id}")

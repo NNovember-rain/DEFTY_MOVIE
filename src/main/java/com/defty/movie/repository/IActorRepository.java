@@ -15,7 +15,8 @@ public interface IActorRepository extends JpaRepository<Actor, Integer> {
     @Query(value = "SELECT m FROM Actor m WHERE " +
             "(:name IS NULL OR m.fullName LIKE %:name%) AND " +
             "(:gender IS NULL OR m.gender LIKE %:gender%) AND " +
-            "(:date_of_birth IS NULL OR DATE(m.dateOfBirth) = :date_of_birth) AND " +
+            "((:startDate IS NULL AND :endDate IS NULL) OR " +
+            "(m.dateOfBirth BETWEEN :startDate AND :endDate)) AND " +
             "(:nationality IS NULL OR m.nationality LIKE %:nationality%) AND " +
             "(m.status != -1) AND " +
             "(:status IS NULL OR m.status = :status) " +
@@ -23,7 +24,8 @@ public interface IActorRepository extends JpaRepository<Actor, Integer> {
             countQuery = "SELECT count(m) FROM Actor m WHERE " +
                     "(:name IS NULL OR m.fullName LIKE %:name%) AND " +
                     "(:gender IS NULL OR m.gender LIKE %:gender%) AND " +
-                    "(:date_of_birth IS NULL OR DATE(m.dateOfBirth) = :date_of_birth) AND " +
+                    "((:startDate IS NULL AND :endDate IS NULL) OR " +
+                    "(m.dateOfBirth BETWEEN :startDate AND :endDate)) AND " +
                     "(:nationality IS NULL OR m.nationality LIKE %:nationality%) AND " +
                     "(m.status != -1) AND " +
                     "(:status IS NULL OR m.status = :status)",
@@ -31,8 +33,10 @@ public interface IActorRepository extends JpaRepository<Actor, Integer> {
     Page<Actor> findActors(
             @Param("name") String name,
             @Param("gender") String gender,
-            @Param("date_of_birth") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date_of_birth,
+            @Param("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @Param("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             @Param("nationality") String nationality,
             @Param("status") Integer status,
             Pageable pageable);
+
 }

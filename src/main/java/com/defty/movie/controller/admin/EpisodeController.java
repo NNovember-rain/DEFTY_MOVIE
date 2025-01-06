@@ -51,15 +51,9 @@ public class EpisodeController {
         return episodeService.deleteEpisode(ids);
     }
 
-    @PatchMapping("/do-enable/{ids}")
-    @PreAuthorize("@requiredPermission.checkPermission('ENABLE_EPISODE')")
-    public ApiResponse<List<Integer>> enableEpisode(@PathVariable List<Integer> ids) {
-        return episodeService.enableEpisode(ids);
-    }
-
-    @PatchMapping("/do-disable/{ids}")
-    @PreAuthorize("@requiredPermission.checkPermission('DISABLE_EPISODE')")
-    public ApiResponse<List<Integer>> disableEpisode(@PathVariable List<Integer> ids) {
-        return episodeService.disableEpisode(ids);
+    @PatchMapping("/status/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('CHANGE_EPISODE_STATUS')")
+    public ApiResponse<Integer> changeStatus(@PathVariable Integer id) {
+        return episodeService.changeStatus(id);
     }
 }
