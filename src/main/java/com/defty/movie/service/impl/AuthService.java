@@ -49,7 +49,7 @@ public class AuthService implements IAuthService {
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
         Optional<Account> accountOptional = accountRepository.findByUsername(loginRequest.getUsername());
         if (accountOptional.isEmpty()) {
-            log.error("{}Account not found with username: {}", PREFIX_AUTH, loginRequest.getUsername());
+            log.error("{}Account not found with Username: {}", PREFIX_AUTH, loginRequest.getUsername());
             throw new NotFoundException("Account not found");
         }
         if (accountOptional.get().getStatus() == 0) {

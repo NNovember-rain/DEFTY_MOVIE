@@ -80,10 +80,17 @@ public class RoleService implements IRoleService {
                 .map(permissionMapper::toPermissionResponse)
                 .collect(Collectors.toSet());
         log.info("{}Get role by id: {}", PREFIX_ROLE, roleId);
+        Optional<Role> roleOptional = roleRepository.findById(roleId);
+        if (roleOptional.isEmpty()) {
+            log.error("{}Role not found roleId: {}", PREFIX_ROLE, roleId);
+            throw new NotFoundException("Role not found with id: " + roleId);
+        }
+        Role role = roleOptional.get();
         return RoleResponse.builder()
-                .name(roleRepository.findById(roleId).get().getName())
-                .description(roleRepository.findById(roleId).get().getDescription())
+                .name(role.getName())
+                .description(role.getDescription())
                 .rolePermissions(permissionResponses)
+                .status(role.getStatus())
                 .build();
     }
 
@@ -121,10 +128,14 @@ public class RoleService implements IRoleService {
     public RoleResponse assignPermissionToRole(Integer roleId, List<Integer> permissionIds) {
         Optional<Role> roleOptional = roleRepository.findById(roleId);
         if (roleOptional.isEmpty()) {
-            log.error("{}Role not found with id: {}", PREFIX_ROLE, roleId);
+            log.error("{}Role not found with roleId: {}", PREFIX_ROLE, roleId);
             throw new NotFoundException("Role not found with id: " + roleId);
         }
         Role role = roleOptional.get();
+        if(role.getStatus() == 0){
+            log.error("{}Role is disabled", PREFIX_ROLE);
+            throw new NotFoundException("Role is disabled");
+        }
         List<Permission> permissions = permissionRepository.findAllById(permissionIds);
         Set<Permission> existPermissions = permissionRepository.findPermissionsByRoleId(roleId);
         List<RolePermission> newRolePermissions = new ArrayList<>();
@@ -155,6 +166,10 @@ public class RoleService implements IRoleService {
             throw new NotFoundException("Role not found with id: " + roleId);
         }
         Role role = roleOptional.get();
+        if(role.getStatus() == 0){
+            log.error("{}Role is disabled", PREFIX_ROLE);
+            throw new NotFoundException("Role is disabled");
+        }
         List<Permission> permissions = permissionRepository.findAllById(permissionIds);
         List<RolePermission> rolePermissions = new ArrayList<>();
         for (Permission permission : permissions) {

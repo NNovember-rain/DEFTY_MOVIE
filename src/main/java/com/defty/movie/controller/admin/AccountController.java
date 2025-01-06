@@ -58,7 +58,7 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/status/{id}")
+    @PatchMapping("/status/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('STATUS_ACCOUNT')")
     public ResponseEntity<?> switchStatus(@PathVariable("id") Integer roleId) {
         Integer status = accountService.switchStatus(roleId);

@@ -44,7 +44,7 @@ public class PermissionService implements IPermissionService {
     public PermissionResponse getPermissionById(Integer id) {
         Optional<Permission> permissionOptional = permissionRepository.findById(id);
         if(permissionOptional.isEmpty()){
-            log.error("{}Permission not found", PREFIX_PERMISSION);
+            log.error("{}Permission not found with permissionID: {}", PREFIX_PERMISSION, id);
             throw new RuntimeException("Permission not found");
         }
         Permission permission = permissionOptional.get();

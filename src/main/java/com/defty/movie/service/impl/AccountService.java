@@ -70,7 +70,7 @@ public class AccountService implements IAccountService {
     public void deleteAccount(List<Integer> ids) {
         List<Account> accounts = accountRepository.findAllById(ids);
         for(Account account : accounts) {
-            account.setStatus(0);
+            account.setStatus(-1);
             accountRepository.save(account);
         }
     }

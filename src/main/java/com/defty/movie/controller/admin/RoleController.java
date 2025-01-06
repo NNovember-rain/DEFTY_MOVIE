@@ -57,7 +57,7 @@ public class RoleController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/status/{id}")
+    @PatchMapping("/status/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('STATUS_ROLE')")
     public ResponseEntity<?> switchStatus(@PathVariable("id") Integer roleId) {
         Integer status = roleService.checkStatusRole(roleId);
