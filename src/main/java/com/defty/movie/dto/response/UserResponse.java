@@ -19,7 +19,7 @@ public class UserResponse {
     String phone;
     String gender;
     String address;
-    MultipartFile avatar;
+    String avatar;
     Integer status;
     LocalDate dateOfBirth;
 }
