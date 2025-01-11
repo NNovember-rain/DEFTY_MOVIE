@@ -146,24 +146,39 @@ public class ActorService implements IActorService {
     public ApiResponse<PageableResponse<ActorResponse>> getAllActors(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
 
-        Date sqlDate_of_birth = null;
+        Date startDate = null;
+        Date endDate = null;
         if (date_of_birth != null && !date_of_birth.isEmpty()) {
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date utilDate = sdf.parse(date_of_birth);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(utilDate);
-                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                String[] dates = date_of_birth.split(" - ");
+                if (dates.length == 2) {
+                    startDate = sdf.parse(dates[0]);
+                    endDate = sdf.parse(dates[1]);
+                    Calendar startCal = Calendar.getInstance();
+                    startCal.setTime(startDate);
+                    startCal.set(Calendar.HOUR_OF_DAY, 0);
+                    startCal.set(Calendar.MINUTE, 0);
+                    startCal.set(Calendar.SECOND, 0);
+                    startCal.set(Calendar.MILLISECOND, 0);
+                    startDate = startCal.getTime();
 
-                sqlDate_of_birth = calendar.getTime();
+                    Calendar endCal = Calendar.getInstance();
+                    endCal.setTime(endDate);
+                    endCal.set(Calendar.HOUR_OF_DAY, 23);
+                    endCal.set(Calendar.MINUTE, 59);
+                    endCal.set(Calendar.SECOND, 59);
+                    endCal.set(Calendar.MILLISECOND, 999);
+                    endDate = endCal.getTime();
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-        Page<Actor> actorEntities = actorRepository.findActors(name, gender, sqlDate_of_birth, nationality, status, sortedPageable);
+        Page<Actor> actorEntities = actorRepository.findActors(
+                name, gender, startDate, endDate, nationality, status, sortedPageable
+        );
+
         List<ActorResponse> actorResponseDTOS = new ArrayList<>();
         if (actorEntities.isEmpty()){
             throw new NotFoundException("Not found exception");

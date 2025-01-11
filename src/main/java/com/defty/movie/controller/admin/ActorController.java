@@ -17,7 +17,6 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/movie/actor")
-//@RequestMapping("/movie/actor")
 public class ActorController {
     private final IActorService actorService;
     @PostMapping("")
