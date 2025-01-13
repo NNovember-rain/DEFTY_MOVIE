@@ -41,6 +41,7 @@ public class MembershipPackageService implements IMembershipPackageService {
     @Override
     public MembershipPacketResponse createMembershipPacket(MembershipPacketRequest membershipPacketRequest) {
         MembershipPackage membershipPackage = membershipPackageMapper.toMembershipPacket(membershipPacketRequest);
+        membershipPackage.setStatus(1);
         membershipPacketRepository.save(membershipPackage);
         log.info(PREFIX_MEMBERSHIP_PACKET + "Create successfully");
         return membershipPackageMapper.toMembershipPacketResponse(membershipPackage);

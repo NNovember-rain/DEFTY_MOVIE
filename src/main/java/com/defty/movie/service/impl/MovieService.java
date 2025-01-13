@@ -54,8 +54,8 @@ public class MovieService implements IMovieService {
         Movie newMovie = movieRepository.save(movie);
         newMovie.setSlug(slugUtil.createSlug(newMovie.getTitle(), newMovie.getId()));
         try{
-            newMovie.setThubnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
-            newMovie.setCoverImage(uploadImageUtil.upload(movieRequest.getCoverImage()));
+            newMovie.setThumbnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
+//            newMovie.setCoverImage(uploadImageUtil.upload(movieRequest.getCoverImage()));
             movieRepository.save(newMovie);
         }
         catch (Exception e){
