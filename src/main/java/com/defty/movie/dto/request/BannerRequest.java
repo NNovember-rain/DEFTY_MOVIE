@@ -7,10 +7,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EpisodeRequest {
-    Integer number;
-    String description;
+public class BannerRequest {
+    String key;
     MultipartFile thumbnail;
-    String link;
-    Integer movieId;
+    String title;
+    String contentType;
+    Integer contentId;
+    Integer position;
+    Integer status;
 }
