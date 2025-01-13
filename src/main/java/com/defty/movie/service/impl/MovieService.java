@@ -7,6 +7,7 @@ import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Director;
 import com.defty.movie.entity.Movie;
 import com.defty.movie.exception.CustomDateException;
+import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.MovieMapper;
 import com.defty.movie.repository.IDirectorRepository;
@@ -15,6 +16,7 @@ import com.defty.movie.service.IMovieService;
 import com.defty.movie.utils.DateUtil;
 import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.utils.UploadImageUtil;
+import com.defty.movie.utils.UploadVideoUtil;
 import com.defty.movie.validation.MovieValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,7 @@ public class MovieService implements IMovieService {
     private final IDirectorRepository directorRepository;
     private final SlugUtil slugUtil;
     UploadImageUtil uploadImageUtil;
+    UploadVideoUtil uploadVideoUtil;
     DateUtil dateUtil;
 
     @Override
@@ -53,14 +56,33 @@ public class MovieService implements IMovieService {
         director.ifPresent(movie::setDirector);
         Movie newMovie = movieRepository.save(movie);
         newMovie.setSlug(slugUtil.createSlug(newMovie.getTitle(), newMovie.getId()));
-        try{
-            newMovie.setThubnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
-            newMovie.setCoverImage(uploadImageUtil.upload(movieRequest.getCoverImage()));
-            movieRepository.save(newMovie);
+
+        if(movieRequest.getTrailer()!=null) {
+            try {
+                newMovie.setTrailer(uploadVideoUtil.upload(movieRequest.getTrailer()));
+            } catch (Exception e) {
+                throw new ImageUploadException("Could not upload the video, please try again later!");
+            }
         }
-        catch (Exception e){
-            return new ApiResponse<>(500, e.getMessage(), newMovie.getId());
+
+        if(movieRequest.getThumbnail()!=null) {
+            try {
+                newMovie.setThubnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
+            } catch (Exception e) {
+                return new ApiResponse<>(500, e.getMessage(), newMovie.getId());
+            }
         }
+
+        if(movieRequest.getCoverImage()!=null) {
+            try {
+                newMovie.setCoverImage(uploadImageUtil.upload(movieRequest.getCoverImage()));
+            } catch (Exception e) {
+                return new ApiResponse<>(500, e.getMessage(), newMovie.getId());
+            }
+        }
+
+        movieRepository.save(newMovie);
+
         return new ApiResponse<>(201, "created", newMovie.getId());
     }
 

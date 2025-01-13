@@ -1,7 +1,5 @@
 package com.defty.movie.dto.response;
 
-import com.defty.movie.entity.ArticleComment;
-import com.defty.movie.entity.ArticleCommentReaction;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,5 +15,5 @@ public class ArticleCommentResponse {
     int articleId;
     int articleCommentParentId;
     String content;
-    List<ArticleCommentReactionResponse> articleCommentReactionResponses;
+    List<CommentReactionResponse> commentReactionRespons;
 }
