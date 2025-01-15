@@ -7,11 +7,13 @@ import com.defty.movie.dto.response.DirectorResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Actor;
 import com.defty.movie.entity.Director;
+import com.defty.movie.exception.CustomDateException;
 import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.DirectorMapper;
 import com.defty.movie.repository.IDirectorRepository;
 import com.defty.movie.service.IDirectorService;
+import com.defty.movie.utils.DateUtil;
 import com.defty.movie.utils.UploadImageUtil;
 import com.defty.movie.validation.DirectorValidation;
 import lombok.AccessLevel;
@@ -37,6 +39,7 @@ public class DirectorService implements IDirectorService {
     DirectorValidation directorValidation;
     IDirectorRepository directorRepository;
     UploadImageUtil uploadImageUtil;
+    DateUtil dateUtil;
     @Override
     public ApiResponse<Integer> addDirector(DirectorRequest directorRequest) {
         directorValidation.fieldValidation(directorRequest);
@@ -67,11 +70,12 @@ public class DirectorService implements IDirectorService {
             Director updatedDirector = director.get();
 
             BeanUtils.copyProperties(directorRequest, updatedDirector, "id");
-            try {
-                updatedDirector.setAvatar(uploadImageUtil.upload(directorRequest.getAvatar()));
-            }
-            catch (Exception e){
-                throw new ImageUploadException("Could not upload the image, please try again later!");
+            if (directorRequest.getAvatar() != null && !directorRequest.getAvatar().isEmpty()) {
+                try {
+                    updatedDirector.setAvatar(uploadImageUtil.upload(directorRequest.getAvatar()));
+                } catch (Exception e) {
+                    throw new ImageUploadException("Could not upload the image, please try again later!");
+                }
             }
             try {
                 directorRepository.save(updatedDirector);
@@ -89,26 +93,20 @@ public class DirectorService implements IDirectorService {
     @Override
     public ApiResponse<PageableResponse<DirectorResponse>> getAllDirectors(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-
-        Date sqlDate_of_birth = null;
+        Date startDate = null;
+        Date endDate = null;
         if (date_of_birth != null && !date_of_birth.isEmpty()) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date utilDate = sdf.parse(date_of_birth);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(utilDate);
-                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-
-                sqlDate_of_birth = calendar.getTime();
-            } catch (ParseException e) {
-                e.printStackTrace();
+            String[] dates = date_of_birth.split(" - ");
+            if (dates.length == 2) {
+                startDate = dateUtil.stringToSqlDate(dates[0]);
+                endDate = dateUtil.stringToSqlDate(dates[1]);
+            }
+            else{
+                throw new CustomDateException("please enter the right date format: dd/MM/yyyy - dd/MM/yyyy");
             }
         }
 
-        Page<Director> directorEntities = directorRepository.findDirectors(name, gender, sqlDate_of_birth, nationality, status, sortedPageable);
+        Page<Director> directorEntities = directorRepository.findDirectors(name, gender, startDate, endDate, nationality, status, sortedPageable);
         List<DirectorResponse> directorResponseDTOS = new ArrayList<>();
         if (directorEntities.isEmpty()){
             throw new NotFoundException("Not found exception");

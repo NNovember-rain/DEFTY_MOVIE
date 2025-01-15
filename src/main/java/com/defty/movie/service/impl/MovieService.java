@@ -7,6 +7,7 @@ import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Director;
 import com.defty.movie.entity.Movie;
 import com.defty.movie.exception.CustomDateException;
+import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.MovieMapper;
 import com.defty.movie.repository.IDirectorRepository;
@@ -53,9 +54,29 @@ public class MovieService implements IMovieService {
         director.ifPresent(movie::setDirector);
         Movie newMovie = movieRepository.save(movie);
         newMovie.setSlug(slugUtil.createSlug(newMovie.getTitle(), newMovie.getId()));
+        if (movieRequest.getThumbnail() != null && !movieRequest.getThumbnail().isEmpty()) {
+            try {
+                newMovie.setThubnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
+            }
+            catch (Exception e){
+                throw new ImageUploadException("Could not upload the image, please try again later!");
+            }
+        }
+        else{
+            newMovie.setThubnail(null);
+        }
+        if (movieRequest.getCoverImage() != null && !movieRequest.getCoverImage().isEmpty()) {
+            try {
+                newMovie.setCoverImage(uploadImageUtil.upload(movieRequest.getCoverImage()));
+            }
+            catch (Exception e){
+                throw new ImageUploadException("Could not upload the image, please try again later!");
+            }
+        }
+        else{
+            newMovie.setCoverImage(null);
+        }
         try{
-            newMovie.setThubnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
-//            newMovie.setCoverImage(uploadImageUtil.upload(movieRequest.getCoverImage()));
             movieRepository.save(newMovie);
         }
         catch (Exception e){
@@ -111,6 +132,28 @@ public class MovieService implements IMovieService {
             /*copy different fields from movieRequest to updatedMovie*/
             BeanUtils.copyProperties(movieRequest, updatedMovie, "id");
             updatedMovie.setSlug(slugUtil.createSlug(movieRequest.getTitle(), id));
+            if (movieRequest.getThumbnail() != null && !movieRequest.getThumbnail().isEmpty()) {
+                try {
+                    updatedMovie.setThubnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
+                }
+                catch (Exception e){
+                    throw new ImageUploadException("Could not upload the image, please try again later!");
+                }
+            }
+            else{
+                updatedMovie.setThubnail(null);
+            }
+            if (movieRequest.getCoverImage() != null && !movieRequest.getCoverImage().isEmpty()) {
+                try {
+                    updatedMovie.setCoverImage(uploadImageUtil.upload(movieRequest.getCoverImage()));
+                }
+                catch (Exception e){
+                    throw new ImageUploadException("Could not upload the image, please try again later!");
+                }
+            }
+            else{
+                updatedMovie.setCoverImage(null);
+            }
             Optional<Director> director = directorRepository.findByFullName(movieRequest.getDirector());
             director.ifPresent(updatedMovie::setDirector);
             movieRepository.save(updatedMovie);

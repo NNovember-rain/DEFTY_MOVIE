@@ -40,12 +40,18 @@ public class BannerService implements IBannerService {
         bannerValidation.fieldValidation(bannerRequest);
         Banner bannerEntity = bannerMapper.toBannerEntity(bannerRequest);
         String link = "defty://" + bannerRequest.getContentType() + "?id=" + bannerRequest.getContentId();
-        try {
-            bannerEntity.setThumnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
+        if (bannerRequest.getThumbnail() != null && !bannerRequest.getThumbnail().isEmpty()) {
+            try {
+                bannerEntity.setThumnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
+            }
+            catch (Exception e){
+                throw new ImageUploadException("Could not upload the image, please try again later!");
+            }
         }
-        catch (Exception e){
-            throw new ImageUploadException("Could not upload the image, please try again later!");
+        else {
+            bannerEntity.setThumnail(null);
         }
+
         try {
             bannerEntity.setLink(link);
             bannerRepository.save(bannerEntity);
@@ -64,6 +70,14 @@ public class BannerService implements IBannerService {
         if(bannerEntity.isPresent()){
             Banner updatedBanner = bannerEntity.get();
             BeanUtils.copyProperties(bannerRequest, updatedBanner, "id");
+            if (bannerRequest.getThumbnail() != null && !bannerRequest.getThumbnail().isEmpty()) {
+                try {
+                    updatedBanner.setThumnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
+                }
+                catch (Exception e){
+                    throw new ImageUploadException("Could not upload the image, please try again later!");
+                }
+            }
             updatedBanner.setLink(link);
             try {
                 bannerRepository.save(updatedBanner);

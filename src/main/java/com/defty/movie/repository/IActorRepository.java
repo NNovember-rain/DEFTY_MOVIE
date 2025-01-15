@@ -16,7 +16,7 @@ public interface IActorRepository extends JpaRepository<Actor, Integer> {
             "(:name IS NULL OR m.fullName LIKE %:name%) AND " +
             "(:gender IS NULL OR m.gender LIKE %:gender%) AND " +
             "((:startDate IS NULL AND :endDate IS NULL) OR " +
-            "(m.dateOfBirth BETWEEN :startDate AND :endDate)) AND " +
+            "(DATE(m.dateOfBirth) BETWEEN DATE(:startDate) AND DATE(:endDate))) AND " +
             "(:nationality IS NULL OR m.nationality LIKE %:nationality%) AND " +
             "(m.status != -1) AND " +
             "(:status IS NULL OR m.status = :status) " +
@@ -25,7 +25,7 @@ public interface IActorRepository extends JpaRepository<Actor, Integer> {
                     "(:name IS NULL OR m.fullName LIKE %:name%) AND " +
                     "(:gender IS NULL OR m.gender LIKE %:gender%) AND " +
                     "((:startDate IS NULL AND :endDate IS NULL) OR " +
-                    "(m.dateOfBirth BETWEEN :startDate AND :endDate)) AND " +
+                    "(DATE(m.dateOfBirth) BETWEEN DATE(:startDate) AND DATE(:endDate))) AND " +
                     "(:nationality IS NULL OR m.nationality LIKE %:nationality%) AND " +
                     "(m.status != -1) AND " +
                     "(:status IS NULL OR m.status = :status)",
