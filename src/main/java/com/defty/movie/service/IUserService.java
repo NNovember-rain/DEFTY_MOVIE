@@ -7,4 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface IUserService {
     ApiResponse<PageableResponse<UserResponse>> getAllUsers(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status);
+    ApiResponse<Integer> changeStatus(Integer id);
+    Object getUser(Integer id);
 }

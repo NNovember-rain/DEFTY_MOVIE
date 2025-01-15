@@ -3,6 +3,7 @@ import com.defty.movie.dto.response.UserResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.User;
+import com.defty.movie.entity.User;
 import com.defty.movie.exception.CustomDateException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.UserMapper;
@@ -20,10 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,60 +30,6 @@ public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final UserMapper userMapper;
     DateUtil dateUtil;
-//    @Override
-//    public ApiResponse<PageableResponse<UserResponse>> getAllUsers(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status) {
-//        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
-//
-//        Date startDate = null;
-//        Date endDate = null;
-//        if (date_of_birth != null && !date_of_birth.isEmpty()) {
-//            try {
-//                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//                String[] dates = date_of_birth.split(" - ");
-//                if (dates.length == 2) {
-//                    startDate = sdf.parse(dates[0]);
-//                    endDate = sdf.parse(dates[1]);
-//                    Calendar startCal = Calendar.getInstance();
-//                    startCal.setTime(startDate);
-//                    startCal.set(Calendar.HOUR_OF_DAY, 0);
-//                    startCal.set(Calendar.MINUTE, 0);
-//                    startCal.set(Calendar.SECOND, 0);
-//                    startCal.set(Calendar.MILLISECOND, 0);
-//                    startDate = startCal.getTime();
-//
-//                    Calendar endCal = Calendar.getInstance();
-//                    endCal.setTime(endDate);
-//                    endCal.set(Calendar.HOUR_OF_DAY, 23);
-//                    endCal.set(Calendar.MINUTE, 59);
-//                    endCal.set(Calendar.SECOND, 59);
-//                    endCal.set(Calendar.MILLISECOND, 999);
-//                    endDate = endCal.getTime();
-//                }
-//                else {
-//
-//                }
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        Page<User> userEntities = userRepository.findUsers(
-//                name, gender, startDate, endDate, status, sortedPageable
-//        );
-//
-//        List<UserResponse> userResponseDTOS = new ArrayList<>();
-//        if (userEntities.isEmpty()){
-//            throw new NotFoundException("Not found exception");
-//        }
-//        else {
-//            for(User d : userEntities){
-//                userResponseDTOS.add(userMapper.toUserResponse(d));
-//            }
-//
-//            PageableResponse<UserResponse> pageableResponse= new PageableResponse<>(userResponseDTOS, userEntities.getTotalElements());
-//            ApiResponse<PageableResponse<UserResponse>> apiResponse = new ApiResponse<>(200, "OK", pageableResponse);
-//            return apiResponse;
-//        }
-//    }
     @Override
     public ApiResponse<PageableResponse<UserResponse>> getAllUsers(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
@@ -123,4 +67,30 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public ApiResponse<Integer> changeStatus(Integer id) {
+        Optional<User> user = userRepository.findById(id);
+        if(user.get() != null){
+            String message = "";
+            if(user.get().getStatus() == 0){
+                user.get().setStatus(1);
+                message += "Enable users successfully";
+            }
+            else{
+                user.get().setStatus(0);
+                message += "Disable users successfully";
+            }
+            userRepository.save(user.get());
+            return new ApiResponse<>(200, message, id);
+        }
+        else throw new NotFoundException("Not found exception");
+    }
+    @Override
+    public Object getUser(Integer id) {
+        Optional<User> userEntity = userRepository.findById(id);
+        if(userEntity.isPresent()){
+            return new ApiResponse<>(200, "OK", userMapper.toUserResponse(userEntity.get()));
+        }
+        return new ApiResponse<>(404, "User doesn't exist", null);
+    }
 }
