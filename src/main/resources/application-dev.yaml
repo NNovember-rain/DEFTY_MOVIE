@@ -2,10 +2,16 @@ server:
   port: 8088
 
 spring:
+
+  servlet:
+    multipart:
+      max-file-size: 3000MB
+      max-request-size: 3000MB
+
   datasource:
-    url: jdbc:mysql://localhost:3306/defty_movie_dev
+    url: jdbc:mysql://localhost:3306/movie
     username: root
-    password: 12345
+    password: Hoanghiep2003@
 
   jpa:
     hibernate:
@@ -14,8 +20,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect  # Đảm bảo sử dụng đúng Dialect cho MySQL 8
         format_sql: true  # Hiển thị SQL đã định dạng đẹp (kèm theo tham số)
-        show_sql: true  # In câu lệnh SQL ra console
+        show_sql: none  # In câu lệnh SQL ra console
         use_sql_comments: true  # Thêm các chú thích SQL (nếu cần thiết)
+
+
 
 springdoc:
   swagger-ui:
@@ -31,3 +39,15 @@ jwt:
   expiration: 600  # 10m
   expiration-refresh-token: 604800 # 7day
   secretKey: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
+
+aws:
+  access:
+    key:
+      id: AKIAZAI4GU3MNR2WWZEJ
+  secret:
+    access:
+      key: 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
+  s3:
+    region: ap-southeast-2
+    bucket:
+      name: defty-movie
