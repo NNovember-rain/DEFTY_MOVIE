@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/user/moviecomment")
+@RequestMapping("${api.prefix}/user/movie-comment")
 public class MovieCommentController {
 
     private final IMovieCommentService movieCommentService;
@@ -44,9 +44,9 @@ public class MovieCommentController {
         return ApiResponeUtil.ResponseOK(massage);
     }
 
-    @GetMapping("/{movieid}")
-    public Object getMovieComment(@PathVariable Integer movieid) {
-        List<MovieCommentResponse> movieComments= movieCommentService.getMovieComment(movieid);
+    @GetMapping("/{episodeid}")
+    public Object getMovieComment(@PathVariable Integer episodeid) {
+        List<MovieCommentResponse> movieComments= movieCommentService.getMovieComment(episodeid);
         log.info(PREFIX_MOVIE_COMMENT + "Get all Episode Comment by movieId successfully");
         return ApiResponeUtil.ResponseOK(movieComments);
     }

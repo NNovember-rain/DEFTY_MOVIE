@@ -25,8 +25,10 @@ public class UploadImageUtil {
 
         //TODO: Tạo tên tệp duy nhất
         String uniqueFilename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        uniqueFilename=uniqueFilename.substring(0, uniqueFilename.lastIndexOf('.'));
-
+        int dotIndex = uniqueFilename.lastIndexOf('.');
+        if (dotIndex != -1) {
+            uniqueFilename = uniqueFilename.substring(0, dotIndex); // Cắt bỏ phần mở rộng
+        }
         //TODO: Tải ảnh
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
                 "public_id", uniqueFilename,
