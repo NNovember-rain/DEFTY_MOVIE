@@ -57,17 +57,17 @@ public class MovieService implements IMovieService {
         Movie newMovie = movieRepository.save(movie);
         newMovie.setSlug(slugUtil.createSlug(newMovie.getTitle(), newMovie.getId()));
 
-        if(movieRequest.getTrailer()!=null) {
-            try {
-                newMovie.setTrailer(uploadVideoUtil.upload(movieRequest.getTrailer()));
-            } catch (Exception e) {
-                throw new ImageUploadException("Could not upload the video, please try again later!");
-            }
-        }
+//        if(movieRequest.getTrailer()!=null) {
+//            try {
+//                newMovie.setTrailer(uploadVideoUtil.upload(movieRequest.getTrailer()));
+//            } catch (Exception e) {
+//                throw new ImageUploadException("Could not upload the video, please try again later!");
+//            }
+//        }
 
         if(movieRequest.getThumbnail()!=null) {
             try {
-                newMovie.setThubnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
+                newMovie.setThumbnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
             } catch (Exception e) {
                 return new ApiResponse<>(500, e.getMessage(), newMovie.getId());
             }
@@ -135,15 +135,13 @@ public class MovieService implements IMovieService {
             updatedMovie.setSlug(slugUtil.createSlug(movieRequest.getTitle(), id));
             if (movieRequest.getThumbnail() != null && !movieRequest.getThumbnail().isEmpty()) {
                 try {
-                    updatedMovie.setThubnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
+                    updatedMovie.setThumbnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
                 }
                 catch (Exception e){
                     throw new ImageUploadException("Could not upload the image, please try again later!");
                 }
             }
-            else{
-                updatedMovie.setThubnail(null);
-            }
+
             if (movieRequest.getCoverImage() != null && !movieRequest.getCoverImage().isEmpty()) {
                 try {
                     updatedMovie.setCoverImage(uploadImageUtil.upload(movieRequest.getCoverImage()));
@@ -152,9 +150,7 @@ public class MovieService implements IMovieService {
                     throw new ImageUploadException("Could not upload the image, please try again later!");
                 }
             }
-            else{
-                updatedMovie.setCoverImage(null);
-            }
+
             Optional<Director> director = directorRepository.findByFullName(movieRequest.getDirector());
             director.ifPresent(updatedMovie::setDirector);
             movieRepository.save(updatedMovie);

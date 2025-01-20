@@ -21,8 +21,8 @@ public class Movie extends BaseEntity{
     @Column(name = "trailer")
     private String trailer;
 
-    @Column(name = "thubnail")
-    private String thubnail;
+    @Column(name = "thumbnail")
+    private String thumbnail;
 
     @Column(name = "cover_image")
     private String coverImage;

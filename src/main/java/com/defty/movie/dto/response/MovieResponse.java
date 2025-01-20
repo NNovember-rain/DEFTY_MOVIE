@@ -18,7 +18,7 @@ public class MovieResponse {
 
     String trailer;
 
-    MultipartFile thumbnail;
+    String thumbnail;
 
     String coverImage;
 

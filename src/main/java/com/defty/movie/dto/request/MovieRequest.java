@@ -17,7 +17,7 @@ public class MovieRequest {
 
     String description;
 
-    MultipartFile trailer;
+    String trailer;
 
     MultipartFile thumbnail;
 

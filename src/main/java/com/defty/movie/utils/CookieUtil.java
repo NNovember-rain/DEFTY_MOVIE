@@ -32,7 +32,6 @@ public class CookieUtil {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(name)) {
-                    log.info("COOKIE | Cookie found: name={}, value={}", name, cookie.getValue());
                     return cookie.getValue();
                 }
             }
