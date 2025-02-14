@@ -12,7 +12,6 @@ import java.util.Date;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MovieRequest {
-    Integer id;
 
     String title;
 

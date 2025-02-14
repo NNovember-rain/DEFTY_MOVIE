@@ -57,6 +57,19 @@ public class RoleController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PatchMapping("/status/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('STATUS_ROLE')")
+    public ResponseEntity<?> switchStatus(@PathVariable("id") Integer roleId) {
+        Integer status = roleService.checkStatusRole(roleId);
+        log.info(PREFIX_ROLE + "Switch status role success");
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(status)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PostMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_ROLE')")
     public ResponseEntity<?> createRole(@RequestBody RoleRequest roleRequest) {

@@ -43,11 +43,17 @@ public class EpisodeService implements IEpisodeService {
         episodeValidation.fieldValidation(episodeRequest);
 
         Episode episode = episodeMapper.toEpisodeEntity(episodeRequest);
-        try{
-            episode.setThumbnail(uploadImageUtil.upload(episodeRequest.getThumbnail()));
+
+        if (episodeRequest.getThumbnail() != null && !episodeRequest.getThumbnail().isEmpty()) {
+            try{
+                episode.setThumbnail(uploadImageUtil.upload(episodeRequest.getThumbnail()));
+            }
+            catch(Exception e){
+                throw new ImageUploadException("Could not upload the image, please try again later!");
+            }
         }
-        catch(Exception e){
-            throw new ImageUploadException("Could not upload the image, please try again later!");
+        else {
+            episode.setThumbnail(null);
         }
 
         try{
@@ -84,6 +90,14 @@ public class EpisodeService implements IEpisodeService {
             Episode updatedEpisode = episode.get();
             /*copy different fields from episodeRequest to updatedEpisode*/
             BeanUtils.copyProperties(episodeRequest, updatedEpisode, "id");
+            if (episodeRequest.getThumbnail() != null && !episodeRequest.getThumbnail().isEmpty()) {
+                try{
+                    updatedEpisode.setThumbnail(uploadImageUtil.upload(episodeRequest.getThumbnail()));
+                }
+                catch(Exception e){
+                    throw new ImageUploadException("Could not upload the image, please try again later!");
+                }
+            }
             episodeRepository.save(updatedEpisode);
         }
         else {

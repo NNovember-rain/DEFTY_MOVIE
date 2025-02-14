@@ -3,17 +3,17 @@ package com.defty.movie.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoleResponse {
+public class MembershipPacketResponse {
     Integer id;
     String name;
-    String description;
+    Integer price;
+    Integer discount;
+    Integer duration;
     Integer status;
-    Set<PermissionResponse> rolePermissions;
+    String description;
 }

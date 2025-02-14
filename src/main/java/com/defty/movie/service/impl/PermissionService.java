@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,9 +42,12 @@ public class PermissionService implements IPermissionService {
 
     @Override
     public PermissionResponse getPermissionById(Integer id) {
-        Permission permission = permissionRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Permission not found")
-        );
+        Optional<Permission> permissionOptional = permissionRepository.findById(id);
+        if(permissionOptional.isEmpty()){
+            log.error("{}Permission not found with permissionID: {}", PREFIX_PERMISSION, id);
+            throw new RuntimeException("Permission not found");
+        }
+        Permission permission = permissionOptional.get();
         log.info("{}Get permission by id: {}", PREFIX_PERMISSION, id);
         return permissionMapper.toPermissionResponse(permission);
     }
@@ -56,7 +60,7 @@ public class PermissionService implements IPermissionService {
             log.info("{}Get all permissions by name: {}", PREFIX_PERMISSION, name);
         } else {
             permissions = permissionRepository.findAll(pageable);
-            log.info("{}Get all permissions", PREFIX_PERMISSION);
+            log.info("{}Get all permissions with pageable", PREFIX_PERMISSION);
         }
         return permissions.map(permissionMapper::toPermissionResponse);
     }
@@ -79,9 +83,12 @@ public class PermissionService implements IPermissionService {
 
     @Override
     public void updatePermission(Integer permissionId, PermissionRequest permissionRequest) {
-        Permission permission = permissionRepository.findById(permissionId).orElseThrow(
-                () -> new RuntimeException("Permission not found")
-        );
+        Optional<Permission> permissionOptional = permissionRepository.findById(permissionId);
+        if(permissionOptional.isEmpty()){
+            log.error("{}Permission not found", PREFIX_PERMISSION);
+            throw new RuntimeException("Permission not found");
+        }
+        Permission permission = permissionOptional.get();
         permission.setName(permissionRequest.getName());
         permission.setDescription(permissionRequest.getDescription());
         permissionRepository.save(permission);

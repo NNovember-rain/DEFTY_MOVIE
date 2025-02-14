@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,7 @@ public class RoleService implements IRoleService {
                 role.getId(),
                 role.getName(),
                 role.getDescription(),
+                role.getStatus(),
                 null
         ));
     }
@@ -67,7 +69,7 @@ public class RoleService implements IRoleService {
                 .status(1)
                 .build();
         roleRepository.save(role);
-        return new RoleResponse(role.getId(), role.getName(), role.getDescription(), null);
+        return new RoleResponse(role.getId(), role.getName(), role.getDescription(), role.getStatus(), null);
     }
 
     @Override
@@ -78,11 +80,36 @@ public class RoleService implements IRoleService {
                 .map(permissionMapper::toPermissionResponse)
                 .collect(Collectors.toSet());
         log.info("{}Get role by id: {}", PREFIX_ROLE, roleId);
+        Optional<Role> roleOptional = roleRepository.findById(roleId);
+        if (roleOptional.isEmpty()) {
+            log.error("{}Role not found roleId: {}", PREFIX_ROLE, roleId);
+            throw new NotFoundException("Role not found with id: " + roleId);
+        }
+        Role role = roleOptional.get();
         return RoleResponse.builder()
-                .name(roleRepository.findById(roleId).get().getName())
-                .description(roleRepository.findById(roleId).get().getDescription())
+                .name(role.getName())
+                .description(role.getDescription())
                 .rolePermissions(permissionResponses)
+                .status(role.getStatus())
                 .build();
+    }
+
+    @Override
+    public Integer checkStatusRole(Integer roleId) {
+        Optional<Role> roleOptional = roleRepository.findById(roleId);
+        if(roleOptional.isEmpty()) {
+            log.error("{}Role not found id: {}", PREFIX_ROLE, roleId);
+            throw new NotFoundException("Role not found with id: " + roleId);
+        }
+        Role role = roleOptional.get();
+        if (role.getStatus() == 1) {
+            role.setStatus(0);
+        }
+        else if(role.getStatus() == 0) {
+            role.setStatus(1);
+        }
+        roleRepository.save(role);
+        return role.getStatus();
     }
 
     @Override
@@ -90,7 +117,7 @@ public class RoleService implements IRoleService {
         List<Role> roles = roleRepository.findAllById(roleId);
         log.info("{}Delete role by id: {}", PREFIX_ROLE, roleId);
         for (Role role : roles) {
-            role.setStatus(0);
+            role.setStatus(-1);
             List<RolePermission> rolePermissions = rolePermissionRepository.findByRoleId(role.getId());
             rolePermissionRepository.deleteAll(rolePermissions);
             roleRepository.save(role);
@@ -99,8 +126,16 @@ public class RoleService implements IRoleService {
 
     @Override
     public RoleResponse assignPermissionToRole(Integer roleId, List<Integer> permissionIds) {
-        Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new NotFoundException("Role not found with id: " + roleId));
+        Optional<Role> roleOptional = roleRepository.findById(roleId);
+        if (roleOptional.isEmpty()) {
+            log.error("{}Role not found with roleId: {}", PREFIX_ROLE, roleId);
+            throw new NotFoundException("Role not found with id: " + roleId);
+        }
+        Role role = roleOptional.get();
+        if(role.getStatus() == 0){
+            log.error("{}Role is disabled", PREFIX_ROLE);
+            throw new NotFoundException("Role is disabled");
+        }
         List<Permission> permissions = permissionRepository.findAllById(permissionIds);
         Set<Permission> existPermissions = permissionRepository.findPermissionsByRoleId(roleId);
         List<RolePermission> newRolePermissions = new ArrayList<>();
@@ -125,8 +160,16 @@ public class RoleService implements IRoleService {
 
     @Override
     public RoleResponse unassignPermissionFromRole(Integer roleId, List<Integer> permissionIds) {
-        Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new NotFoundException("Role not found with id: " + roleId));
+        Optional<Role> roleOptional = roleRepository.findById(roleId);
+        if (roleOptional.isEmpty()) {
+            log.error("{}Role not found with id: {}", PREFIX_ROLE, roleId);
+            throw new NotFoundException("Role not found with id: " + roleId);
+        }
+        Role role = roleOptional.get();
+        if(role.getStatus() == 0){
+            log.error("{}Role is disabled", PREFIX_ROLE);
+            throw new NotFoundException("Role is disabled");
+        }
         List<Permission> permissions = permissionRepository.findAllById(permissionIds);
         List<RolePermission> rolePermissions = new ArrayList<>();
         for (Permission permission : permissions) {
@@ -145,21 +188,20 @@ public class RoleService implements IRoleService {
     }
 
     @Override
-    public RoleResponse updateRole(Integer id, RoleRequest roleRequest) {
-        try {
-            Role role = roleRepository.findById(id).orElseThrow(
-                    () -> new NotFoundException("Role not found"));
-            role.setName(roleRequest.getName());
-            role.setDescription(roleRequest.getDescription());
-            roleRepository.save(role);
-            log.info("{}Update role by id: {}", PREFIX_ROLE, id);
-            return RoleResponse.builder()
-                    .name(roleRequest.getName())
-                    .description(roleRequest.getDescription())
-                    .build();
-        } catch (NotFoundException e) {
-            log.error("{}Error updating role by id: {}. Exception: {}", PREFIX_ROLE, id, e.getMessage());
-            throw e;
+    public RoleResponse updateRole(Integer roleId, RoleRequest roleRequest) {
+        Optional<Role> roleOptional = roleRepository.findById(roleId);
+        if (roleOptional.isEmpty()) {
+            log.error("{}Role not found with id: {}", PREFIX_ROLE, roleId);
+            throw new NotFoundException("Role not found with id: " + roleId);
         }
+        Role role = roleOptional.get();
+        role.setName(roleRequest.getName());
+        role.setDescription(roleRequest.getDescription());
+        roleRepository.save(role);
+        log.info("{}Update role by id: {}", PREFIX_ROLE, roleId);
+        return RoleResponse.builder()
+                .name(roleRequest.getName())
+                .description(roleRequest.getDescription())
+                .build();
     }
 }

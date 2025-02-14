@@ -27,8 +27,8 @@ import java.util.*;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService implements IUserService {
-    private final IUserRepository userRepository;
-    private final UserMapper userMapper;
+    IUserRepository userRepository;
+    UserMapper userMapper;
     DateUtil dateUtil;
     @Override
     public ApiResponse<PageableResponse<UserResponse>> getAllUsers(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status) {

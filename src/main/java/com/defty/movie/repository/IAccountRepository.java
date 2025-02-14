@@ -19,9 +19,9 @@ public interface IAccountRepository extends JpaRepository<Account, Integer> {
 
     @Query("SELECT a FROM Account a " +
             "WHERE (:username IS NULL OR LOWER(a.username) " +
-            "LIKE LOWER(CONCAT('%', :username, '%'))) AND a.status = 1")
+            "LIKE LOWER(CONCAT('%', :username, '%'))) AND a.status >= 0")
     Page<Account> findAccount(@Param("username") String username, Pageable pageable);
 
-    @Query("SELECT a FROM Account a WHERE a.status = 1")
+    @Query("SELECT a FROM Account a WHERE a.status >= 0")
     Page<Account> findAllWithStatus(Pageable pageable);
 }

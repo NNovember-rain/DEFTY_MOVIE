@@ -5,11 +5,13 @@ import com.defty.movie.dto.response.ActorResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Actor;
+import com.defty.movie.exception.CustomDateException;
 import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.ActorMapper;
 import com.defty.movie.repository.IActorRepository;
 import com.defty.movie.service.IActorService;
+import com.defty.movie.utils.DateUtil;
 import com.defty.movie.utils.UploadImageUtil;
 import com.defty.movie.validation.ActorValidation;
 import lombok.AccessLevel;
@@ -35,16 +37,23 @@ public class ActorService implements IActorService {
     ActorValidation actorValidation;
     IActorRepository actorRepository;
     UploadImageUtil uploadImageUtil;
+    DateUtil dateUtil;
     @Override
     public ApiResponse<Integer> addActor(ActorRequest actorRequest) {
         actorValidation.fieldValidation(actorRequest);
         Actor actorEntity = actorMapper.toActorEntity(actorRequest);
-        try {
-            actorEntity.setAvatar(uploadImageUtil.upload(actorRequest.getAvatar()));
+        if(actorRequest.getAvatar() != null && !actorRequest.getAvatar().isEmpty()){
+            try {
+                actorEntity.setAvatar(uploadImageUtil.upload(actorRequest.getAvatar()));
+            }
+            catch (Exception e){
+                throw new ImageUploadException("Could not upload the image, please try again later!");
+            }
         }
-        catch (Exception e){
-            throw new ImageUploadException("Could not upload the image, please try again later!");
+        else {
+            actorEntity.setAvatar(null);
         }
+
         try {
             actorRepository.save(actorEntity);
         }
@@ -62,12 +71,15 @@ public class ActorService implements IActorService {
             Actor updatedActor = actor.get();
 
             BeanUtils.copyProperties(actorRequest, updatedActor, "id");
-            try {
-                updatedActor.setAvatar(uploadImageUtil.upload(actorRequest.getAvatar()));
+            if(actorRequest.getAvatar() != null && !actorRequest.getAvatar().isEmpty()){
+                try {
+                    updatedActor.setAvatar(uploadImageUtil.upload(actorRequest.getAvatar()));
+                }
+                catch (Exception e){
+                    throw new ImageUploadException("Could not upload the image, please try again later!");
+                }
             }
-            catch (Exception e){
-                throw new ImageUploadException("Could not upload the image, please try again later!");
-            }
+
             try {
                 actorRepository.save(updatedActor);
             }
@@ -150,28 +162,15 @@ public class ActorService implements IActorService {
         Date endDate = null;
         if (date_of_birth != null && !date_of_birth.isEmpty()) {
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 String[] dates = date_of_birth.split(" - ");
                 if (dates.length == 2) {
-                    startDate = sdf.parse(dates[0]);
-                    endDate = sdf.parse(dates[1]);
-                    Calendar startCal = Calendar.getInstance();
-                    startCal.setTime(startDate);
-                    startCal.set(Calendar.HOUR_OF_DAY, 0);
-                    startCal.set(Calendar.MINUTE, 0);
-                    startCal.set(Calendar.SECOND, 0);
-                    startCal.set(Calendar.MILLISECOND, 0);
-                    startDate = startCal.getTime();
-
-                    Calendar endCal = Calendar.getInstance();
-                    endCal.setTime(endDate);
-                    endCal.set(Calendar.HOUR_OF_DAY, 23);
-                    endCal.set(Calendar.MINUTE, 59);
-                    endCal.set(Calendar.SECOND, 59);
-                    endCal.set(Calendar.MILLISECOND, 999);
-                    endDate = endCal.getTime();
+                    startDate = dateUtil.stringToSqlDate(dates[0]);
+                    endDate = dateUtil.stringToSqlDate(dates[1]);
                 }
-            } catch (ParseException e) {
+                else{
+                    throw new CustomDateException("please enter the right date format: dd/MM/yyyy - dd/MM/yyyy");
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

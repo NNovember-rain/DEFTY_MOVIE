@@ -2,8 +2,10 @@ package com.defty.movie.controller.user;
 
 import com.defty.movie.dto.request.LoginRequest;
 import com.defty.movie.dto.request.RegisterRequest;
-import com.defty.movie.dto.request.UserRequest;
-import com.defty.movie.dto.response.*;
+import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.dto.response.LoginResponse;
+import com.defty.movie.dto.response.RefreshTokenResponse;
+import com.defty.movie.dto.response.UserResponse;
 import com.defty.movie.service.IAuthUserService;
 import com.defty.movie.utils.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,11 +24,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${api.prefix}/user/auth")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthUserController {
+    String PREFIX_AUTH_USER = "AUTH_USER | ";
     IAuthUserService authUserService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse res){
         LoginResponse loginResponse = authUserService.login(loginRequest, res);
+        log.info(PREFIX_AUTH_USER + "Login success");
         ApiResponse<LoginResponse> response = ApiResponse.<LoginResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -38,6 +42,7 @@ public class AuthUserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest){
         UserResponse userResponse = authUserService.register(registerRequest);
+        log.info(PREFIX_AUTH_USER + "Register success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
                 .message(HttpStatus.CREATED.getReasonPhrase())
@@ -60,6 +65,7 @@ public class AuthUserController {
         }
         try {
             UserResponse userResponse = authUserService.getUserFromToken(token);
+            log.info(PREFIX_AUTH_USER + "Check account success");
             ApiResponse<?> response = ApiResponse.builder()
                     .status(HttpStatus.OK.value())
                     .message(HttpStatus.OK.getReasonPhrase())
@@ -67,6 +73,7 @@ public class AuthUserController {
                     .build();
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
+            log.error(PREFIX_AUTH_USER + "Token is expired or invalid");
             ApiResponse<?> response = ApiResponse.builder()
                     .status(HttpStatus.UNAUTHORIZED.value())
                     .message("Token is expired or invalid")
@@ -80,6 +87,7 @@ public class AuthUserController {
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse res) {
         String refreshToken = CookieUtil.getValue(request, "refresh_token");
         RefreshTokenResponse newToken = authUserService.refreshToken(refreshToken, res);
+        log.info(PREFIX_AUTH_USER + "Refresh token success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -94,6 +102,7 @@ public class AuthUserController {
         authUserService.logout(accessToken);
         CookieUtil.clear(response, "access_token");
         CookieUtil.clear(response, "refresh_token");
+        log.info(PREFIX_AUTH_USER + "Logout success");
         ApiResponse<?> responseObj = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

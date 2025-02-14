@@ -23,8 +23,6 @@ spring:
         show_sql: none  # In câu lệnh SQL ra console
         use_sql_comments: true  # Thêm các chú thích SQL (nếu cần thiết)
 
-
-
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

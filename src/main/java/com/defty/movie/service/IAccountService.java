@@ -13,4 +13,5 @@ public interface IAccountService {
     void deleteAccount(List<Integer> ids);
     AccountResponse updateAccount(Integer id, AccountRequest accountRequest);
     AccountResponse getAccount(Integer id);
+    Integer switchStatus(Integer id);
 }

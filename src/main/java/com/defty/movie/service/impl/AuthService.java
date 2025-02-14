@@ -49,8 +49,12 @@ public class AuthService implements IAuthService {
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
         Optional<Account> accountOptional = accountRepository.findByUsername(loginRequest.getUsername());
         if (accountOptional.isEmpty()) {
-            log.error("{}Account not found", PREFIX_AUTH);
+            log.error("{}Account not found with Username: {}", PREFIX_AUTH, loginRequest.getUsername());
             throw new NotFoundException("Account not found");
+        }
+        if (accountOptional.get().getStatus() == 0) {
+            log.error("{}Account is disabled", PREFIX_AUTH);
+            throw new RuntimeException("Account is disabled");
         }
         Account account = accountOptional.get();
         if (!passwordEncoder.matches(loginRequest.getPassword(), account.getPassword())) {
@@ -73,12 +77,13 @@ public class AuthService implements IAuthService {
     @Override
     public void logout(String token) {
         String username = jwtTokenUtil.extractUsername(token);
-        Account account = accountRepository.findByUsername(username).orElseThrow(
-                () -> new NotFoundException("Account not found")
-        );
-        if(account != null) {
-            refreshTokenService.deleteRefreshToken(account.getId(), true);
+        Optional<Account> accountOptional = accountRepository.findByUsername(username);
+        if(accountOptional.isEmpty()) {
+            log.error("{}Account not found with username", PREFIX_AUTH);
+            throw new NotFoundException("Account not found");
         }
+        Account account = accountOptional.get();
+        refreshTokenService.deleteRefreshToken(account.getId(), true);
     }
 
     @Override
@@ -90,7 +95,7 @@ public class AuthService implements IAuthService {
         String username = jwtTokenUtil.extractUsername(token);
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
         if (accountOptional.isEmpty()) {
-            log.error("{}Account not found", PREFIX_AUTH);
+            log.error("{}Account not found with username: {}", PREFIX_AUTH, username);
             throw new NotFoundException("Account not found");
         }
         Account account = accountOptional.get();
