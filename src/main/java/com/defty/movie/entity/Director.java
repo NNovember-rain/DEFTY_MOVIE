@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -18,7 +20,7 @@ public class Director extends BaseEntity{
     private String gender;
 
     @Column(name = "date_of_birth")
-    private String dateOfBirth;
+    private Date dateOfBirth;
 
     @Column(name = "weight")
     private Integer weight;

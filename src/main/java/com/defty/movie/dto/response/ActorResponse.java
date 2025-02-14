@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Date;
+
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ActorResponse {
@@ -13,7 +15,7 @@ public class ActorResponse {
 
     String gender;
 
-    String dateOfBirth;
+    Date dateOfBirth;
 
     Integer weight;
 

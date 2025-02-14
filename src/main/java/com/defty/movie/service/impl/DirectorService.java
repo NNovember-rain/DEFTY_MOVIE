@@ -44,6 +44,7 @@ public class DirectorService implements IDirectorService {
     public ApiResponse<Integer> addDirector(DirectorRequest directorRequest) {
         directorValidation.fieldValidation(directorRequest);
         Director directorEntity = directorMapper.toDirectorEntity(directorRequest);
+        directorEntity.setDateOfBirth(dateUtil.stringToSqlDate(directorRequest.getDateOfBirth()));
         if (directorRequest.getAvatar() != null && !directorRequest.getAvatar().isEmpty()) {
             try {
                 directorEntity.setAvatar(uploadImageUtil.upload(directorRequest.getAvatar()));

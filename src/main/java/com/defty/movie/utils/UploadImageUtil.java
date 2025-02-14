@@ -25,8 +25,10 @@ public class UploadImageUtil {
 
         //TODO: Tạo tên tệp duy nhất
         String uniqueFilename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        uniqueFilename=uniqueFilename.substring(0, uniqueFilename.lastIndexOf('.'));
-
+        int dotIndex = uniqueFilename.lastIndexOf('.');
+        if (dotIndex != -1) {
+            uniqueFilename = uniqueFilename.substring(0, dotIndex); // Cắt bỏ phần mở rộng
+        }
         //TODO: Tải ảnh
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
                 "public_id", uniqueFilename,
@@ -34,9 +36,9 @@ public class UploadImageUtil {
                 "unique_filename", false,
                 "overwrite", false,
                 "transformation", new Transformation()
-                                .quality("auto")            //TODO: Nén ảnh tự động
-                                .fetchFormat("auto")        //TODO: Định dạng ảnh tự động
-                                //.width(1000).crop("scale")        //TODO: Đặt lại kích thước
+                        .quality("auto")            //TODO: Nén ảnh tự động
+                        .fetchFormat("auto")        //TODO: Định dạng ảnh tự động
+                //.width(1000).crop("scale")        //TODO: Đặt lại kích thước
         ));
 
         //TODO: Lấy URL của hình ảnh đã tải lên Cloud

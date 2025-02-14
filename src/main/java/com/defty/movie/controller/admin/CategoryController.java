@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/movie/category")
+@RequestMapping("${api.prefix}/admin/movie/category")
 //@RequestMapping("/movie/category")
 public class CategoryController {
     private final ICategoryService categoryService;

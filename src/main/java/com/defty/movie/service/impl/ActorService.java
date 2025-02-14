@@ -42,6 +42,7 @@ public class ActorService implements IActorService {
     public ApiResponse<Integer> addActor(ActorRequest actorRequest) {
         actorValidation.fieldValidation(actorRequest);
         Actor actorEntity = actorMapper.toActorEntity(actorRequest);
+        actorEntity.setDateOfBirth(dateUtil.stringToSqlDate(actorRequest.getDateOfBirth()));
         if(actorRequest.getAvatar() != null && !actorRequest.getAvatar().isEmpty()){
             try {
                 actorEntity.setAvatar(uploadImageUtil.upload(actorRequest.getAvatar()));
