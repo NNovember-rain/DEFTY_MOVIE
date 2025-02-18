@@ -41,6 +41,7 @@ public class Actor extends BaseEntity{
     @Column(name = "description")
     private String description;
 
+
     @ManyToMany(mappedBy = "actors")
     private Set<Movie> movies;
 }
