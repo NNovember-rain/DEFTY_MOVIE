@@ -15,34 +15,39 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/user/articlecomment")
+@RequestMapping("${api.prefix}/user/article-comment")
 public class ArticleCommentController {
 
     private final IArticleCommentService articleCommentService;
+    String PREFIX_ARTICLE_COMMENT = "ARTICLE_COMMENT | ";
 
     @PostMapping()
     public Object addArticleComment(@RequestBody ArticleCommentRequest articleCommentRequest) {
         Integer id= articleCommentService.addArticleComment(articleCommentRequest);
+        log.info(PREFIX_ARTICLE_COMMENT + "Add Aritcle Comment successfully");
         return ApiResponeUtil.ResponseCreatedSuccess(id);
     }
 
     @PatchMapping("/{id}")
     public Object updateArticleComment(@PathVariable Integer id,@RequestBody ArticleCommentRequest articleCommentRequest) {
         articleCommentService.updateArticleComment(id, articleCommentRequest);
-        String massage="Updated article comment";
-        return ApiResponeUtil.ResponseOK(massage);
+        String message="Updated article comment";
+        log.info(PREFIX_ARTICLE_COMMENT + "Update Aritcle Comment successfully");
+        return ApiResponeUtil.ResponseOK(message);
     }
 
     @DeleteMapping("/{ids}")
     public Object deletarArticleComment(@PathVariable List<Integer> ids) {
         articleCommentService.deleteArticleComment(ids);
-        String massage="Deleted article comment";
-        return ApiResponeUtil.ResponseOK(massage);
+        String message="Deleted article comment";
+        log.info(PREFIX_ARTICLE_COMMENT + "Deleted Article Comment successfully");
+        return ApiResponeUtil.ResponseOK(message);
     }
 
-    @GetMapping("/{id}")
-    public Object getArticleComment(@PathVariable Integer id) {
-        List<ArticleCommentResponse> articleComments= articleCommentService.getArticleComment(id);
+    @GetMapping("/{articleid}")
+    public Object getArticleComment(@PathVariable Integer articleid) {
+        List<ArticleCommentResponse> articleComments= articleCommentService.getArticleComment(articleid);
+        log.info(PREFIX_ARTICLE_COMMENT + "Get All Article Comment with ArticleId successfully");
         return ApiResponeUtil.ResponseOK(articleComments);
     }
 }

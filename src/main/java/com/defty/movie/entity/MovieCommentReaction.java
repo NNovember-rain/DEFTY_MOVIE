@@ -1,5 +1,6 @@
 package com.defty.movie.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -13,6 +14,13 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MovieCommentReaction extends BaseEntity {
+
+    @Column
+    Integer status;
+
+    @Column
+    String content;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;

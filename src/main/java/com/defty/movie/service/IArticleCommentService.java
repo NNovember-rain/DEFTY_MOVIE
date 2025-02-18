@@ -11,5 +11,6 @@ public interface IArticleCommentService {
     Integer addArticleComment(ArticleCommentRequest articleCommentRequest);
     void updateArticleComment(Integer id, ArticleCommentRequest articleCommentRequest);
     void deleteArticleComment(List<Integer> ids);
-    List<ArticleCommentResponse> getArticleComment(Integer ariticleId);
+    List<ArticleCommentResponse> getArticleComment(Integer articleId);
+    ArticleComment getArticleCommentById(Integer id);
 }

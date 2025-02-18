@@ -2,6 +2,12 @@ server:
   port: 8088
 
 spring:
+
+  servlet:
+    multipart:
+      max-file-size: 3000MB
+      max-request-size: 3000MB
+
   datasource:
     url: jdbc:mysql://localhost:3306/defty_movie_dev
 #    url: jdbc:mysql://movie-advance.cn2k6s0skt43.ap-southeast-2.rds.amazonaws.com:3306/movie_advance
@@ -32,3 +38,15 @@ jwt:
   expiration: 600  # 10m
   expiration-refresh-token: 604800 # 7day
   secretKey: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
+
+aws:
+  access:
+    key:
+      id: AKIAZAI4GU3MNR2WWZEJ
+  secret:
+    access:
+      key: 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
+  s3:
+    region: ap-southeast-2
+    bucket:
+      name: defty-movie

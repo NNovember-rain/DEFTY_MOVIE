@@ -3,6 +3,8 @@ package com.defty.movie.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -13,4 +15,5 @@ public class ArticleCommentResponse {
     int articleId;
     int articleCommentParentId;
     String content;
+    List<CommentReactionResponse> commentReactionRespons;
 }

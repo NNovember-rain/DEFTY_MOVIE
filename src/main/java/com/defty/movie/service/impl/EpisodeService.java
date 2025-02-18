@@ -12,6 +12,7 @@ import com.defty.movie.mapper.EpisodeMapper;
 import com.defty.movie.repository.IEpisodeRepository;
 import com.defty.movie.service.IEpisodeService;
 import com.defty.movie.utils.UploadImageUtil;
+import com.defty.movie.utils.UploadVideoUtil;
 import com.defty.movie.validation.EpisodeValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class EpisodeService implements IEpisodeService {
     IEpisodeRepository episodeRepository;
     EpisodeValidation episodeValidation;
     UploadImageUtil uploadImageUtil;
+
     @Override
     public ApiResponse<Integer> addEpisode(EpisodeRequest episodeRequest) {
         episodeValidation.fieldValidation(episodeRequest);

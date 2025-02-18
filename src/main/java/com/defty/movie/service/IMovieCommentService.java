@@ -13,4 +13,5 @@ public interface IMovieCommentService {
     void updateMovieComment(Integer id, MovieCommentRequest movieCommentRequest);
     void deleteMovieComment(List<Integer> ids);
     List<MovieCommentResponse> getMovieComment(Integer movieId);
+    MovieComment getMovieCommentById(Integer id);
 }
