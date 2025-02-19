@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/movie/actor")
+@RequestMapping("${api.prefix}/admin/movie/actor")
 public class ActorController {
     private final IActorService actorService;
     @PostMapping("")

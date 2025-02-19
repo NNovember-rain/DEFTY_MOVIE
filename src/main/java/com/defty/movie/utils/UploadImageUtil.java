@@ -36,9 +36,9 @@ public class UploadImageUtil {
                 "unique_filename", false,
                 "overwrite", false,
                 "transformation", new Transformation()
-                                .quality("auto")            //TODO: Nén ảnh tự động
-                                .fetchFormat("auto")        //TODO: Định dạng ảnh tự động
-                                //.width(1000).crop("scale")        //TODO: Đặt lại kích thước
+                        .quality("auto")            //TODO: Nén ảnh tự động
+                        .fetchFormat("auto")        //TODO: Định dạng ảnh tự động
+                //.width(1000).crop("scale")        //TODO: Đặt lại kích thước
         ));
 
         //TODO: Lấy URL của hình ảnh đã tải lên Cloud
