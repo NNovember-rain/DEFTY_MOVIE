@@ -19,4 +19,5 @@ public interface IActorService {
     ApiResponse<Integer> changeStatus(Integer id);
     ApiResponse<PageableResponse<ActorResponse>> getAllActors(Pageable pageable, String name, String gender, String date_of_birth, String nationality, Integer status);
     Object getActor(Integer id);
+    PageableResponse<ActorResponse> getAllActorsOrder(Pageable pageable);
 }

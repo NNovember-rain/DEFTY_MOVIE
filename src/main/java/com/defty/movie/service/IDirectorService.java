@@ -1,6 +1,7 @@
 package com.defty.movie.service;
 
 import com.defty.movie.dto.request.DirectorRequest;
+import com.defty.movie.dto.response.ActorResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.DirectorResponse;
 import com.defty.movie.dto.response.PageableResponse;
@@ -16,4 +17,5 @@ public interface IDirectorService {
     ApiResponse<Integer> changeStatus(Integer id);
     ApiResponse<PageableResponse<DirectorResponse>> getAllDirectors(Pageable pageable,String name, String gender, String date_of_birth, String nationality, Integer status);
     Object getDirector(Integer id);
+    PageableResponse<DirectorResponse> getAllDirectorOrder(Pageable pageable);
 }
