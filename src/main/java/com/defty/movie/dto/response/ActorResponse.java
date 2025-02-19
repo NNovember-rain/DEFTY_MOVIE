@@ -23,6 +23,8 @@ public class ActorResponse {
 
     String nationality;
 
+    Integer order;
+
     String description;
 
     String avatar;

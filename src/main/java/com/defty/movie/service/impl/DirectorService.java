@@ -1,11 +1,7 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.DirectorRequest;
-import com.defty.movie.dto.response.ApiResponse;
-import com.defty.movie.dto.response.CategoryResponse;
-import com.defty.movie.dto.response.DirectorResponse;
-import com.defty.movie.dto.response.PageableResponse;
-import com.defty.movie.entity.Actor;
+import com.defty.movie.dto.response.*;
 import com.defty.movie.entity.Director;
 import com.defty.movie.exception.CustomDateException;
 import com.defty.movie.exception.ImageUploadException;
@@ -129,6 +125,22 @@ public class DirectorService implements IDirectorService {
             return new ApiResponse<>(200, "OK", directorMapper.toDirectorResponseDTO(directorEntity.get()));
         }
         return new ApiResponse<>(404, "Director doesn't exist", null);
+    }
+
+    @Override
+    public PageableResponse<DirectorResponse> getAllDirectorOrder(Pageable pageable) {
+
+        List<Director> directors = directorRepository.findAll(pageable).getContent();
+        List<Director> directorsSize=directorRepository.findAll();
+        if(directors.size() == 0) throw new NotFoundException("Not found exception");
+        PageableResponse<DirectorResponse> directorResponsePageableResponse =new PageableResponse<>();
+        List<DirectorResponse> directorResponseDTOS = new ArrayList<>();
+        for(Director director : directors){
+            directorResponseDTOS.add(directorMapper.toDirectorResponseDTO(director));
+        }
+        directorResponsePageableResponse.setContent(directorResponseDTOS);
+        directorResponsePageableResponse.setTotalElements(directorsSize.size()+0L);
+        return directorResponsePageableResponse;
     }
 
     @Override

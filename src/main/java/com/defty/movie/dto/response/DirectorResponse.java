@@ -19,6 +19,8 @@ public class DirectorResponse {
 
     Integer height;
 
+    Integer order;
+
     String nationality;
 
     String description;

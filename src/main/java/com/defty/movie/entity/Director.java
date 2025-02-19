@@ -31,6 +31,9 @@ public class Director extends BaseEntity{
     @Column(name = "nationality")
     private String nationality;
 
+    @Column(name="order")
+    private Integer order;
+
     @Column(name = "description")
     private String description;
 
