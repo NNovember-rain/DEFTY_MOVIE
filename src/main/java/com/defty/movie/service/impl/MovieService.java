@@ -67,7 +67,7 @@ public class MovieService implements IMovieService {
 
         if(movieRequest.getThumbnail()!=null) {
             try {
-                newMovie.setThumbnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
+                newMovie.setThubnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
             } catch (Exception e) {
                 return new ApiResponse<>(500, e.getMessage(), newMovie.getId());
             }
@@ -135,13 +135,15 @@ public class MovieService implements IMovieService {
             updatedMovie.setSlug(slugUtil.createSlug(movieRequest.getTitle(), id));
             if (movieRequest.getThumbnail() != null && !movieRequest.getThumbnail().isEmpty()) {
                 try {
-                    updatedMovie.setThumbnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
+                    updatedMovie.setThubnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
                 }
                 catch (Exception e){
                     throw new ImageUploadException("Could not upload the image, please try again later!");
                 }
             }
-
+            else{
+                updatedMovie.setThubnail(null);
+            }
             if (movieRequest.getCoverImage() != null && !movieRequest.getCoverImage().isEmpty()) {
                 try {
                     updatedMovie.setCoverImage(uploadImageUtil.upload(movieRequest.getCoverImage()));
@@ -150,7 +152,9 @@ public class MovieService implements IMovieService {
                     throw new ImageUploadException("Could not upload the image, please try again later!");
                 }
             }
-
+            else{
+                updatedMovie.setCoverImage(null);
+            }
             Optional<Director> director = directorRepository.findByFullName(movieRequest.getDirector());
             director.ifPresent(updatedMovie::setDirector);
             movieRepository.save(updatedMovie);

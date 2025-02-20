@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 public class CommentReactionResponse {
 
     String content;
-
     UserResponse userResponse;
 
 }

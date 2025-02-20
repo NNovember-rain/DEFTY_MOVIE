@@ -2,7 +2,10 @@ package com.defty.movie.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -27,4 +30,7 @@ public class Category extends BaseEntity {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private Set<MovieCategory> movieCategories;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private Set<Showon> showons;
 }

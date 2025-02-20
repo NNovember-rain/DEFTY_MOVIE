@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/banner")
+@RequestMapping("${api.prefix}/admin/banner")
 public class BannerController {
     private final IBannerService bannerService;
     @PostMapping("")

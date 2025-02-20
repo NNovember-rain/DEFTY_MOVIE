@@ -30,7 +30,7 @@ public class RefreshToken extends BaseEntity {
     private Instant createdAt = Instant.now();
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id",nullable = true)
     Account account;
 
     @ManyToOne

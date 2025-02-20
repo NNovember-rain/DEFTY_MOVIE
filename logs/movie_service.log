@@ -1,236 +1,169 @@
-2025-12-29 17:54:50 INFO  movie.MovieApplication.logStarting Starting MovieApplication using Java 17.0.12 with PID 1300 (D:\Workspace\JAVA_Backend\movie\target\classes started by admin in D:\Workspace\JAVA_Backend\movie)
-2025-12-29 17:54:50 INFO  movie.MovieApplication.logStartupProfileInfo The following 1 profile is active: "dev"
-2025-12-29 17:54:51 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-12-29 17:54:51 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Finished Spring Data repository scanning in 52 ms. Found 14 JPA repository interfaces.
-2025-12-29 17:54:51 INFO  tomcat.TomcatWebServer.initialize Tomcat initialized with port 8088 (http)
-2025-12-29 17:54:51 INFO  http11.Http11NioProtocol.log Initializing ProtocolHandler ["http-nio-8088"]
-2025-12-29 17:54:51 INFO  core.StandardService.log Starting service [Tomcat]
-2025-12-29 17:54:51 INFO  core.StandardEngine.log Starting Servlet engine: [Apache Tomcat/10.1.30]
-2025-12-29 17:54:51 INFO  [localhost].[/].log Initializing Spring embedded WebApplicationContext
-2025-12-29 17:54:51 INFO  context.ServletWebServerApplicationContext.prepareWebApplicationContext Root WebApplicationContext: initialization completed in 1155 ms
-2025-12-29 17:54:51 INFO  util.LogHelper.logPersistenceUnitInformation HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-12-29 17:54:51 INFO  hibernate.Version.logVersion HHH000412: Hibernate ORM core version 6.5.3.Final
-2025-12-29 17:54:51 INFO  internal.RegionFactoryInitiator.initiateService HHH000026: Second-level cache disabled
-2025-12-29 17:54:52 INFO  persistenceunit.SpringPersistenceUnitInfo.addTransformer No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-12-29 17:54:52 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Starting...
-2025-12-29 17:54:52 INFO  pool.HikariPool.checkFailFast HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5af4328e
-2025-12-29 17:54:52 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Start completed.
-2025-12-29 17:54:52 WARN  orm.deprecation.constructDialect HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-12-29 17:54:52 WARN  orm.deprecation.logSelectedDialect HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
-2025-12-29 17:54:53 INFO  internal.JtaPlatformInitiator.initiateService HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-12-29 17:54:53 INFO  jpa.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-12-29 17:54:53 INFO  query.QueryEnhancerFactory.<clinit> Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-12-29 17:54:54 INFO  configuration.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer.configure Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2025-12-29 17:54:54 WARN  configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer.configure Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
-2025-12-29 17:54:54 WARN  jpa.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-12-29 17:54:55 INFO  http11.Http11NioProtocol.log Starting ProtocolHandler ["http-nio-8088"]
-2025-12-29 17:54:55 INFO  tomcat.TomcatWebServer.start Tomcat started on port 8088 (http) with context path '/'
-2025-12-29 17:54:55 INFO  movie.MovieApplication.logStarted Started MovieApplication in 4.909 seconds (process running for 6.258)
-2025-12-29 17:55:24 INFO  [localhost].[/].log Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-12-29 17:55:24 INFO  servlet.DispatcherServlet.initServletBean Initializing Servlet 'dispatcherServlet'
-2025-12-29 17:55:24 INFO  servlet.DispatcherServlet.initServletBean Completed initialization in 1 ms
-2025-12-29 17:55:25 INFO  api.AbstractOpenApiResource.getOpenApi Init duration for springdoc-openapi is: 433 ms
-2025-12-29 17:56:17 INFO  impl.RefreshTokenService.deleteExistingToken REFRESH_TOKEN | Deleted existing refresh token for user User
-2025-12-29 17:56:17 INFO  impl.RefreshTokenService.saveRefreshToken REFRESH_TOKEN | Created refresh token for user
-2025-12-29 17:56:17 INFO  impl.RefreshTokenService.createRefreshToken REFRESH_TOKEN | Created refresh token for user
-2025-12-29 17:56:17 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcwMzc3fQ.QODsqkWTbdpLFpKpBOsAlgUHZ9wPxpm3Wt7RQuervOo, httpOnly=true, secure=true, maxAge=600, path=/
-2025-12-29 17:56:17 INFO  utils.CookieUtil.create COOKIE | Cookie created: jakarta.servlet.http.Cookie@f3e8cdbc
-2025-12-29 17:56:17 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=refresh_token, value=e415dd9d-797d-4a75-ae1c-1cc26bb08850, httpOnly=true, secure=true, maxAge=604800, path=/
-2025-12-29 17:56:17 INFO  utils.CookieUtil.create COOKIE | Cookie created: jakarta.servlet.http.Cookie@77cb9c09
-2025-12-29 18:02:15 INFO  jpa.LocalContainerEntityManagerFactoryBean.destroy Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-12-29 18:02:15 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown initiated...
-2025-12-29 18:02:15 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown completed.
-2025-12-29 18:02:18 INFO  movie.MovieApplication.logStarting Starting MovieApplication using Java 17.0.12 with PID 5520 (D:\Workspace\JAVA_Backend\movie\target\classes started by admin in D:\Workspace\JAVA_Backend\movie)
-2025-12-29 18:02:18 INFO  movie.MovieApplication.logStartupProfileInfo The following 1 profile is active: "dev"
-2025-12-29 18:02:19 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-12-29 18:02:19 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Finished Spring Data repository scanning in 54 ms. Found 14 JPA repository interfaces.
-2025-12-29 18:02:19 INFO  tomcat.TomcatWebServer.initialize Tomcat initialized with port 8088 (http)
-2025-12-29 18:02:19 INFO  http11.Http11NioProtocol.log Initializing ProtocolHandler ["http-nio-8088"]
-2025-12-29 18:02:19 INFO  core.StandardService.log Starting service [Tomcat]
-2025-12-29 18:02:19 INFO  core.StandardEngine.log Starting Servlet engine: [Apache Tomcat/10.1.30]
-2025-12-29 18:02:19 INFO  [localhost].[/].log Initializing Spring embedded WebApplicationContext
-2025-12-29 18:02:19 INFO  context.ServletWebServerApplicationContext.prepareWebApplicationContext Root WebApplicationContext: initialization completed in 1033 ms
-2025-12-29 18:02:19 INFO  util.LogHelper.logPersistenceUnitInformation HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-12-29 18:02:19 INFO  hibernate.Version.logVersion HHH000412: Hibernate ORM core version 6.5.3.Final
-2025-12-29 18:02:19 INFO  internal.RegionFactoryInitiator.initiateService HHH000026: Second-level cache disabled
-2025-12-29 18:02:19 INFO  persistenceunit.SpringPersistenceUnitInfo.addTransformer No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-12-29 18:02:19 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Starting...
-2025-12-29 18:02:20 INFO  pool.HikariPool.checkFailFast HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2ae7c1d
-2025-12-29 18:02:20 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Start completed.
-2025-12-29 18:02:20 WARN  orm.deprecation.constructDialect HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-12-29 18:02:20 WARN  orm.deprecation.logSelectedDialect HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
-2025-12-29 18:02:21 INFO  internal.JtaPlatformInitiator.initiateService HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-12-29 18:02:21 INFO  jpa.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-12-29 18:02:21 INFO  query.QueryEnhancerFactory.<clinit> Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-12-29 18:02:21 INFO  configuration.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer.configure Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2025-12-29 18:02:21 WARN  configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer.configure Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
-2025-12-29 18:02:22 WARN  jpa.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-12-29 18:02:22 INFO  http11.Http11NioProtocol.log Starting ProtocolHandler ["http-nio-8088"]
-2025-12-29 18:02:22 INFO  tomcat.TomcatWebServer.start Tomcat started on port 8088 (http) with context path '/'
-2025-12-29 18:02:22 INFO  movie.MovieApplication.logStarted Started MovieApplication in 4.453 seconds (process running for 5.094)
-2025-12-29 18:02:25 INFO  [localhost].[/].log Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-12-29 18:02:25 INFO  servlet.DispatcherServlet.initServletBean Initializing Servlet 'dispatcherServlet'
-2025-12-29 18:02:25 INFO  servlet.DispatcherServlet.initServletBean Completed initialization in 1 ms
-2025-12-29 18:02:26 INFO  api.AbstractOpenApiResource.getOpenApi Init duration for springdoc-openapi is: 395 ms
-2025-12-29 18:03:06 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:03:06 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcwMzc3fQ.QODsqkWTbdpLFpKpBOsAlgUHZ9wPxpm3Wt7RQuervOo
-2025-12-29 18:03:51 INFO  jpa.LocalContainerEntityManagerFactoryBean.destroy Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-12-29 18:03:51 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown initiated...
-2025-12-29 18:03:51 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown completed.
-2025-12-29 18:03:54 INFO  movie.MovieApplication.logStarting Starting MovieApplication using Java 17.0.12 with PID 10684 (D:\Workspace\JAVA_Backend\movie\target\classes started by admin in D:\Workspace\JAVA_Backend\movie)
-2025-12-29 18:03:54 INFO  movie.MovieApplication.logStartupProfileInfo The following 1 profile is active: "dev"
-2025-12-29 18:03:55 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-12-29 18:03:55 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Finished Spring Data repository scanning in 51 ms. Found 14 JPA repository interfaces.
-2025-12-29 18:03:55 INFO  tomcat.TomcatWebServer.initialize Tomcat initialized with port 8088 (http)
-2025-12-29 18:03:55 INFO  http11.Http11NioProtocol.log Initializing ProtocolHandler ["http-nio-8088"]
-2025-12-29 18:03:55 INFO  core.StandardService.log Starting service [Tomcat]
-2025-12-29 18:03:55 INFO  core.StandardEngine.log Starting Servlet engine: [Apache Tomcat/10.1.30]
-2025-12-29 18:03:55 INFO  [localhost].[/].log Initializing Spring embedded WebApplicationContext
-2025-12-29 18:03:55 INFO  context.ServletWebServerApplicationContext.prepareWebApplicationContext Root WebApplicationContext: initialization completed in 1007 ms
-2025-12-29 18:03:56 INFO  util.LogHelper.logPersistenceUnitInformation HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-12-29 18:03:56 INFO  hibernate.Version.logVersion HHH000412: Hibernate ORM core version 6.5.3.Final
-2025-12-29 18:03:56 INFO  internal.RegionFactoryInitiator.initiateService HHH000026: Second-level cache disabled
-2025-12-29 18:03:56 INFO  persistenceunit.SpringPersistenceUnitInfo.addTransformer No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-12-29 18:03:56 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Starting...
-2025-12-29 18:03:56 INFO  pool.HikariPool.checkFailFast HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@76c587ce
-2025-12-29 18:03:56 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Start completed.
-2025-12-29 18:03:56 WARN  orm.deprecation.constructDialect HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-12-29 18:03:56 WARN  orm.deprecation.logSelectedDialect HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
-2025-12-29 18:03:57 INFO  internal.JtaPlatformInitiator.initiateService HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-12-29 18:03:57 INFO  jpa.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-12-29 18:03:57 INFO  query.QueryEnhancerFactory.<clinit> Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-12-29 18:03:58 INFO  configuration.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer.configure Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2025-12-29 18:03:58 WARN  configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer.configure Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
-2025-12-29 18:03:58 WARN  jpa.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-12-29 18:03:59 INFO  http11.Http11NioProtocol.log Starting ProtocolHandler ["http-nio-8088"]
-2025-12-29 18:03:59 INFO  tomcat.TomcatWebServer.start Tomcat started on port 8088 (http) with context path '/'
-2025-12-29 18:03:59 INFO  movie.MovieApplication.logStarted Started MovieApplication in 4.345 seconds (process running for 4.984)
-2025-12-29 18:07:31 INFO  [localhost].[/].log Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-12-29 18:07:31 INFO  servlet.DispatcherServlet.initServletBean Initializing Servlet 'dispatcherServlet'
-2025-12-29 18:07:31 INFO  servlet.DispatcherServlet.initServletBean Completed initialization in 2 ms
-2025-12-29 18:07:32 INFO  api.AbstractOpenApiResource.getOpenApi Init duration for springdoc-openapi is: 453 ms
-2025-12-29 18:10:15 INFO  impl.RefreshTokenService.deleteExistingToken REFRESH_TOKEN | Deleted existing refresh token for user User
-2025-12-29 18:10:15 INFO  impl.RefreshTokenService.saveRefreshToken REFRESH_TOKEN | Created refresh token for user
-2025-12-29 18:10:15 INFO  impl.RefreshTokenService.createRefreshToken REFRESH_TOKEN | Created refresh token for user
-2025-12-29 18:10:15 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxMjE1fQ.wNobpGN_PZ7sawkVOGgsGBHl0C93v3iYL_m9QeiaVTM, httpOnly=true, secure=true, maxAge=600, path=/
-2025-12-29 18:10:15 INFO  utils.CookieUtil.create COOKIE | Cookie created: jakarta.servlet.http.Cookie@3ca01d7a
-2025-12-29 18:10:15 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=refresh_token, value=f0027c43-e713-46b9-b1f5-e0b3aed52140, httpOnly=true, secure=true, maxAge=604800, path=/
-2025-12-29 18:10:15 INFO  utils.CookieUtil.create COOKIE | Cookie created: jakarta.servlet.http.Cookie@bcd95db9
-2025-12-29 18:10:45 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:10:45 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxMjE1fQ.wNobpGN_PZ7sawkVOGgsGBHl0C93v3iYL_m9QeiaVTM
-2025-12-29 18:14:55 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:14:55 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxMjE1fQ.wNobpGN_PZ7sawkVOGgsGBHl0C93v3iYL_m9QeiaVTM
-2025-12-29 18:15:40 INFO  jpa.LocalContainerEntityManagerFactoryBean.destroy Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-12-29 18:15:40 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown initiated...
-2025-12-29 18:15:40 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown completed.
-2025-12-29 18:15:43 INFO  movie.MovieApplication.logStarting Starting MovieApplication using Java 17.0.12 with PID 15552 (D:\Workspace\JAVA_Backend\movie\target\classes started by admin in D:\Workspace\JAVA_Backend\movie)
-2025-12-29 18:15:43 INFO  movie.MovieApplication.logStartupProfileInfo The following 1 profile is active: "dev"
-2025-12-29 18:15:44 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-12-29 18:15:44 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Finished Spring Data repository scanning in 59 ms. Found 14 JPA repository interfaces.
-2025-12-29 18:15:44 INFO  tomcat.TomcatWebServer.initialize Tomcat initialized with port 8088 (http)
-2025-12-29 18:15:44 INFO  http11.Http11NioProtocol.log Initializing ProtocolHandler ["http-nio-8088"]
-2025-12-29 18:15:44 INFO  core.StandardService.log Starting service [Tomcat]
-2025-12-29 18:15:44 INFO  core.StandardEngine.log Starting Servlet engine: [Apache Tomcat/10.1.30]
-2025-12-29 18:15:44 INFO  [localhost].[/].log Initializing Spring embedded WebApplicationContext
-2025-12-29 18:15:44 INFO  context.ServletWebServerApplicationContext.prepareWebApplicationContext Root WebApplicationContext: initialization completed in 1171 ms
-2025-12-29 18:15:45 INFO  util.LogHelper.logPersistenceUnitInformation HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-12-29 18:15:45 INFO  hibernate.Version.logVersion HHH000412: Hibernate ORM core version 6.5.3.Final
-2025-12-29 18:15:45 INFO  internal.RegionFactoryInitiator.initiateService HHH000026: Second-level cache disabled
-2025-12-29 18:15:45 INFO  persistenceunit.SpringPersistenceUnitInfo.addTransformer No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-12-29 18:15:45 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Starting...
-2025-12-29 18:15:45 INFO  pool.HikariPool.checkFailFast HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1238a074
-2025-12-29 18:15:45 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Start completed.
-2025-12-29 18:15:45 WARN  orm.deprecation.constructDialect HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-12-29 18:15:45 WARN  orm.deprecation.logSelectedDialect HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
-2025-12-29 18:15:46 INFO  internal.JtaPlatformInitiator.initiateService HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-12-29 18:15:46 INFO  jpa.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-12-29 18:15:47 INFO  query.QueryEnhancerFactory.<clinit> Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-12-29 18:15:47 INFO  configuration.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer.configure Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2025-12-29 18:15:47 WARN  configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer.configure Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
-2025-12-29 18:15:47 WARN  jpa.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-12-29 18:15:48 INFO  http11.Http11NioProtocol.log Starting ProtocolHandler ["http-nio-8088"]
-2025-12-29 18:15:48 INFO  tomcat.TomcatWebServer.start Tomcat started on port 8088 (http) with context path '/'
-2025-12-29 18:15:48 INFO  movie.MovieApplication.logStarted Started MovieApplication in 5.064 seconds (process running for 6.221)
-2025-12-29 18:15:51 INFO  [localhost].[/].log Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-12-29 18:15:51 INFO  servlet.DispatcherServlet.initServletBean Initializing Servlet 'dispatcherServlet'
-2025-12-29 18:15:51 INFO  servlet.DispatcherServlet.initServletBean Completed initialization in 1 ms
-2025-12-29 18:15:51 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:15:51 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxMjE1fQ.wNobpGN_PZ7sawkVOGgsGBHl0C93v3iYL_m9QeiaVTM
-2025-12-29 18:17:14 WARN  pool.HikariPool.run HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=54s644ms685µs600ns).
-2025-12-29 18:17:22 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:17:22 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxMjE1fQ.wNobpGN_PZ7sawkVOGgsGBHl0C93v3iYL_m9QeiaVTM
-2025-12-29 18:17:55 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:17:55 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxMjE1fQ.wNobpGN_PZ7sawkVOGgsGBHl0C93v3iYL_m9QeiaVTM
-2025-12-29 18:18:26 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:18:26 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxMjE1fQ.wNobpGN_PZ7sawkVOGgsGBHl0C93v3iYL_m9QeiaVTM
-2025-12-29 18:19:51 WARN  pool.HikariPool.run HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m37s383ms375µs900ns).
-2025-12-29 18:20:13 INFO  jpa.LocalContainerEntityManagerFactoryBean.destroy Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-12-29 18:20:13 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown initiated...
-2025-12-29 18:20:14 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown completed.
-2025-12-29 18:20:17 INFO  movie.MovieApplication.logStarting Starting MovieApplication using Java 17.0.12 with PID 11944 (D:\Workspace\JAVA_Backend\movie\target\classes started by admin in D:\Workspace\JAVA_Backend\movie)
-2025-12-29 18:20:17 INFO  movie.MovieApplication.logStartupProfileInfo The following 1 profile is active: "dev"
-2025-12-29 18:20:18 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-12-29 18:20:18 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Finished Spring Data repository scanning in 67 ms. Found 14 JPA repository interfaces.
-2025-12-29 18:20:18 INFO  tomcat.TomcatWebServer.initialize Tomcat initialized with port 8088 (http)
-2025-12-29 18:20:18 INFO  http11.Http11NioProtocol.log Initializing ProtocolHandler ["http-nio-8088"]
-2025-12-29 18:20:18 INFO  core.StandardService.log Starting service [Tomcat]
-2025-12-29 18:20:18 INFO  core.StandardEngine.log Starting Servlet engine: [Apache Tomcat/10.1.30]
-2025-12-29 18:20:18 INFO  [localhost].[/].log Initializing Spring embedded WebApplicationContext
-2025-12-29 18:20:18 INFO  context.ServletWebServerApplicationContext.prepareWebApplicationContext Root WebApplicationContext: initialization completed in 1250 ms
-2025-12-29 18:20:18 INFO  util.LogHelper.logPersistenceUnitInformation HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-12-29 18:20:18 INFO  hibernate.Version.logVersion HHH000412: Hibernate ORM core version 6.5.3.Final
-2025-12-29 18:20:18 INFO  internal.RegionFactoryInitiator.initiateService HHH000026: Second-level cache disabled
-2025-12-29 18:20:19 INFO  persistenceunit.SpringPersistenceUnitInfo.addTransformer No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-12-29 18:20:19 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Starting...
-2025-12-29 18:20:19 INFO  pool.HikariPool.checkFailFast HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@446dacf9
-2025-12-29 18:20:19 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Start completed.
-2025-12-29 18:20:19 WARN  orm.deprecation.constructDialect HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-12-29 18:20:19 WARN  orm.deprecation.logSelectedDialect HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
-2025-12-29 18:20:20 INFO  internal.JtaPlatformInitiator.initiateService HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-12-29 18:20:20 INFO  jpa.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-12-29 18:20:20 INFO  query.QueryEnhancerFactory.<clinit> Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-12-29 18:20:21 INFO  configuration.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer.configure Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2025-12-29 18:20:21 WARN  configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer.configure Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
-2025-12-29 18:20:21 WARN  jpa.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-12-29 18:20:22 INFO  http11.Http11NioProtocol.log Starting ProtocolHandler ["http-nio-8088"]
-2025-12-29 18:20:22 INFO  tomcat.TomcatWebServer.start Tomcat started on port 8088 (http) with context path '/'
-2025-12-29 18:20:22 INFO  movie.MovieApplication.logStarted Started MovieApplication in 5.06 seconds (process running for 5.898)
-2025-12-29 18:20:25 INFO  [localhost].[/].log Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-12-29 18:20:25 INFO  servlet.DispatcherServlet.initServletBean Initializing Servlet 'dispatcherServlet'
-2025-12-29 18:20:25 INFO  servlet.DispatcherServlet.initServletBean Completed initialization in 1 ms
-2025-12-29 18:20:25 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:20:32 INFO  impl.RefreshTokenService.deleteExistingToken REFRESH_TOKEN | Deleted existing refresh token for user User
-2025-12-29 18:20:32 INFO  impl.RefreshTokenService.saveRefreshToken REFRESH_TOKEN | Created refresh token for user
-2025-12-29 18:20:32 INFO  impl.RefreshTokenService.createRefreshToken REFRESH_TOKEN | Created refresh token for user
-2025-12-29 18:20:32 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s, httpOnly=true, secure=true, maxAge=600, path=/
-2025-12-29 18:20:32 INFO  utils.CookieUtil.create COOKIE | Cookie created: jakarta.servlet.http.Cookie@446ccbb
-2025-12-29 18:20:32 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=refresh_token, value=f0ea35df-0ae9-4559-b771-d669c5ac597a, httpOnly=true, secure=true, maxAge=604800, path=/
-2025-12-29 18:20:32 INFO  utils.CookieUtil.create COOKIE | Cookie created: jakarta.servlet.http.Cookie@7cbe6041
-2025-12-29 18:20:34 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:20:34 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:21:20 INFO  api.AbstractOpenApiResource.getOpenApi Init duration for springdoc-openapi is: 451 ms
-2025-12-29 18:21:51 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:21:51 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:22:36 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:22:36 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:23:24 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:23:24 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:24:33 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:24:33 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:25:03 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:25:03 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:25:33 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:25:33 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:25:55 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:25:55 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:26:50 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:26:50 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:27:11 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:27:11 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:27:24 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:27:24 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:27:52 INFO  utils.CookieUtil.getValue COOKIE | Getting value of cookie: name=access_token
-2025-12-29 18:27:52 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM1NDcxODMyfQ.7rjfRnD9UlUfhQAdiRktOrcDGyDL07P4HEsoXp_Fh5s
-2025-12-29 18:32:04 INFO  jpa.LocalContainerEntityManagerFactoryBean.destroy Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-12-29 18:32:04 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown initiated...
-2025-12-29 18:32:04 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown completed.
+2025-02-14 09:09:11 INFO  movie.MovieApplication.logStarting Starting MovieApplication using Java 17.0.10 with PID 17912 (D:\Workspace\JAVA_Backend\movie\target\classes started by admin in D:\Workspace\JAVA_Backend\movie)
+2025-02-14 09:09:11 INFO  movie.MovieApplication.logStartupProfileInfo The following 1 profile is active: "dev"
+2025-02-14 09:09:12 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-02-14 09:09:12 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Finished Spring Data repository scanning in 63 ms. Found 18 JPA repository interfaces.
+2025-02-14 09:09:12 INFO  tomcat.TomcatWebServer.initialize Tomcat initialized with port 8088 (http)
+2025-02-14 09:09:12 INFO  http11.Http11NioProtocol.log Initializing ProtocolHandler ["http-nio-8088"]
+2025-02-14 09:09:12 INFO  core.StandardService.log Starting service [Tomcat]
+2025-02-14 09:09:12 INFO  core.StandardEngine.log Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-02-14 09:09:12 INFO  [localhost].[/].log Initializing Spring embedded WebApplicationContext
+2025-02-14 09:09:12 INFO  context.ServletWebServerApplicationContext.prepareWebApplicationContext Root WebApplicationContext: initialization completed in 1281 ms
+2025-02-14 09:09:13 INFO  util.LogHelper.logPersistenceUnitInformation HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-02-14 09:09:13 INFO  hibernate.Version.logVersion HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-02-14 09:09:13 INFO  internal.RegionFactoryInitiator.initiateService HHH000026: Second-level cache disabled
+2025-02-14 09:09:13 INFO  persistenceunit.SpringPersistenceUnitInfo.addTransformer No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-02-14 09:09:13 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Starting...
+2025-02-14 09:09:13 INFO  pool.HikariPool.checkFailFast HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@f310675
+2025-02-14 09:09:13 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Start completed.
+2025-02-14 09:09:13 WARN  orm.deprecation.constructDialect HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-02-14 09:09:13 WARN  orm.deprecation.logSelectedDialect HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-02-14 09:09:14 INFO  internal.JtaPlatformInitiator.initiateService HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-02-14 09:09:14 INFO  jpa.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-02-14 09:09:15 INFO  query.QueryEnhancerFactory.<clinit> Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-02-14 09:09:15 INFO  configuration.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer.configure Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-02-14 09:09:15 WARN  configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer.configure Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-02-14 09:09:16 WARN  jpa.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-02-14 09:09:17 INFO  http11.Http11NioProtocol.log Starting ProtocolHandler ["http-nio-8088"]
+2025-02-14 09:09:17 INFO  tomcat.TomcatWebServer.start Tomcat started on port 8088 (http) with context path '/'
+2025-02-14 09:09:17 INFO  movie.MovieApplication.logStarted Started MovieApplication in 5.901 seconds (process running for 7.05)
+2025-02-14 09:09:17 INFO  [localhost].[/].log Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-02-14 09:09:17 INFO  servlet.DispatcherServlet.initServletBean Initializing Servlet 'dispatcherServlet'
+2025-02-14 09:09:17 INFO  servlet.DispatcherServlet.initServletBean Completed initialization in 1 ms
+2025-02-14 09:09:18 INFO  api.AbstractOpenApiResource.getOpenApi Init duration for springdoc-openapi is: 606 ms
+2025-02-14 09:09:45 INFO  impl.RefreshTokenService.deleteExistingToken REFRESH_TOKEN | Deleted existing refresh token for account admin
+2025-02-14 09:09:45 INFO  impl.RefreshTokenService.saveRefreshToken REFRESH_TOKEN | Created refresh token for account
+2025-02-14 09:09:45 INFO  impl.RefreshTokenService.createRefreshToken REFRESH_TOKEN | Created refresh token for account
+2025-02-14 09:09:45 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3Mzk0OTk1ODV9.mAfBEYG7B1xGrSBOgQ0Vd1rgsLFRNpJjvXA7heuGa_4, httpOnly=true, secure=true, maxAge=600, path=/
+2025-02-14 09:09:45 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=refresh_token, value=4f56099c-8722-4419-8b37-fa839b656b69, httpOnly=true, secure=true, maxAge=604800, path=/
+2025-02-14 09:09:45 INFO  admin.AuthController.login AUTH | Login success
+2025-02-14 09:12:24 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3Mzk0OTk1ODV9.mAfBEYG7B1xGrSBOgQ0Vd1rgsLFRNpJjvXA7heuGa_4
+2025-02-14 09:12:24 ERROR impl.ArticleCommentService.getArticleComment ARTICLE_COMMENT | Article Comment not found
+2025-02-14 09:12:29 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3Mzk0OTk1ODV9.mAfBEYG7B1xGrSBOgQ0Vd1rgsLFRNpJjvXA7heuGa_4
+2025-02-14 09:12:29 INFO  user.ArticleCommentController.getArticleComment ARTICLE_COMMENT | Get All Article Comment with ArticleId successfully
+2025-02-14 09:33:16 INFO  jpa.LocalContainerEntityManagerFactoryBean.destroy Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-02-14 09:33:16 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown initiated...
+2025-02-14 09:33:16 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown completed.
+2025-02-14 09:33:20 INFO  movie.MovieApplication.logStarting Starting MovieApplication using Java 17.0.10 with PID 17088 (D:\Workspace\JAVA_Backend\movie\target\classes started by admin in D:\Workspace\JAVA_Backend\movie)
+2025-02-14 09:33:20 INFO  movie.MovieApplication.logStartupProfileInfo The following 1 profile is active: "dev"
+2025-02-14 09:33:21 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-02-14 09:33:21 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Finished Spring Data repository scanning in 65 ms. Found 18 JPA repository interfaces.
+2025-02-14 09:33:21 INFO  tomcat.TomcatWebServer.initialize Tomcat initialized with port 8088 (http)
+2025-02-14 09:33:21 INFO  http11.Http11NioProtocol.log Initializing ProtocolHandler ["http-nio-8088"]
+2025-02-14 09:33:21 INFO  core.StandardService.log Starting service [Tomcat]
+2025-02-14 09:33:21 INFO  core.StandardEngine.log Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-02-14 09:33:21 INFO  [localhost].[/].log Initializing Spring embedded WebApplicationContext
+2025-02-14 09:33:21 INFO  context.ServletWebServerApplicationContext.prepareWebApplicationContext Root WebApplicationContext: initialization completed in 1137 ms
+2025-02-14 09:33:21 INFO  util.LogHelper.logPersistenceUnitInformation HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-02-14 09:33:21 INFO  hibernate.Version.logVersion HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-02-14 09:33:21 INFO  internal.RegionFactoryInitiator.initiateService HHH000026: Second-level cache disabled
+2025-02-14 09:33:22 INFO  persistenceunit.SpringPersistenceUnitInfo.addTransformer No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-02-14 09:33:22 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Starting...
+2025-02-14 09:33:22 INFO  pool.HikariPool.checkFailFast HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5c16561a
+2025-02-14 09:33:22 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Start completed.
+2025-02-14 09:33:22 WARN  orm.deprecation.constructDialect HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-02-14 09:33:22 WARN  orm.deprecation.logSelectedDialect HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-02-14 09:33:23 INFO  internal.JtaPlatformInitiator.initiateService HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-02-14 09:33:23 INFO  jpa.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-02-14 09:33:23 INFO  query.QueryEnhancerFactory.<clinit> Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-02-14 09:33:24 INFO  configuration.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer.configure Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-02-14 09:33:24 WARN  configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer.configure Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-02-14 09:33:25 WARN  jpa.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-02-14 09:33:25 INFO  http11.Http11NioProtocol.log Starting ProtocolHandler ["http-nio-8088"]
+2025-02-14 09:33:25 INFO  tomcat.TomcatWebServer.start Tomcat started on port 8088 (http) with context path '/'
+2025-02-14 09:33:25 INFO  movie.MovieApplication.logStarted Started MovieApplication in 5.436 seconds (process running for 6.289)
+2025-02-14 09:33:32 INFO  [localhost].[/].log Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-02-14 09:33:32 INFO  servlet.DispatcherServlet.initServletBean Initializing Servlet 'dispatcherServlet'
+2025-02-14 09:33:32 INFO  servlet.DispatcherServlet.initServletBean Completed initialization in 1 ms
+2025-02-14 09:33:32 INFO  impl.RefreshTokenService.deleteExistingToken REFRESH_TOKEN | Deleted existing refresh token for account admin
+2025-02-14 09:33:32 INFO  impl.RefreshTokenService.saveRefreshToken REFRESH_TOKEN | Created refresh token for account
+2025-02-14 09:33:32 INFO  impl.RefreshTokenService.createRefreshToken REFRESH_TOKEN | Created refresh token for account
+2025-02-14 09:33:32 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3Mzk1MDEwMTJ9.mw6IFW6osBhTpGWRBOZkdDoIhc7B35ikxoc21X5Dn8w, httpOnly=true, secure=true, maxAge=600, path=/
+2025-02-14 09:33:32 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=refresh_token, value=098add29-5056-4058-ba73-6563533e3be3, httpOnly=true, secure=true, maxAge=604800, path=/
+2025-02-14 09:33:32 INFO  admin.AuthController.login AUTH | Login success
+2025-02-14 09:33:48 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3Mzk1MDEwMTJ9.mw6IFW6osBhTpGWRBOZkdDoIhc7B35ikxoc21X5Dn8w
+2025-02-14 09:33:48 INFO  user.ArticleCommentController.getArticleComment ARTICLE_COMMENT | Get All Article Comment with ArticleId successfully
+2025-02-14 09:33:50 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3Mzk1MDEwMTJ9.mw6IFW6osBhTpGWRBOZkdDoIhc7B35ikxoc21X5Dn8w
+2025-02-14 09:33:50 INFO  user.ArticleCommentController.getArticleComment ARTICLE_COMMENT | Get All Article Comment with ArticleId successfully
+2025-02-14 09:33:54 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3Mzk1MDEwMTJ9.mw6IFW6osBhTpGWRBOZkdDoIhc7B35ikxoc21X5Dn8w
+2025-02-14 09:33:54 ERROR impl.ArticleCommentService.getArticleComment ARTICLE_COMMENT | Article Comment not found
+2025-02-14 09:35:16 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3Mzk1MDEwMTJ9.mw6IFW6osBhTpGWRBOZkdDoIhc7B35ikxoc21X5Dn8w
+2025-02-14 09:35:16 INFO  user.ArticleCommentController.getArticleComment ARTICLE_COMMENT | Get All Article Comment with ArticleId successfully
+2025-02-14 09:37:56 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3Mzk1MDEwMTJ9.mw6IFW6osBhTpGWRBOZkdDoIhc7B35ikxoc21X5Dn8w
+2025-02-14 09:38:12 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3Mzk1MDEwMTJ9.mw6IFW6osBhTpGWRBOZkdDoIhc7B35ikxoc21X5Dn8w
+2025-02-14 09:39:33 INFO  impl.RefreshTokenService.deleteExistingToken REFRESH_TOKEN | Deleted existing refresh token for user User
+2025-02-14 09:39:33 INFO  impl.RefreshTokenService.saveRefreshToken REFRESH_TOKEN | Created refresh token for user
+2025-02-14 09:39:33 INFO  impl.RefreshTokenService.createRefreshToken REFRESH_TOKEN | Created refresh token for user
+2025-02-14 09:39:33 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM5NTAxMzczfQ.ywfaCm2hPTs8AppbwY9ylKbAFLa0_h1_xZCjmboijVw, httpOnly=true, secure=true, maxAge=600, path=/
+2025-02-14 09:39:33 INFO  utils.CookieUtil.create COOKIE | Creating cookie: name=refresh_token, value=33c275ee-e739-4409-a847-67b58e214773, httpOnly=true, secure=true, maxAge=604800, path=/
+2025-02-14 09:39:33 INFO  user.AuthUserController.login AUTH_USER | Login success
+2025-02-14 09:39:36 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM5NTAxMzczfQ.ywfaCm2hPTs8AppbwY9ylKbAFLa0_h1_xZCjmboijVw
+2025-02-14 09:39:45 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM5NTAxMzczfQ.ywfaCm2hPTs8AppbwY9ylKbAFLa0_h1_xZCjmboijVw
+2025-02-14 09:39:53 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM5NTAxMzczfQ.ywfaCm2hPTs8AppbwY9ylKbAFLa0_h1_xZCjmboijVw
+2025-02-14 09:40:27 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM5NTAxMzczfQ.ywfaCm2hPTs8AppbwY9ylKbAFLa0_h1_xZCjmboijVw
+2025-02-14 09:40:27 ERROR impl.MovieCommentService.getMovieComment MOVIE_COMMENT | Episode Comment not found
+2025-02-14 09:42:30 INFO  jpa.LocalContainerEntityManagerFactoryBean.destroy Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-02-14 09:42:30 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown initiated...
+2025-02-14 09:42:30 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown completed.
+2025-02-14 09:42:42 INFO  movie.MovieApplication.logStarting Starting MovieApplication using Java 17.0.10 with PID 23496 (D:\Workspace\JAVA_Backend\movie\target\classes started by admin in D:\Workspace\JAVA_Backend\movie)
+2025-02-14 09:42:42 INFO  movie.MovieApplication.logStartupProfileInfo The following 1 profile is active: "dev"
+2025-02-14 09:42:42 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-02-14 09:42:42 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Finished Spring Data repository scanning in 73 ms. Found 18 JPA repository interfaces.
+2025-02-14 09:42:43 INFO  tomcat.TomcatWebServer.initialize Tomcat initialized with port 8088 (http)
+2025-02-14 09:42:43 INFO  http11.Http11NioProtocol.log Initializing ProtocolHandler ["http-nio-8088"]
+2025-02-14 09:42:43 INFO  core.StandardService.log Starting service [Tomcat]
+2025-02-14 09:42:43 INFO  core.StandardEngine.log Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-02-14 09:42:43 INFO  [localhost].[/].log Initializing Spring embedded WebApplicationContext
+2025-02-14 09:42:43 INFO  context.ServletWebServerApplicationContext.prepareWebApplicationContext Root WebApplicationContext: initialization completed in 1337 ms
+2025-02-14 09:42:43 INFO  util.LogHelper.logPersistenceUnitInformation HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-02-14 09:42:43 INFO  hibernate.Version.logVersion HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-02-14 09:42:43 INFO  internal.RegionFactoryInitiator.initiateService HHH000026: Second-level cache disabled
+2025-02-14 09:42:43 INFO  persistenceunit.SpringPersistenceUnitInfo.addTransformer No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-02-14 09:42:43 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Starting...
+2025-02-14 09:42:44 INFO  pool.HikariPool.checkFailFast HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7c523bdd
+2025-02-14 09:42:44 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Start completed.
+2025-02-14 09:42:44 WARN  orm.deprecation.constructDialect HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-02-14 09:42:44 WARN  orm.deprecation.logSelectedDialect HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-02-14 09:42:45 INFO  internal.JtaPlatformInitiator.initiateService HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-02-14 09:42:45 INFO  jpa.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-02-14 09:42:45 INFO  query.QueryEnhancerFactory.<clinit> Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-02-14 09:42:50 INFO  configuration.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer.configure Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-02-14 09:42:50 WARN  configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer.configure Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-02-14 09:42:51 WARN  jpa.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-02-14 09:42:51 INFO  tomcat.TomcatWebServer.start Tomcat started on port 8088 (http) with context path '/'
+2025-02-14 09:42:51 INFO  movie.MovieApplication.logStarted Started MovieApplication in 9.768 seconds (process running for 11.611)
+2025-02-14 09:42:51 INFO  jpa.LocalContainerEntityManagerFactoryBean.destroy Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-02-14 09:42:51 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown initiated...
+2025-02-14 09:42:51 INFO  hikari.HikariDataSource.close HikariPool-1 - Shutdown completed.
+2025-02-14 09:42:54 INFO  movie.MovieApplication.logStarting Starting MovieApplication using Java 17.0.10 with PID 12256 (D:\Workspace\JAVA_Backend\movie\target\classes started by admin in D:\Workspace\JAVA_Backend\movie)
+2025-02-14 09:42:54 INFO  movie.MovieApplication.logStartupProfileInfo The following 1 profile is active: "dev"
+2025-02-14 09:42:55 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-02-14 09:42:55 INFO  config.RepositoryConfigurationDelegate.registerRepositoriesIn Finished Spring Data repository scanning in 64 ms. Found 18 JPA repository interfaces.
+2025-02-14 09:42:55 INFO  tomcat.TomcatWebServer.initialize Tomcat initialized with port 8088 (http)
+2025-02-14 09:42:55 INFO  http11.Http11NioProtocol.log Initializing ProtocolHandler ["http-nio-8088"]
+2025-02-14 09:42:55 INFO  core.StandardService.log Starting service [Tomcat]
+2025-02-14 09:42:55 INFO  core.StandardEngine.log Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-02-14 09:42:55 INFO  [localhost].[/].log Initializing Spring embedded WebApplicationContext
+2025-02-14 09:42:55 INFO  context.ServletWebServerApplicationContext.prepareWebApplicationContext Root WebApplicationContext: initialization completed in 1183 ms
+2025-02-14 09:42:55 INFO  util.LogHelper.logPersistenceUnitInformation HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-02-14 09:42:56 INFO  hibernate.Version.logVersion HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-02-14 09:42:56 INFO  internal.RegionFactoryInitiator.initiateService HHH000026: Second-level cache disabled
+2025-02-14 09:42:56 INFO  persistenceunit.SpringPersistenceUnitInfo.addTransformer No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-02-14 09:42:56 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Starting...
+2025-02-14 09:42:56 INFO  pool.HikariPool.checkFailFast HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@12eaa2cd
+2025-02-14 09:42:56 INFO  hikari.HikariDataSource.getConnection HikariPool-1 - Start completed.
+2025-02-14 09:42:56 WARN  orm.deprecation.constructDialect HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-02-14 09:42:56 WARN  orm.deprecation.logSelectedDialect HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-02-14 09:42:57 INFO  internal.JtaPlatformInitiator.initiateService HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-02-14 09:42:57 INFO  jpa.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-02-14 09:42:57 INFO  query.QueryEnhancerFactory.<clinit> Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-02-14 09:42:58 INFO  configuration.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer.configure Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-02-14 09:42:58 WARN  configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer.configure Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-02-14 09:42:59 WARN  jpa.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-02-14 09:42:59 INFO  http11.Http11NioProtocol.log Starting ProtocolHandler ["http-nio-8088"]
+2025-02-14 09:42:59 INFO  tomcat.TomcatWebServer.start Tomcat started on port 8088 (http) with context path '/'
+2025-02-14 09:42:59 INFO  movie.MovieApplication.logStarted Started MovieApplication in 5.143 seconds (process running for 6.051)
+2025-02-14 09:43:13 INFO  [localhost].[/].log Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-02-14 09:43:13 INFO  servlet.DispatcherServlet.initServletBean Initializing Servlet 'dispatcherServlet'
+2025-02-14 09:43:13 INFO  servlet.DispatcherServlet.initServletBean Completed initialization in 0 ms
+2025-02-14 09:43:13 INFO  utils.CookieUtil.getValue COOKIE | Cookie found: name=access_token, value=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVzZXIiLCJzdWIiOiJVc2VyIiwiZXhwIjoxNzM5NTAxMzczfQ.ywfaCm2hPTs8AppbwY9ylKbAFLa0_h1_xZCjmboijVw
+2025-02-14 09:43:13 INFO  user.MovieCommentController.getMovieComment MOVIE_COMMENT | Get all Episode Comment by movieId successfully

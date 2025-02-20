@@ -7,6 +7,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -21,7 +23,7 @@ public class Actor extends BaseEntity{
     private String gender;
 
     @Column(name = "date_of_birth")
-    private String dateOfBirth;
+    private Date dateOfBirth;
 
     @Column(name = "weight")
     private Integer weight;
@@ -32,6 +34,9 @@ public class Actor extends BaseEntity{
     @Column(name = "status")
     private Integer status = 1;
 
+    @Column(name="order")
+    private Integer order;
+
     @Column(name = "nationality")
     private String nationality;
 
@@ -40,6 +45,7 @@ public class Actor extends BaseEntity{
 
     @Column(name = "description")
     private String description;
+
 
     @ManyToMany(mappedBy = "actors")
     private Set<Movie> movies;

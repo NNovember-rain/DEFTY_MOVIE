@@ -19,7 +19,7 @@ public class ArticleCommentMapper {
 
     private final ModelMapper modelMapper;
     private final IArticleCommentReactionRepository articleCommentReactionRepository;
-    private final ArticleCommentReactionMapper articleCommentReactionMapper;
+    private final UserMapper userMapper;
 
     public ArticleComment toArticleComment(ArticleCommentRequest articleCommentRequest) {
         return modelMapper.map(articleCommentRequest, ArticleComment.class);
@@ -30,7 +30,10 @@ public class ArticleCommentMapper {
         ArticleCommentResponse articleCommentResponse=modelMapper.map(articleComment, ArticleCommentResponse.class);
         List<CommentReactionResponse> commentReactionRespons =new ArrayList<>();
         for(ArticleCommentReaction a: articleCommentReactions){
-            commentReactionRespons.add(articleCommentReactionMapper.toArticleCommentReactionResponse(a));
+            CommentReactionResponse commentReactionResponse = new CommentReactionResponse();
+            commentReactionResponse.setContent(a.getContent());
+            commentReactionResponse.setUserResponse(userMapper.toUserResponse(a.getUser()));
+            commentReactionRespons.add(commentReactionResponse);
         }
         articleCommentResponse.setCommentReactionRespons(commentReactionRespons);
         return articleCommentResponse;

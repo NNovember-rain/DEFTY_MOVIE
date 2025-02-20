@@ -42,6 +42,7 @@ public class ActorService implements IActorService {
     public ApiResponse<Integer> addActor(ActorRequest actorRequest) {
         actorValidation.fieldValidation(actorRequest);
         Actor actorEntity = actorMapper.toActorEntity(actorRequest);
+        actorEntity.setDateOfBirth(dateUtil.stringToSqlDate(actorRequest.getDateOfBirth()));
         if(actorRequest.getAvatar() != null && !actorRequest.getAvatar().isEmpty()){
             try {
                 actorEntity.setAvatar(uploadImageUtil.upload(actorRequest.getAvatar()));
@@ -200,5 +201,20 @@ public class ActorService implements IActorService {
             return new ApiResponse<>(200, "OK", actorMapper.toActorResponse(actorEntity.get()));
         }
         return new ApiResponse<>(404, "Actor doesn't exist", null);
+    }
+
+    @Override
+    public PageableResponse<ActorResponse> getAllActorsOrder(Pageable pageable) {
+        List<Actor> actors = actorRepository.findAll(pageable).getContent();
+        List<Actor> actorsSize=actorRepository.findAll();
+        if(actors.size() == 0) throw new NotFoundException("Not found exception");
+        PageableResponse<ActorResponse> actorResponsePageableResponse =new PageableResponse<>();
+        List<ActorResponse> actorResponseDTOS = new ArrayList<>();
+        for(Actor actor : actors){
+            actorResponseDTOS.add(actorMapper.toActorResponse(actor));
+        }
+        actorResponsePageableResponse.setContent(actorResponseDTOS);
+        actorResponsePageableResponse.setTotalElements(actorsSize.size()+0L);
+        return actorResponsePageableResponse;
     }
 }
