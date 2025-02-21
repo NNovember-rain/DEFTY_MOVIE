@@ -19,6 +19,7 @@ public class UploadImageController {
 
     UploadImageUtil uploadImageUtil;
 
+
     @PostMapping
     public Object uploadImage(@RequestParam("image") MultipartFile image) {
         if(image!=null) {
