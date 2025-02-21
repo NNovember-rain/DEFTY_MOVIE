@@ -23,7 +23,7 @@ public class ActorResponse {
 
     String nationality;
 
-    Integer order;
+    Integer position;
 
     String description;
 

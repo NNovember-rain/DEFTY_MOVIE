@@ -70,9 +70,9 @@ public class ArticleController {
     @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLE')")
     public ResponseEntity<?> getArticles(@Valid @RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(value = "size", defaultValue = "10") int size,
-                                         @RequestParam Map<String, Object> params) {
+                                         @RequestParam(required = false) String title) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        PageableResponse<ArticleResponse> articlePageableResponse = articleService.getAllArticles(pageable, params);
+        PageableResponse<ArticleResponse> articlePageableResponse = articleService.getAllArticles(pageable, title);
         log.info(PREFIX_ARTICLE + "Get all Aritcles successfully");
         return ApiResponeUtil.ResponseOK(articlePageableResponse);
     }

@@ -122,9 +122,19 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable, Map<String, Object> params) {
-        List<Article> articles= ariticleRepository.findArticles(pageable,params);
-        log.info(PREFIX_ARTICLE + "Get all Articles by id list and pagination" );
+    public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable, String title) {
+        List<Article> articles=new ArrayList<>();
+        Integer totalElements=0;
+        if(title!=null) {
+            articles= ariticleRepository.findByStatusAndTitleContains(1,title,pageable).getContent();
+            totalElements=ariticleRepository.findByStatusAndTitleContains(1,title).size();
+            log.info(PREFIX_ARTICLE + "Get all Articles by title list and pagination" );
+        }
+        else{
+            articles= ariticleRepository.findAllByStatus(1,pageable).getContent();
+            totalElements=ariticleRepository.findAllByStatus(1).size();
+            log.info(PREFIX_ARTICLE + "Get all Articles list and pagination" );
+        }
         List<ArticleResponse> articleResponses=new ArrayList<>();
         if(!articles.isEmpty()) {
             for(Article article:articles) {
@@ -132,7 +142,7 @@ public class ArticleService implements IArticleService {
             }
             return PageableResponse.<ArticleResponse>builder()
                     .content(articleResponses)
-                    .totalElements(ariticleRepository.countArticles(params))
+                    .totalElements(totalElements+0L)
                     .build();
         }else {
             log.error("{}Article not found !", PREFIX_ARTICLE);
