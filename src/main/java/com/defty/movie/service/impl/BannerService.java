@@ -16,6 +16,7 @@ import com.defty.movie.validation.BannerValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BannerService implements IBannerService {
@@ -35,6 +37,7 @@ public class BannerService implements IBannerService {
     BannerValidation bannerValidation;
     IBannerRepository bannerRepository;
     UploadImageUtil uploadImageUtil;
+    String PREFIX_BANNER_SERVICE = "BANNER SERVICE | ";
     @Override
     public ApiResponse<Integer> addBanner(BannerRequest bannerRequest) {
         bannerValidation.fieldValidation(bannerRequest);
@@ -55,8 +58,10 @@ public class BannerService implements IBannerService {
         try {
             bannerEntity.setLink(link);
             bannerRepository.save(bannerEntity);
+            log.info(PREFIX_BANNER_SERVICE + "create banner successfully");
         }
         catch (Exception e){
+            log.info(PREFIX_BANNER_SERVICE + "error creating banner: " + e.getMessage());
             return new ApiResponse<>(500, e.getMessage(), bannerEntity.getId());
         }
         return new ApiResponse<>(201, "created", bannerEntity.getId());
@@ -81,14 +86,16 @@ public class BannerService implements IBannerService {
             updatedBanner.setLink(link);
             try {
                 bannerRepository.save(updatedBanner);
+                log.info(PREFIX_BANNER_SERVICE + "update banner successfully");
             }
             catch (Exception e){
+                log.info(PREFIX_BANNER_SERVICE + "error updating banner: " + e.getMessage());
                 e.printStackTrace();
             }
         }
         else{
+            log.info(PREFIX_BANNER_SERVICE + "no record found for banner: " + id);
             throw new NotFoundException("Not found exception");
-
         }
         return new ApiResponse<>(200, "Update banner successfully", id);
     }
@@ -102,9 +109,11 @@ public class BannerService implements IBannerService {
         }
         bannerRepository.saveAll(banners);
         if(ids.size() > 1){
+            log.info(PREFIX_BANNER_SERVICE + "delete banners successfully");
             return new ApiResponse<>(200, "Delete banners successfully", ids);
         }
-        return new ApiResponse<>(200, "Delete categorie successfully", ids);
+        log.info(PREFIX_BANNER_SERVICE + "delete banner successfully");
+        return new ApiResponse<>(200, "Delete banner successfully", ids);
     }
 
     @Override
@@ -121,6 +130,7 @@ public class BannerService implements IBannerService {
                 message += "Disable banners successfully";
             }
             bannerRepository.save(banner.get());
+            log.info(PREFIX_BANNER_SERVICE + message);
             return new ApiResponse<>(200, message, id);
         }
         else throw new NotFoundException("Not found exception");
@@ -152,8 +162,8 @@ public class BannerService implements IBannerService {
                 bannerResponse.setContentId(Integer.parseInt(contentId));
                 bannerResponses.add(bannerResponse);
             }
-
             PageableResponse<BannerResponse> pageableResponse= new PageableResponse<>(bannerResponses, banners.getTotalElements());
+            log.info(PREFIX_BANNER_SERVICE + "get banners successfully");
             return new ApiResponse<>(200, "OK", pageableResponse);
         }
     }
@@ -176,6 +186,7 @@ public class BannerService implements IBannerService {
         bannerResponse.setContentType(contentType);
         bannerResponse.setContentId(Integer.parseInt(contentId));
         if(banner.isPresent()){
+            log.info(PREFIX_BANNER_SERVICE + "get banner successfully");
             return new ApiResponse<>(200, "OK", bannerResponse);
         }
         return new ApiResponse<>(404, "Banner doesn't exist", null);

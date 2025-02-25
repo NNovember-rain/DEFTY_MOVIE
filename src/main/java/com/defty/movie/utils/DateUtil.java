@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class DateUtil {
@@ -14,18 +17,15 @@ public class DateUtil {
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             result = sdf.parse(s);
-
-//            Calendar startCal = Calendar.getInstance();
-//            startCal.setTime(result);
-//            startCal.set(Calendar.HOUR_OF_DAY, 0);
-//            startCal.set(Calendar.MINUTE, 0);
-//            startCal.set(Calendar.SECOND, 0);
-//            startCal.set(Calendar.MILLISECOND, 0);
-//            result = startCal.getTime();
         }
         catch (Exception e){
             throw new CustomDateException("please enter the right date format: dd/MM/yyyy");
         }
         return result;
+    }
+
+    public static String dateToString(Date inputDate) {
+        SimpleDateFormat outputFormatter = new SimpleDateFormat("dd-MM-yyyy");
+        return outputFormatter.format(inputDate);
     }
 }
