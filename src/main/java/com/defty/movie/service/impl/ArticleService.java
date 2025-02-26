@@ -122,12 +122,12 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable, String title) {
+    public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable, String title,Integer status) {
         List<Article> articles=new ArrayList<>();
         Integer totalElements=0;
         if(title!=null) {
-            articles= ariticleRepository.findByStatusAndTitleContains(1,title,pageable).getContent();
-            totalElements=ariticleRepository.findByStatusAndTitleContains(1,title).size();
+            articles= ariticleRepository.findByStatusAndTitleContains(status,title,pageable).getContent();
+            totalElements=ariticleRepository.findByStatusAndTitleContains(status,title).size();
             log.info(PREFIX_ARTICLE + "Get all Articles by title list and pagination" );
         }
         else{
