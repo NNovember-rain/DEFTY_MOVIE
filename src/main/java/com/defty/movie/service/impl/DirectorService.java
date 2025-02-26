@@ -110,7 +110,11 @@ public class DirectorService implements IDirectorService {
         }
         else {
             for(Director d : directorEntities){
-                directorResponseDTOS.add(directorMapper.toDirectorResponseDTO(d));
+                DirectorResponse directorResponse = directorMapper.toDirectorResponseDTO(d);
+                if (d.getDateOfBirth() != null){
+                    directorResponse.setDateOfBirth(dateUtil.dateToString(d.getDateOfBirth()));
+                }
+                directorResponseDTOS.add(directorResponse);
             }
 
             PageableResponse<DirectorResponse> pageableResponse= new PageableResponse<>(directorResponseDTOS, directorEntities.getTotalElements());
