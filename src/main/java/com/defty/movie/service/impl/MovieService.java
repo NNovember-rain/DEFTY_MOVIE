@@ -4,8 +4,7 @@ import com.defty.movie.dto.request.MovieRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.dto.response.PageableResponse;
-import com.defty.movie.entity.Director;
-import com.defty.movie.entity.Movie;
+import com.defty.movie.entity.*;
 import com.defty.movie.exception.CustomDateException;
 import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
@@ -28,8 +27,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -205,4 +202,6 @@ public class MovieService implements IMovieService {
         }
         return new ApiResponse<>(200, "Movie doesn't exist", null);
     }
+
+
 }

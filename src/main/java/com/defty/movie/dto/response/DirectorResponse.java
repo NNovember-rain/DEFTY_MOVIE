@@ -6,6 +6,8 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 
+import java.util.List;
+
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DirectorResponse {
@@ -30,4 +32,6 @@ public class DirectorResponse {
     String avatar;
 
     Integer status;
+
+    List<MovieResponse> movies;
 }

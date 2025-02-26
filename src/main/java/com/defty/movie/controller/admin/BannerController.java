@@ -2,6 +2,7 @@ package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.BannerRequest;
 import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.dto.response.BannerResponse;
 import com.defty.movie.service.IBannerService;
 import com.defty.movie.service.IBannerService;
 import lombok.RequiredArgsConstructor;
@@ -61,5 +62,10 @@ public class BannerController {
     public ApiResponse<Integer> changeStatus(@PathVariable Integer id) {
         log.info(PREFIX_BANNER_CONTROLLER + "Going to change banner status");
         return bannerService.changeStatus(id);
+    }
+    @GetMapping("/content-name")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_CONTENT_NAME')")
+    public Object getContentName(@RequestParam(name="contentType") String contentType) {
+        return bannerService.getContentNameByContentType(contentType);
     }
 }
