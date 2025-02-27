@@ -63,9 +63,11 @@ public class BannerController {
         log.info(PREFIX_BANNER_CONTROLLER + "Going to change banner status");
         return bannerService.changeStatus(id);
     }
+
     @GetMapping("/content-name")
     @PreAuthorize("@requiredPermission.checkPermission('GET_CONTENT_NAME')")
-    public Object getContentName(@RequestParam(name="contentType") String contentType) {
-        return bannerService.getContentNameByContentType(contentType);
+    public Object getContentName(@RequestParam(name="contentType") String contentType,
+                                 @RequestParam(required = false, name="title") String title) {
+        return bannerService.getContentNameByContentType(contentType,title);
     }
 }

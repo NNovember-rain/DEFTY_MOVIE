@@ -28,8 +28,8 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
             @Param("status") Integer status,
             Pageable pageable);
 
-    @Query(value="SELECT c FROM Category c WHERE NOT EXISTS (" +
-            "SELECT b FROM Banner b WHERE b.contentType = 'Category' AND b.contentId = c.id)"
-            ,nativeQuery = false)
-    List<Category> findAllCategoriesNotInBanner();
+    @Query("SELECT c FROM Category c WHERE NOT EXISTS (" +
+            "SELECT b FROM Banner b WHERE b.contentType = 'Category' AND b.contentId = c.id) " +
+            "AND (:title IS NULL OR c.name LIKE %:title%)"+"AND c.status=1")
+    List<Category> findAllCategoriesNotInBanner(@Param("title") String title);
 }

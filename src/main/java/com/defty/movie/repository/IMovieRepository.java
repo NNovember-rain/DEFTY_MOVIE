@@ -64,8 +64,8 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
     List<Movie> findTop2NewestMoviesByDirectorId(@Param("directorId") Integer directorId);
 
 
-    @Query(value="SELECT m FROM Movie m WHERE NOT EXISTS (" +
-            "SELECT b FROM Banner b WHERE b.contentType = 'Movie' AND b.contentId = m.id)"
-            ,nativeQuery = false)
-    List<Movie> findAllMoviesNotInBanner();
+    @Query("SELECT m FROM Movie m WHERE NOT EXISTS (" +
+            "SELECT b FROM Banner b WHERE b.contentType = 'Movie' AND b.contentId = m.id) " +
+            "AND (:title IS NULL OR m.title LIKE %:title%)"+"AND m.status=1")
+    List<Movie> findAllMoviesNotInBanner(@Param("title") String title);
 }

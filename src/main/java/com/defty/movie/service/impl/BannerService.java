@@ -205,16 +205,16 @@ public class BannerService implements IBannerService {
     }
 
     @Override
-    public Object getContentNameByContentType(String contentType) {
+    public Object getContentNameByContentType(String contentType, String title) {
         if(contentType.equals("Category")){
-            List<Category> categories=categoryRepository.findAllCategoriesNotInBanner();
+            List<Category> categories=categoryRepository.findAllCategoriesNotInBanner(title);
             List<CategoryResponse> categoriesResponses = new ArrayList<>();
             for(Category c : categories){
                 categoriesResponses.add(categoryMapper.toCategoryResponse(c));
             }
             return ApiResponeUtil.ResponseOK(categoriesResponses);
         } else if(contentType.equals("Movie")) {
-            List<Movie> movies=movieRepository.findAllMoviesNotInBanner();
+            List<Movie> movies=movieRepository.findAllMoviesNotInBanner(title);
             List<MovieResponse> moviesResponses = new ArrayList<>();
             for(Movie m : movies){
                 moviesResponses.add(movieMapper.toMovieResponseDTO(m));

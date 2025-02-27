@@ -17,5 +17,5 @@ public interface IBannerService {
     ApiResponse<Integer> changeStatus(Integer id);
     ApiResponse<PageableResponse<BannerResponse>> getAllBanners(Pageable pageable, String title, Integer status);
     Object getBanner(Integer id);
-    Object getContentNameByContentType(String contentType);
+    Object getContentNameByContentType(String contentType,String title);
 }
