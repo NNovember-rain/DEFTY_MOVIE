@@ -15,7 +15,7 @@ public class DirectorResponse {
 
     String gender;
 
-    String dateOfBirth;
+    Date dateOfBirth;
 
     Integer weight;
 

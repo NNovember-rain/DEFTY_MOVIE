@@ -19,6 +19,7 @@ public class ShowonMapper {
     }
     public ShowonResponse toShowonResponse(Showon showon){
         ShowonResponse showonResponse = modelMapper.map(showon, ShowonResponse.class);
+        showonResponse.setContentName(showon.getCategory().getName());
         showonResponse.setContentId(showon.getCategory().getId());
         return showonResponse;
     }

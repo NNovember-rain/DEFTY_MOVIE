@@ -111,9 +111,6 @@ public class DirectorService implements IDirectorService {
         else {
             for(Director d : directorEntities){
                 DirectorResponse directorResponse = directorMapper.toDirectorResponseDTO(d);
-                if (d.getDateOfBirth() != null){
-                    directorResponse.setDateOfBirth(dateUtil.dateToString(d.getDateOfBirth()));
-                }
                 directorResponseDTOS.add(directorResponse);
             }
 
@@ -126,7 +123,8 @@ public class DirectorService implements IDirectorService {
     public Object getDirector(Integer id) {
         Optional<Director> directorEntity = directorRepository.findById(id);
         if(directorEntity.isPresent()){
-            return new ApiResponse<>(200, "OK", directorMapper.toDirectorResponseDTO(directorEntity.get()));
+            DirectorResponse directorResponse = directorMapper.toDirectorResponseDTO(directorEntity.get());
+            return new ApiResponse<>(200, "OK", directorResponse);
         }
         return new ApiResponse<>(404, "Director doesn't exist", null);
     }

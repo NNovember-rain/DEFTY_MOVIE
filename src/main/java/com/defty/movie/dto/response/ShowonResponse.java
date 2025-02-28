@@ -8,5 +8,7 @@ public class ShowonResponse {
     private Integer position;
     private Integer contentId;
     private String contentType;
+    private String contentName;
+    private Integer status;
     private String note;
 }
