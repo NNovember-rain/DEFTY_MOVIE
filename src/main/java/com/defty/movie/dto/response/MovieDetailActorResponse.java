@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MovieDetailActorResponse {
-    DirectorResponse directorResponse;
-    List<ActorResponse> actors;
+    DirectorMovieDetailResponse directorResponse;
+    List<ActorMovieDetailResponse> actors;
 }

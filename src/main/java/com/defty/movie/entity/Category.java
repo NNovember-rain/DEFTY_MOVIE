@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "category")
+
 public class Category extends BaseEntity {
     @Column(name = "name")
     private String name;
@@ -27,6 +29,9 @@ public class Category extends BaseEntity {
 //
 //    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
 //    private Set<CategoryEntity> subCategories;
+
+    @Column(name = "slug")
+    private String slug;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private Set<MovieCategory> movieCategories;

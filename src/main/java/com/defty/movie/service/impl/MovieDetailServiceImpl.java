@@ -33,30 +33,37 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
 
     @Override
     public MovieDetailResponse getMovieDetails(String slugMovie) {
-        Optional<Movie> movieOptional = movieRepository.findBySlug((slugMovie));
+        Optional<Movie> movieOptional = movieRepository.findBySlugAndStatus(slugMovie,1);
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
             MovieDetailResponse movieDetailResponse= new MovieDetailResponse();
 
             Set<MovieCategory> movieCategories = movie.getMovieCategories();
-            List<String> categoryNames = new ArrayList<>();
+            List<CategoryResponse> categoryNames = new ArrayList<>();
             for (MovieCategory movieCategory : movieCategories) {
-                categoryNames.add(movieCategory.getCategory().getName());
+                Category category = movieCategory.getCategory();
+                CategoryResponse categoryResponse = new CategoryResponse();
+                BeanUtils.copyProperties(category, categoryResponse);
+                categoryNames.add(categoryResponse);
             }
 
-            String directorName = movie.getDirector().getFullName();
+            Director director = movie.getDirector();
+            DirectorResponse directorResponse = new DirectorResponse();
+            BeanUtils.copyProperties(director, directorResponse);
 
-            List<String> actorNames = new ArrayList<>();
+            List<ActorResponse> actorNames = new ArrayList<>();
             Set<Actor> actors = movie.getActors();
             for (Actor actor : actors) {
-                actorNames.add(actor.getFullName());
+                ActorResponse actorResponse = new ActorResponse();
+                BeanUtils.copyProperties(actor, actorResponse);
+                actorNames.add(actorResponse);
             }
 
             Set<Episode> episodes = movie.getEpisodes();
 
             movieDetailResponse.setTitle(movie.getTitle());
             movieDetailResponse.setCategory(categoryNames);
-            movieDetailResponse.setDirector(directorName);
+            movieDetailResponse.setDirector(directorResponse);
             movieDetailResponse.setActor(actorNames);
             movieDetailResponse.setDescription(movie.getDescription());
             movieDetailResponse.setReleaseDate(movie.getReleaseDate());
@@ -70,7 +77,7 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
 
     @Override
     public List<EpisodeResponse> getEpisodes(String slugMovie) {
-        Optional<Movie> movieOptional = movieRepository.findBySlug((slugMovie));
+        Optional<Movie> movieOptional = movieRepository.findBySlugAndStatus(slugMovie,1);
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
             Set<Episode> episodes = movie.getEpisodes();
@@ -86,16 +93,16 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
 
     @Override
     public MovieDetailActorResponse getMovieDetailActor(String slugMovie) {
-        Optional<Movie> movieOptional = movieRepository.findBySlug((slugMovie));
+        Optional<Movie> movieOptional = movieRepository.findBySlugAndStatus(slugMovie,1);
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
             MovieDetailActorResponse movieDetailActorResponse = new MovieDetailActorResponse();
             Set<Actor> actors=movie.getActors();
             Director director=movie.getDirector();
 
-            List<ActorResponse> actorResponses=new ArrayList<>();
+            List<ActorMovieDetailResponse> actorResponses=new ArrayList<>();
             for(Actor actor:actors){
-                ActorResponse actorResponse = new ActorResponse();
+                ActorMovieDetailResponse actorResponse = new ActorMovieDetailResponse();
                 BeanUtils.copyProperties(actor, actorResponse);
                 List<Movie> movies= movieRepository.findTop2NewestMoviesByActorId(actor.getId());
                 List<MovieResponse> movieResponses=new ArrayList<>();
@@ -115,7 +122,7 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
                 BeanUtils.copyProperties(movie1, movieResponse);
                 movieResponses.add(movieResponse);
             }
-            DirectorResponse directorResponse=new DirectorResponse();
+            DirectorMovieDetailResponse directorResponse=new DirectorMovieDetailResponse();
             BeanUtils.copyProperties(director, directorResponse);
             directorResponse.setMovies(movieResponses);
 

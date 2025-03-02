@@ -5,27 +5,26 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
-
 import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DirectorResponse {
+public class ActorMovieDetailResponse {
     Integer id;
 
     String fullName;
 
     String gender;
 
-    String dateOfBirth;
+    Date dateOfBirth;
 
     Integer weight;
 
     Integer height;
 
-    Integer position;
-
     String nationality;
+
+    Integer position;
 
     String description;
 
@@ -33,5 +32,5 @@ public class DirectorResponse {
 
     Integer status;
 
-    String slug;
+    List<MovieResponse> movies;
 }

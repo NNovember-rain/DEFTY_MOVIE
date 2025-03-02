@@ -32,5 +32,5 @@ public class ActorResponse {
 
     Integer status;
 
-    List<MovieResponse> movies;
+    String slug;
 }
