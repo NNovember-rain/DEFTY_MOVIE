@@ -60,7 +60,7 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
             movieDetailResponse.setActor(actorNames);
             movieDetailResponse.setDescription(movie.getDescription());
             movieDetailResponse.setReleaseDate(movie.getReleaseDate());
-            movieDetailResponse.setImage(movie.getCoverImage());
+            movieDetailResponse.setCoverImage(movie.getCoverImage());
             movieDetailResponse.setDuration(episodes.size());
             movieDetailResponse.setTrailer(movie.getTrailer());
 

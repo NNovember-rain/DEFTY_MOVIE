@@ -15,7 +15,7 @@ public class MovieDetailResponse {
     Date releaseDate;
     Integer duration;
     String description;
-    String image;
+    String coverImage;
     String trailer;
     String director;
     List<String> category;
