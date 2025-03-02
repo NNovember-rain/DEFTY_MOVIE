@@ -21,6 +21,8 @@ public class ArticleResponse {
 
     String thumbnail;
 
+    Integer status;
+
     String slug;
 
 

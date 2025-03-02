@@ -1,5 +1,6 @@
 package com.defty.movie.controller.admin;
 
+import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.service.IArticleService;
 import com.defty.movie.utils.ApiResponeUtil;
@@ -49,6 +50,13 @@ public class ArticleController {
         return ApiResponeUtil.ResponseOK(responseMessage);
     }
 
+    @PatchMapping("/status/{id}")
+    @PreAuthorize("@requiredPermission.checkPermission('CHANGE_ARTICLE_STATUS')")
+    public Object changeStatus(@PathVariable Integer id) {
+        String message=articleService.changeStatus(id);
+        return ApiResponeUtil.ResponseOK(message);
+    }
+
     @DeleteMapping("/{ids}")
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_ARTICLE')")
     public ResponseEntity<String> deleteArticle(@PathVariable List<Integer> ids) {
@@ -67,12 +75,13 @@ public class ArticleController {
     }
 
     @GetMapping()
-    @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLE')")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_ARTICLES')")
     public ResponseEntity<?> getArticles(@Valid @RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(value = "size", defaultValue = "10") int size,
-                                         @RequestParam Map<String, Object> params) {
+                                         @RequestParam(required = false) String title,
+                                         @RequestParam(required = false) Integer status) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        PageableResponse<ArticleResponse> articlePageableResponse = articleService.getAllArticles(pageable, params);
+        PageableResponse<ArticleResponse> articlePageableResponse = articleService.getAllArticles(pageable, title,status);
         log.info(PREFIX_ARTICLE + "Get all Aritcles successfully");
         return ApiResponeUtil.ResponseOK(articlePageableResponse);
     }

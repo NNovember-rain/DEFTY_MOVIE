@@ -20,7 +20,6 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/admin/movie")
-//@RequestMapping("/movie")
 public class MovieController {
 
     private final IMovieService movieService;

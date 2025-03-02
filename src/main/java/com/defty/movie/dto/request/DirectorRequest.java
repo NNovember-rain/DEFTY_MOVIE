@@ -18,7 +18,7 @@ public class  DirectorRequest {
 
     Integer height;
 
-    Integer order;
+    Integer position;
 
     String nationality;
 

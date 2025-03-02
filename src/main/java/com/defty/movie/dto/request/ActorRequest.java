@@ -17,7 +17,7 @@ public class ActorRequest {
 
     Integer height;
 
-    Integer order;
+    Integer position;
 
     String nationality;
 

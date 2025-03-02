@@ -122,9 +122,19 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable, Map<String, Object> params) {
-        List<Article> articles= ariticleRepository.findArticles(pageable,params);
-        log.info(PREFIX_ARTICLE + "Get all Articles by id list and pagination" );
+    public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable, String title,Integer status) {
+        List<Article> articles=new ArrayList<>();
+        Integer totalElements=0;
+        if(title!=null) {
+            articles= ariticleRepository.findByStatusAndTitleContains(status,title,pageable).getContent();
+            totalElements=ariticleRepository.findByStatusAndTitleContains(status,title).size();
+            log.info(PREFIX_ARTICLE + "Get all Articles by title list and pagination" );
+        }
+        else{
+            articles= ariticleRepository.findAllByStatus(1,pageable).getContent();
+            totalElements=ariticleRepository.findAllByStatus(1).size();
+            log.info(PREFIX_ARTICLE + "Get all Articles list and pagination" );
+        }
         List<ArticleResponse> articleResponses=new ArrayList<>();
         if(!articles.isEmpty()) {
             for(Article article:articles) {
@@ -132,12 +142,29 @@ public class ArticleService implements IArticleService {
             }
             return PageableResponse.<ArticleResponse>builder()
                     .content(articleResponses)
-                    .totalElements(ariticleRepository.countArticles(params))
+                    .totalElements(totalElements+0L)
                     .build();
         }else {
             log.error("{}Article not found !", PREFIX_ARTICLE);
             throw new NotFoundException(" Article not found !");
         }
+    }
+
+    @Override
+    public String changeStatus(Integer id) {
+        Optional<Article> articleOptional=ariticleRepository.findById(id);
+        if(articleOptional.isPresent()) {
+            Article article=articleOptional.get();
+           if(article.getStatus()==1) {
+               article.setStatus(0);
+               ariticleRepository.save(article);
+               return "Disable article successfully";
+           }else{
+               article.setStatus(1);
+               ariticleRepository.save(article);
+               return "Enable article successfully";
+           }
+        }else throw new NotFoundException(" Article not found !");
     }
 
 
