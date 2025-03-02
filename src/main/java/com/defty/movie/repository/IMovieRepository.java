@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpecificationExecutor<Movie> {
     Page<Movie> findAll(Specification<Movie> spec, Pageable pageable);
@@ -68,4 +69,6 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
             "SELECT b FROM Banner b WHERE b.contentType = 'Movie' AND b.contentId = m.id) " +
             "AND (:title IS NULL OR m.title LIKE %:title%)"+"AND m.status=1")
     List<Movie> findAllMoviesNotInBanner(@Param("title") String title);
+
+    Optional<Movie> findBySlug(String slug);
 }

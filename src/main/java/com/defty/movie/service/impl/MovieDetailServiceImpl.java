@@ -30,9 +30,10 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
     IActorRepository actorRepository;
     IDirectorRepository directorRepository;
 
+
     @Override
-    public MovieDetailResponse getMovieDetails(Integer movieId) {
-        Optional<Movie> movieOptional = movieRepository.findById(movieId);
+    public MovieDetailResponse getMovieDetails(String slugMovie) {
+        Optional<Movie> movieOptional = movieRepository.findBySlug((slugMovie));
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
             MovieDetailResponse movieDetailResponse= new MovieDetailResponse();
@@ -68,8 +69,8 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
     }
 
     @Override
-    public List<EpisodeResponse> getEpisodes(Integer movieId) {
-        Optional<Movie> movieOptional = movieRepository.findById(movieId);
+    public List<EpisodeResponse> getEpisodes(String slugMovie) {
+        Optional<Movie> movieOptional = movieRepository.findBySlug((slugMovie));
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
             Set<Episode> episodes = movie.getEpisodes();
@@ -84,8 +85,8 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
     }
 
     @Override
-    public MovieDetailActorResponse getMovieDetailActor(Integer movieId) {
-        Optional<Movie> movieOptional = movieRepository.findById(movieId);
+    public MovieDetailActorResponse getMovieDetailActor(String slugMovie) {
+        Optional<Movie> movieOptional = movieRepository.findBySlug((slugMovie));
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
             MovieDetailActorResponse movieDetailActorResponse = new MovieDetailActorResponse();

@@ -7,7 +7,8 @@ import com.defty.movie.dto.response.MovieDetailResponse;
 import java.util.List;
 
 public interface IMovieDetailService {
-    MovieDetailResponse getMovieDetails(Integer movieId);
-    List<EpisodeResponse>  getEpisodes(Integer movieId);
-    MovieDetailActorResponse getMovieDetailActor(Integer movieId);
+
+    MovieDetailResponse getMovieDetails(String slugMovie);
+    List<EpisodeResponse>  getEpisodes(String slugMovie);
+    MovieDetailActorResponse getMovieDetailActor(String slugMovie);
 }

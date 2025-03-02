@@ -21,23 +21,24 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MovieDetailController {
 
+
     private final IMovieDetailService movieDetailService;
 
-    @GetMapping("/{movieid}")
-    public Object getDetailMovie(@PathVariable Integer movieid) {
-        MovieDetailResponse movieDetailResponse = movieDetailService.getMovieDetails(movieid);
+    @GetMapping()
+    public Object getDetailMovie(@RequestParam(value = "slugMovie") String slugMovie) {
+        MovieDetailResponse movieDetailResponse = movieDetailService.getMovieDetails(slugMovie);
         return ApiResponeUtil.ResponseOK(movieDetailResponse);
     }
 
-    @GetMapping("/episode/{movieid}")
-    public Object getDetailMovieEpisode(@PathVariable Integer movieid) {
-        List<EpisodeResponse> episodeResponses = movieDetailService.getEpisodes(movieid);
+    @GetMapping("/episode")
+    public Object getDetailMovieEpisode(@RequestParam(value = "slugMovie") String slugMovie) {
+        List<EpisodeResponse> episodeResponses = movieDetailService.getEpisodes(slugMovie);
         return ApiResponeUtil.ResponseOK(episodeResponses);
     }
 
-    @GetMapping("/actor/{movieid}")
-    public Object getDetailMovieActor(@PathVariable Integer movieid) {
-        MovieDetailActorResponse episodeResponses = movieDetailService.getMovieDetailActor(movieid);
+    @GetMapping("/actor")
+    public Object getDetailMovieActor(@RequestParam(value = "slugMovie") String slugMovie) {
+        MovieDetailActorResponse episodeResponses = movieDetailService.getMovieDetailActor(slugMovie);
         return ApiResponeUtil.ResponseOK(episodeResponses);
     }
 }
