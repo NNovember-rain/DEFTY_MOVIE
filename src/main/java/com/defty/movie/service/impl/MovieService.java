@@ -54,13 +54,13 @@ public class MovieService implements IMovieService {
         Movie newMovie = movieRepository.save(movie);
         newMovie.setSlug(slugUtil.createSlug(newMovie.getTitle(), newMovie.getId()));
 
-//        if(movieRequest.getTrailer()!=null) {
-//            try {
-//                newMovie.setTrailer(uploadVideoUtil.upload(movieRequest.getTrailer()));
-//            } catch (Exception e) {
-//                throw new ImageUploadException("Could not upload the video, please try again later!");
-//            }
-//        }
+        if(movieRequest.getTrailer()!=null) {
+            try {
+                newMovie.setTrailer(uploadVideoUtil.upload(movieRequest.getTrailer()));
+            } catch (Exception e) {
+                throw new ImageUploadException("Could not upload the video, please try again later!");
+            }
+        }
 
         if(movieRequest.getThumbnail()!=null) {
             try {
