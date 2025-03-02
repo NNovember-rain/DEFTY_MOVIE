@@ -34,8 +34,8 @@ public class Actor extends BaseEntity{
     @Column(name = "status")
     private Integer status = 1;
 
-    @Column(name="position")
-    private Integer position;
+    @Column(name = "order_index")
+    private Integer orderIndex;
 
     @Column(name = "nationality")
     private String nationality;
@@ -45,6 +45,7 @@ public class Actor extends BaseEntity{
 
     @Column(name = "description")
     private String description;
+
 
     @ManyToMany(mappedBy = "actors")
     private Set<Movie> movies;

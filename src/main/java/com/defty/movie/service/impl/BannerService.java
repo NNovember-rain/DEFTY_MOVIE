@@ -57,18 +57,19 @@ public class BannerService implements IBannerService {
         String link = "defty://" + bannerRequest.getContentType() + "?id=" + bannerRequest.getContentId();
         if (bannerRequest.getThumbnail() != null && !bannerRequest.getThumbnail().isEmpty()) {
             try {
-                bannerEntity.setThumnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
+                bannerEntity.setThumbnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
             }
             catch (Exception e){
                 throw new ImageUploadException("Could not upload the image, please try again later!");
             }
         }
         else {
-            bannerEntity.setThumnail(null);
+            bannerEntity.setThumbnail(null);
         }
 
         try {
             bannerEntity.setLink(link);
+            bannerEntity.setStatus(1);
             bannerRepository.save(bannerEntity);
             log.info(PREFIX_BANNER_SERVICE + "create banner successfully");
         }
@@ -89,13 +90,14 @@ public class BannerService implements IBannerService {
             BeanUtils.copyProperties(bannerRequest, updatedBanner, "id");
             if (bannerRequest.getThumbnail() != null && !bannerRequest.getThumbnail().isEmpty()) {
                 try {
-                    updatedBanner.setThumnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
+                    updatedBanner.setThumbnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
                 }
                 catch (Exception e){
                     throw new ImageUploadException("Could not upload the image, please try again later!");
                 }
             }
             updatedBanner.setLink(link);
+            updatedBanner.setStatus(1);
             try {
                 bannerRepository.save(updatedBanner);
                 log.info(PREFIX_BANNER_SERVICE + "update banner successfully");
@@ -170,6 +172,7 @@ public class BannerService implements IBannerService {
                         contentType = contentType.substring(2);
                     }
                 }
+                bannerResponse.setThumbnail(c.getThumbnail());
                 bannerResponse.setContentType(contentType);
                 bannerResponse.setContentId(Integer.parseInt(contentId));
                 bannerResponses.add(bannerResponse);

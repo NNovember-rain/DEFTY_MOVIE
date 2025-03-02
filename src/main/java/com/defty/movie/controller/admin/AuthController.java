@@ -73,6 +73,7 @@ public class AuthController {
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse res) {
         String refreshToken = CookieUtil.getValue(request, "refresh_token");
+        log.info(PREFIX_AUTH + "Refresh token: {}", refreshToken);
         RefreshTokenResponse newToken = authService.refreshToken(refreshToken, res);
         log.info(PREFIX_AUTH + "Refresh token success");
         ApiResponse<?> response = ApiResponse.builder()

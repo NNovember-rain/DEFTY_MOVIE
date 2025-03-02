@@ -135,8 +135,8 @@ public class AuthUserService implements IAuthUserService {
     public RefreshTokenResponse refreshToken(String refreshToken, HttpServletResponse response) {
         Optional<RefreshToken> exitRefreshToken = refreshTokenRepository.findByRefreshToken(refreshToken);
         if (exitRefreshToken.isEmpty()) {
-            log.error("{}Refresh token not found", PREFIX_AUTH_USER);
-            throw new NotFoundException("Refresh token not found");
+            log.error("{}Refresh token user not found", PREFIX_AUTH_USER);
+            throw new NotFoundException("Refresh token user not found");
         }
         User user = exitRefreshToken.get().getUser();
         String newToken = jwtTokenUtil.generateToken(user);
