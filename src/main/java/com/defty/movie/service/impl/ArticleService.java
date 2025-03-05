@@ -150,5 +150,22 @@ public class ArticleService implements IArticleService {
         }
     }
 
+    @Override
+    public String changeStatus(Integer id) {
+        Optional<Article> articleOptional=ariticleRepository.findById(id);
+        if(articleOptional.isPresent()) {
+            Article article=articleOptional.get();
+           if(article.getStatus()==1) {
+               article.setStatus(0);
+               ariticleRepository.save(article);
+               return "Disable article successfully";
+           }else{
+               article.setStatus(1);
+               ariticleRepository.save(article);
+               return "Enable article successfully";
+           }
+        }else throw new NotFoundException(" Article not found !");
+    }
+
 
 }

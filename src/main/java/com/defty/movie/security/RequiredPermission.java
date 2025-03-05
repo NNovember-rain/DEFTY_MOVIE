@@ -40,6 +40,9 @@ public class RequiredPermission {
             }
             Set<Permission> permissions = permissionRepository.findPermissionsByRoleId(account.get().getRole().getId());
             for(Permission permission : permissions){
+                if(permission.getName().equals("/**")){
+                    return true;
+                }
                 if (permission.getName().equals(permissionCheck)){
                     return true;
                 }

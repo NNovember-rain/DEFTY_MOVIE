@@ -4,12 +4,11 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryResponse {
-    Integer id;
-    String name;
-    String description;
-    Integer status;
-    String slug;
+public class MovieDetailActorResponse {
+    DirectorMovieDetailResponse directorResponse;
+    List<ActorMovieDetailResponse> actors;
 }

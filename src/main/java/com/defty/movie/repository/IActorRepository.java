@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 public interface IActorRepository extends JpaRepository<Actor, Integer> {
     @Query(value = "SELECT m FROM Actor m WHERE " +
@@ -38,5 +39,14 @@ public interface IActorRepository extends JpaRepository<Actor, Integer> {
             @Param("nationality") String nationality,
             @Param("status") Integer status,
             Pageable pageable);
+
+    @Query(value = "SELECT a.* FROM actor a " +
+            "JOIN actor_movie am ON a.id = am.actor_id " +
+            "JOIN movie m ON am.movie_id = m.id " +
+            "WHERE am.movie_id = :movieId " +
+            "ORDER BY m.release_date DESC " +  // Sắp xếp theo release_date của movie
+            "LIMIT 2", nativeQuery = true)
+    List<Actor> findTop2NewestActorsByMovieId(@Param("movieId") Integer movieId);
+
 
 }

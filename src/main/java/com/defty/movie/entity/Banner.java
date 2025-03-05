@@ -1,13 +1,13 @@
 package com.defty.movie.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jakarta.persistence.*;
 import lombok.Data;
 @Data
 @Entity
-@Table(name = "banner")
+@Table(name = "banner",uniqueConstraints = @UniqueConstraint(columnNames = {"contentType", "contentId"}))
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Banner extends BaseEntity{
     @Column(name = "`key`")
     private String key;
@@ -21,8 +21,8 @@ public class Banner extends BaseEntity{
     private Integer position;
     @Column(name = "status")
     private Integer status;
-    @Transient
+    @Column(name = "contentType")
     private String contentType;
-    @Transient
+    @Column(name = "contentId")
     private Integer contentId;
 }

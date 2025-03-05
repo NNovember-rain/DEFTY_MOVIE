@@ -15,4 +15,5 @@ public interface IArticleService {
     void deleteArticle(List<Integer> ids);
     ArticleResponse getArticle(Integer id);
     PageableResponse<ArticleResponse> getAllArticles(Pageable pageable, String name,Integer status);
+    String changeStatus(Integer id);
 }
