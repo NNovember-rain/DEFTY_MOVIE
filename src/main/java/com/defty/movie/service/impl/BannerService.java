@@ -1,16 +1,23 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.BannerRequest;
-import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.dto.response.*;
 import com.defty.movie.dto.response.BannerResponse;
-import com.defty.movie.dto.response.BannerResponse;
-import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Banner;
+import com.defty.movie.entity.Category;
+import com.defty.movie.entity.Movie;
 import com.defty.movie.exception.ImageUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.BannerMapper;
+import com.defty.movie.mapper.CategoryMapper;
+import com.defty.movie.mapper.MovieMapper;
 import com.defty.movie.repository.IBannerRepository;
+import com.defty.movie.repository.ICategoryRepository;
+import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IBannerService;
+import com.defty.movie.service.ICategoryService;
+import com.defty.movie.service.IMovieService;
+import com.defty.movie.utils.ApiResponeUtil;
 import com.defty.movie.utils.UploadImageUtil;
 import com.defty.movie.validation.BannerValidation;
 import lombok.AccessLevel;
@@ -37,6 +44,11 @@ public class BannerService implements IBannerService {
     BannerValidation bannerValidation;
     IBannerRepository bannerRepository;
     UploadImageUtil uploadImageUtil;
+    ICategoryRepository categoryRepository;
+    IMovieRepository movieRepository;
+    CategoryMapper categoryMapper;
+    MovieMapper movieMapper;
+
     String PREFIX_BANNER_SERVICE = "BANNER SERVICE | ";
     @Override
     public ApiResponse<Integer> addBanner(BannerRequest bannerRequest) {
@@ -190,5 +202,24 @@ public class BannerService implements IBannerService {
             return new ApiResponse<>(200, "OK", bannerResponse);
         }
         return new ApiResponse<>(404, "Banner doesn't exist", null);
+    }
+
+    @Override
+    public Object getContentNameByContentType(String contentType, String title) {
+        if(contentType.equals("Category")){
+            List<Category> categories=categoryRepository.findAllCategoriesNotInBanner(title);
+            List<CategoryResponse> categoriesResponses = new ArrayList<>();
+            for(Category c : categories){
+                categoriesResponses.add(categoryMapper.toCategoryResponse(c));
+            }
+            return ApiResponeUtil.ResponseOK(categoriesResponses);
+        } else if(contentType.equals("Movie")) {
+            List<Movie> movies=movieRepository.findAllMoviesNotInBanner(title);
+            List<MovieResponse> moviesResponses = new ArrayList<>();
+            for(Movie m : movies){
+                moviesResponses.add(movieMapper.toMovieResponseDTO(m));
+            }
+            return ApiResponeUtil.ResponseOK(moviesResponses);
+        } throw new NotFoundException("Content-Type not found");
     }
 }

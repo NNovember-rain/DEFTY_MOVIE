@@ -5,9 +5,7 @@ import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 
-import java.util.Date;
 import java.util.List;
 
 public interface IMovieService {
