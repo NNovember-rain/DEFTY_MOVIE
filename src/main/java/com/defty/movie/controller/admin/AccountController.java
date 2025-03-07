@@ -71,6 +71,7 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+
     @PatchMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_ACCOUNT')")
     public ResponseEntity<?> updateAccount(@Valid @PathVariable Integer id,
@@ -81,6 +82,19 @@ public class AccountController {
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(accountResponse)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/profile")
+    @PreAuthorize("@requiredPermission.checkPermission('UPDATE_PROFILE')")
+    public ResponseEntity<?> updateProfile(@ModelAttribute AccountRequest accountRequest) {
+        accountService.updateProfile(accountRequest);
+        log.info(PREFIX_ACCOUNT + "update profile account success");
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data("update profile account success")
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

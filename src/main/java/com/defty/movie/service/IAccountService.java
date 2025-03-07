@@ -14,4 +14,5 @@ public interface IAccountService {
     AccountResponse updateAccount(Integer id, AccountRequest accountRequest);
     AccountResponse getAccount(Integer id);
     Integer switchStatus(Integer id);
+    void updateProfile(AccountRequest accountRequest);
 }
