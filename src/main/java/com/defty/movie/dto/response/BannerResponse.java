@@ -4,6 +4,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Map;
+import java.util.Set;
+
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BannerResponse {
@@ -16,4 +19,8 @@ public class BannerResponse {
     Integer contentId;
     Integer position;
     Integer status;
+    String contentName;
+    String contentSlug;
+    SubBannerResponse subBannerResponse;
+    Map<String, String> bannerItems;
 }

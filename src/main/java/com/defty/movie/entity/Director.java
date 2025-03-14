@@ -3,6 +3,7 @@ package com.defty.movie.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -43,6 +44,10 @@ public class Director extends BaseEntity{
     @Column(name = "avatar")
     private String avatar;
 
+    @Column(name = "slug")
+    private String slug;
+
     @OneToMany(mappedBy = "director", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Where(clause = "status = 1")
     private Set<Movie> movies;
 }

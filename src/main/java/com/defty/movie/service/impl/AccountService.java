@@ -11,11 +11,13 @@ import com.defty.movie.mapper.AccountMapper;
 import com.defty.movie.repository.IAccountRepository;
 import com.defty.movie.repository.IRoleRepository;
 import com.defty.movie.service.IAccountService;
+import com.defty.movie.service.IAuthService;
 import com.defty.movie.utils.UploadImageUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +37,7 @@ public class AccountService implements IAccountService {
     IRoleRepository roleRepository;
     UploadImageUtil uploadImageUtil;
     String PREFIX_ACCOUNT = "ACCOUNT | ";
+    IAuthService authService;
 
     @Override
     public AccountResponse createAccount(AccountRequest accountRequest) {
@@ -154,5 +157,20 @@ public class AccountService implements IAccountService {
         }
         accountRepository.save(account);
         return account.getStatus();
+    }
+
+    @Override
+    public void updateProfile(AccountRequest accountRequest) {
+        Optional<Account> accountOptional= authService.getCurrentAccount();
+        Account account= accountOptional.get();
+        BeanUtils.copyProperties(accountRequest, account);
+        if(!accountRequest.getAvatar().isEmpty()) {
+            try {
+                account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
+            } catch (Exception e) {
+                throw new ImageUploadException("Could not upload the image, please try again later !");
+            }
+        }
+        accountRepository.save(account);
     }
 }

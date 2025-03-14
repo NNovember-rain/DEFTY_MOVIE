@@ -43,6 +43,9 @@ public class Actor extends BaseEntity{
     @Column(name = "avatar")
     private String avatar;
 
+    @Column(name = "slug")
+    private String slug;
+
     @Column(name = "description")
     private String description;
 

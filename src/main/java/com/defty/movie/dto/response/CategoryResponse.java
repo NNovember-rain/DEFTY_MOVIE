@@ -11,4 +11,5 @@ public class CategoryResponse {
     String name;
     String description;
     Integer status;
+    String slug;
 }

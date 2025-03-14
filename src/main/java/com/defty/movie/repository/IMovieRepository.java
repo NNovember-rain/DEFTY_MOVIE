@@ -70,5 +70,5 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
             "AND (:title IS NULL OR m.title LIKE %:title%)"+"AND m.status=1")
     List<Movie> findAllMoviesNotInBanner(@Param("title") String title);
 
-    Optional<Movie> findBySlug(String slug);
+    Optional<Movie> findBySlugAndStatus(String slug, Integer status);
 }

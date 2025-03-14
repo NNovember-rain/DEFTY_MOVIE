@@ -10,6 +10,7 @@ import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.CategoryMapper;
 import com.defty.movie.repository.ICategoryRepository;
 import com.defty.movie.service.ICategoryService;
+import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.validation.CategoryValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +34,16 @@ public class CategoryService implements ICategoryService {
     CategoryMapper categoryMapper;
     CategoryValidation categoryValidation;
     ICategoryRepository categoryRepository;
+    SlugUtil slugUtil;
 
     @Override
     public ApiResponse<Integer> addCategory(CategoryRequest categoryRequest) {
         categoryValidation.fieldValidation(categoryRequest);
         Category categoryEntity = categoryMapper.toCategoryEntity(categoryRequest);
         try {
-            categoryRepository.save(categoryEntity);
+            Category newCategory = categoryRepository.save(categoryEntity);
+            newCategory.setSlug(slugUtil.createSlug(newCategory.getName(), newCategory.getId()));
+            categoryRepository.save(newCategory);
         }
         catch (Exception e){
             return new ApiResponse<>(500, e.getMessage(), categoryEntity.getId());
@@ -55,6 +59,7 @@ public class CategoryService implements ICategoryService {
             Category updatedCategory = categoryEntity.get();
             BeanUtils.copyProperties(categoryRequest, updatedCategory, "id");
             try {
+                updatedCategory.setSlug(slugUtil.createSlug(categoryRequest.getName(), id));
                 categoryRepository.save(updatedCategory);
             }
             catch (Exception e){

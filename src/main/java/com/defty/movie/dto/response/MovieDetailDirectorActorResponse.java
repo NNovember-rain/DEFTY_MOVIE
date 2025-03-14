@@ -4,9 +4,11 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MovieDetailActorResponse {
-    String name;
-    String slug;
+public class MovieDetailDirectorActorResponse {
+    DirectorMovieDetailResponse directorResponse;
+    List<ActorMovieDetailResponse> actors;
 }

@@ -12,7 +12,8 @@ public interface IShowonRepository extends JpaRepository<Showon, Integer> {
             "LEFT JOIN s.category c " +
             "WHERE (:contentType IS NULL OR s.contentType = :contentType) " +
             "AND (:contentName IS NULL OR (s.contentType = 'category' AND c.name LIKE %:contentName%)) " +
-            "AND (:status IS NULL OR s.status = :status)")
+            "AND (:status IS NULL OR s.status = :status) " +
+            "AND s.status <> -1")
     Page<Showon> getShowons(@Param("contentType") String contentType,
                                @Param("contentName") String contentName,
                                @Param("status") Integer status,
