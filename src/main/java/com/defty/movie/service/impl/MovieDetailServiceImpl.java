@@ -7,7 +7,6 @@ import com.defty.movie.repository.IActorRepository;
 import com.defty.movie.repository.IDirectorRepository;
 import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IMovieDetailService;
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -39,23 +38,26 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
             MovieDetailResponse movieDetailResponse= new MovieDetailResponse();
 
             Set<MovieCategory> movieCategories = movie.getMovieCategories();
-            List<CategoryResponse> categoryNames = new ArrayList<>();
+            List<MovieDetailCategoryResponse> categoryNames = new ArrayList<>();
             for (MovieCategory movieCategory : movieCategories) {
                 Category category = movieCategory.getCategory();
-                CategoryResponse categoryResponse = new CategoryResponse();
-                BeanUtils.copyProperties(category, categoryResponse);
+                MovieDetailCategoryResponse categoryResponse = new MovieDetailCategoryResponse();
+                categoryResponse.setName(category.getName());
+                categoryResponse.setSlug(category.getSlug());
                 categoryNames.add(categoryResponse);
             }
 
             Director director = movie.getDirector();
-            DirectorResponse directorResponse = new DirectorResponse();
-            BeanUtils.copyProperties(director, directorResponse);
+            MovieDetailDirectorResponse directorResponse = new MovieDetailDirectorResponse();
+            directorResponse.setName(director.getFullName());
+            directorResponse.setSlug(director.getSlug());
 
-            List<ActorResponse> actorNames = new ArrayList<>();
+            List<MovieDetailActorResponse> actorNames = new ArrayList<>();
             Set<Actor> actors = movie.getActors();
             for (Actor actor : actors) {
-                ActorResponse actorResponse = new ActorResponse();
-                BeanUtils.copyProperties(actor, actorResponse);
+                MovieDetailActorResponse actorResponse = new MovieDetailActorResponse();
+                actorResponse.setName(actor.getFullName());
+                actorResponse.setSlug(actor.getSlug());
                 actorNames.add(actorResponse);
             }
 
@@ -92,11 +94,11 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
     }
 
     @Override
-    public MovieDetailActorResponse getMovieDetailActor(String slugMovie) {
+    public MovieDetailDirectorActorResponse getMovieDetailActor(String slugMovie) {
         Optional<Movie> movieOptional = movieRepository.findBySlugAndStatus(slugMovie,1);
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
-            MovieDetailActorResponse movieDetailActorResponse = new MovieDetailActorResponse();
+            MovieDetailDirectorActorResponse movieDetailDirectorActorResponse = new MovieDetailDirectorActorResponse();
             Set<Actor> actors=movie.getActors();
             Director director=movie.getDirector();
 
@@ -126,9 +128,9 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
             BeanUtils.copyProperties(director, directorResponse);
             directorResponse.setMovies(movieResponses);
 
-            movieDetailActorResponse.setDirectorResponse(directorResponse);
-            movieDetailActorResponse.setActors(actorResponses);
-            return movieDetailActorResponse;
+            movieDetailDirectorActorResponse.setDirectorResponse(directorResponse);
+            movieDetailDirectorActorResponse.setActors(actorResponses);
+            return movieDetailDirectorActorResponse;
         }else throw new NotFoundException("Movie not found");
     }
 }

@@ -1,10 +1,9 @@
 package com.defty.movie.controller.user;
 
 import com.defty.movie.dto.response.EpisodeResponse;
-import com.defty.movie.dto.response.MovieDetailActorResponse;
+import com.defty.movie.dto.response.MovieDetailDirectorActorResponse;
 import com.defty.movie.dto.response.MovieDetailResponse;
 import com.defty.movie.service.IMovieDetailService;
-import com.defty.movie.service.IMovieService;
 import com.defty.movie.utils.ApiResponeUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/user/moviedetail")
+@RequestMapping("${api.prefix}/user/access/moviedetail")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MovieDetailController {
 
@@ -38,7 +37,7 @@ public class MovieDetailController {
 
     @GetMapping("/actor")
     public Object getDetailMovieActor(@RequestParam(value = "slugMovie") String slugMovie) {
-        MovieDetailActorResponse episodeResponses = movieDetailService.getMovieDetailActor(slugMovie);
+        MovieDetailDirectorActorResponse episodeResponses = movieDetailService.getMovieDetailActor(slugMovie);
         return ApiResponeUtil.ResponseOK(episodeResponses);
     }
 }

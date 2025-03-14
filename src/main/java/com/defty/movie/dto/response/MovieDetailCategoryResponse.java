@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MovieDetailActorResponse {
+public class MovieDetailCategoryResponse {
     String name;
     String slug;
 }
