@@ -11,8 +11,8 @@ import lombok.Data;
 public class Banner extends BaseEntity{
     @Column(name = "`key`")
     private String key;
-    @Column(name = "thumnail")
-    private String thumnail;
+    @Column(name = "thumbnail")
+    private String thumbnail;
     @Column(name = "title")
     private String title;
     @Column(name = "link")

@@ -57,14 +57,14 @@ public class BannerService implements IBannerService {
         String link = "defty://" + bannerRequest.getContentType() + "?id=" + bannerRequest.getContentId();
         if (bannerRequest.getThumbnail() != null && !bannerRequest.getThumbnail().isEmpty()) {
             try {
-                bannerEntity.setThumnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
+                bannerEntity.setThumbnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
             }
             catch (Exception e){
                 throw new ImageUploadException("Could not upload the image, please try again later!");
             }
         }
         else {
-            bannerEntity.setThumnail(null);
+            bannerEntity.setThumbnail(null);
         }
 
         try {
@@ -89,7 +89,7 @@ public class BannerService implements IBannerService {
             BeanUtils.copyProperties(bannerRequest, updatedBanner, "id");
             if (bannerRequest.getThumbnail() != null && !bannerRequest.getThumbnail().isEmpty()) {
                 try {
-                    updatedBanner.setThumnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
+                    updatedBanner.setThumbnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
                 }
                 catch (Exception e){
                     throw new ImageUploadException("Could not upload the image, please try again later!");
@@ -159,19 +159,19 @@ public class BannerService implements IBannerService {
         else {
             for(Banner c : banners){
                 BannerResponse bannerResponse = bannerMapper.toBannerResponse(c);
-                String[] parts = null;
-                String contentType = null;
-                String contentId = null;
-                if(bannerResponse.getLink() != null){
-                    parts = bannerResponse.getLink().split(":|\\?id=");
-                    contentType = parts[1];
-                    contentId = parts[2];
-                    if (contentType.startsWith("//")) {
-                        contentType = contentType.substring(2);
-                    }
-                }
-                bannerResponse.setContentType(contentType);
-                bannerResponse.setContentId(Integer.parseInt(contentId));
+//                String[] parts = null;
+//                String contentType = null;
+//                String contentId = null;
+//                if(bannerResponse.getLink() != null){
+//                    parts = bannerResponse.getLink().split(":|\\?id=");
+//                    contentType = parts[1];
+//                    contentId = parts[2];
+//                    if (contentType.startsWith("//")) {
+//                        contentType = contentType.substring(2);
+//                    }
+//                }
+//                bannerResponse.setContentType(contentType);
+//                bannerResponse.setContentId(Integer.parseInt(contentId));
                 bannerResponses.add(bannerResponse);
             }
             PageableResponse<BannerResponse> pageableResponse= new PageableResponse<>(bannerResponses, banners.getTotalElements());
