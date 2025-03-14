@@ -2,6 +2,8 @@ package com.defty.movie.dto.response;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ShowonResponse {
     private Integer id;
@@ -11,4 +13,5 @@ public class ShowonResponse {
     private String contentName;
     private Integer status;
     private String note;
+    private List<Object> contentItems;
 }
