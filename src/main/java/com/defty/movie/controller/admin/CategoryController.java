@@ -2,6 +2,7 @@ package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.CategoryRequest;
 import com.defty.movie.dto.response.ApiResponse;
+import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.service.ICategoryService;
 import com.defty.movie.service.impl.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/admin/movie/category")
+@RequestMapping("${api.prefix}/admin/category")
 //@RequestMapping("/movie/category")
 public class CategoryController {
     private final ICategoryService categoryService;
@@ -58,4 +59,30 @@ public class CategoryController {
     public ApiResponse<Integer> changeStatus(@PathVariable Integer id) {
         return categoryService.changeStatus(id);
     }
+
+    @PatchMapping("/{categoryId}/{movieIds}")
+    @PreAuthorize("@requiredPermission.checkPermission('ADD_MOVIE_TO_CATEGORY')")
+    public ApiResponse<Integer> addMovie(@PathVariable Integer categoryId, @PathVariable List<Integer> movieIds) {
+        return categoryService.addMovie(categoryId, movieIds);
+    }
+
+    @PatchMapping("/{categoryId}/movies")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_MOVIE_BY_CATEGORY')")
+    public Object getMoviesNotInCategory(Pageable pageable,
+                                      @PathVariable Integer categoryId,
+                                      @RequestParam(name = "isInCategory", required = false) Boolean isInCategory,
+                                      @RequestParam(name = "title", required = false) String title,
+                                      @RequestParam(name = "nation", required = false) String nation,
+                                      @RequestParam(name = "releaseDate", required = false) String releaseDate,
+                                      @RequestParam(name = "ranking", required = false) Integer ranking,
+                                      @RequestParam(name = "directorId", required = false) Integer directorId) {
+        return categoryService.findMoviesByCategory(pageable, categoryId, isInCategory, title, nation, releaseDate, ranking, directorId);
+    }
+
+    @DeleteMapping("/{categoryId}/{movieIds}")
+    @PreAuthorize("@requiredPermission.checkPermission('DELETE_MOVIE_FROM_CATEGORY')")
+    public ApiResponse<Integer> deleteMovie(@PathVariable Integer categoryId, @PathVariable List<Integer> movieIds) {
+        return categoryService.deleteMovie(categoryId, movieIds);
+    }
+
 }

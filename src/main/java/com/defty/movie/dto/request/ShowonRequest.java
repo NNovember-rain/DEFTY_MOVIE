@@ -1,6 +1,9 @@
 package com.defty.movie.dto.request;
 
 import lombok.Data;
+
+import java.util.List;
+
 @Data
 public class ShowonRequest {
     private Integer position;
