@@ -10,6 +10,7 @@ public class CategoryResponse {
     Integer id;
     String name;
     String description;
+    Integer numberOfMovies;
     Integer status;
     String slug;
 }

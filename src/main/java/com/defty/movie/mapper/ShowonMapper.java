@@ -50,6 +50,14 @@ public class ShowonMapper {
             }
             showonResponse.setContentItems(Collections.singletonList(subCategoryResponses));
         }
+        else if(showon.getContentType().equals("director") || showon.getContentType().equals("actor")){
+            if(showon.getContentType().equals("director")){
+
+            }
+            else{
+
+            }
+        }
         return showonResponse;
     }
 }
