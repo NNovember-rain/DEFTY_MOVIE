@@ -18,6 +18,7 @@ import com.defty.movie.service.IBannerService;
 import com.defty.movie.service.ICategoryService;
 import com.defty.movie.service.IMovieService;
 import com.defty.movie.utils.ApiResponeUtil;
+import com.defty.movie.utils.CopyUtil;
 import com.defty.movie.utils.UploadImageUtil;
 import com.defty.movie.validation.BannerValidation;
 import lombok.AccessLevel;
@@ -83,10 +84,11 @@ public class BannerService implements IBannerService {
     public ApiResponse<Integer> updateBanner(Integer id, BannerRequest bannerRequest) {
         bannerValidation.fieldValidation(bannerRequest);
         Optional<Banner> bannerEntity = bannerRepository.findById(id);
-        String link = "defty://" + bannerRequest.getContentType() + "?id=" + bannerRequest.getContentId();
+//        String link = "defty://" + bannerRequest.getContentType() + "?id=" + bannerRequest.getContentId();
         if(bannerEntity.isPresent()){
             Banner updatedBanner = bannerEntity.get();
-            BeanUtils.copyProperties(bannerRequest, updatedBanner, "id");
+//            BeanUtils.copyProperties(bannerRequest, updatedBanner, "id");
+            CopyUtil.copyPropertiesIgnoreNull(bannerRequest, updatedBanner);
             if (bannerRequest.getThumbnail() != null && !bannerRequest.getThumbnail().isEmpty()) {
                 try {
                     updatedBanner.setThumbnail(uploadImageUtil.upload(bannerRequest.getThumbnail()));
@@ -95,7 +97,7 @@ public class BannerService implements IBannerService {
                     throw new ImageUploadException("Could not upload the image, please try again later!");
                 }
             }
-            updatedBanner.setLink(link);
+//            updatedBanner.setLink(link);
             try {
                 bannerRepository.save(updatedBanner);
                 log.info(PREFIX_BANNER_SERVICE + "update banner successfully");
