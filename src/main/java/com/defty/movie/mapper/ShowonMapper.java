@@ -48,7 +48,8 @@ public class ShowonMapper {
 
                 subCategoryResponses.add(subCategoryResponse);
             }
-            showonResponse.setContentItems(Collections.singletonList(subCategoryResponses));
+//            showonResponse.setContentItems(Collections.singletonList(subCategoryResponses));
+            showonResponse.setContentItems(subCategoryResponses);
         }
         else if(showon.getContentType().equals("director") || showon.getContentType().equals("actor")){
             if(showon.getContentType().equals("director")){

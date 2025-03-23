@@ -13,5 +13,5 @@ public class ShowonResponse {
     private String contentName;
     private Integer status;
     private String note;
-    private List<Object> contentItems;
+    private Object contentItems;
 }
