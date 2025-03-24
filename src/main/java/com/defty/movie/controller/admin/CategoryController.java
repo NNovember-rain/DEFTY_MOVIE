@@ -68,21 +68,32 @@ public class CategoryController {
 
     @PatchMapping("/{categoryId}/movies")
     @PreAuthorize("@requiredPermission.checkPermission('GET_MOVIE_BY_CATEGORY')")
-    public Object getMoviesNotInCategory(Pageable pageable,
+    public Object getMoviesByCategory(Pageable pageable,
                                       @PathVariable Integer categoryId,
-                                      @RequestParam(name = "isInCategory", required = false) Boolean isInCategory,
                                       @RequestParam(name = "title", required = false) String title,
                                       @RequestParam(name = "nation", required = false) String nation,
                                       @RequestParam(name = "releaseDate", required = false) String releaseDate,
                                       @RequestParam(name = "ranking", required = false) Integer ranking,
                                       @RequestParam(name = "directorId", required = false) Integer directorId) {
-        return categoryService.findMoviesByCategory(pageable, categoryId, isInCategory, title, nation, releaseDate, ranking, directorId);
+        return categoryService.findMoviesByCategory(pageable, categoryId, title, nation, releaseDate, ranking, directorId);
     }
 
     @DeleteMapping("/{categoryId}/{movieIds}")
     @PreAuthorize("@requiredPermission.checkPermission('DELETE_MOVIE_FROM_CATEGORY')")
     public ApiResponse<Integer> deleteMovie(@PathVariable Integer categoryId, @PathVariable List<Integer> movieIds) {
         return categoryService.deleteMovie(categoryId, movieIds);
+    }
+
+    @PatchMapping("/{categoryId}/other-movies")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_MOVIE_NOT_IN_CATEGORY')")
+    public Object getMoviesNotInCategory(Pageable pageable,
+                                         @PathVariable Integer categoryId,
+                                         @RequestParam(name = "title", required = false) String title,
+                                         @RequestParam(name = "nation", required = false) String nation,
+                                         @RequestParam(name = "releaseDate", required = false) String releaseDate,
+                                         @RequestParam(name = "ranking", required = false) Integer ranking,
+                                         @RequestParam(name = "directorId", required = false) Integer directorId) {
+        return categoryService.findMoviesNotInCategory(pageable, categoryId, title, nation, releaseDate, ranking, directorId);
     }
 
 }

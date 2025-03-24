@@ -15,7 +15,7 @@ public class Episode extends BaseEntity{
     @Column(name = "number")
     private Integer number;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "thumbnail")
