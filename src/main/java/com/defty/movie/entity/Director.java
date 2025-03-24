@@ -35,7 +35,7 @@ public class Director extends BaseEntity{
     @Column(name="positon")
     private Integer position;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "status")

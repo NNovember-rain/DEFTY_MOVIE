@@ -46,7 +46,7 @@ public class Actor extends BaseEntity{
     @Column(name = "slug")
     private String slug;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @ManyToMany(mappedBy = "actors")

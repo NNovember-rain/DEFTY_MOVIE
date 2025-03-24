@@ -19,5 +19,6 @@ public interface ICategoryService {
     Object getCategory(Integer id);
     ApiResponse<Integer> addMovie(Integer CategoryId, List<Integer> ids);
     ApiResponse<Integer> deleteMovie(Integer CategoryId, List<Integer> ids);
-    ApiResponse<PageableResponse<MovieResponse>> findMoviesByCategory(Pageable pageable, Integer categoryId, Boolean isInCategory, String title, String nation, String releaseDate, Integer ranking, Integer directorId);
+    ApiResponse<PageableResponse<MovieResponse>> findMoviesByCategory(Pageable pageable, Integer categoryId, String title, String nation, String releaseDate, Integer ranking, Integer directorId);
+    ApiResponse<PageableResponse<MovieResponse>> findMoviesNotInCategory(Pageable pageable, Integer categoryId, String title, String nation, String releaseDate, Integer ranking, Integer directorId);
 }
