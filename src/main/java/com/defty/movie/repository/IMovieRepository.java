@@ -71,4 +71,6 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
     List<Movie> findAllMoviesNotInBanner(@Param("title") String title);
 
     Optional<Movie> findBySlugAndStatus(String slug, Integer status);
+
+
 }

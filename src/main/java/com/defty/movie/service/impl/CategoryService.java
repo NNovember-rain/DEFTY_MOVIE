@@ -185,7 +185,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public ApiResponse<PageableResponse<MovieResponse>> findMoviesByCategory(Pageable pageable, Integer categoryId, Boolean isInCategory, String title, String nation, String releaseDate, Integer ranking, Integer directorId) {
+    public ApiResponse<PageableResponse<MovieResponse>> findMoviesByCategory(Pageable pageable, Integer categoryId, String title, String nation, String releaseDate, Integer ranking, Integer directorId) {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
         Date startReleaseDate = null;
         Date endReleaseDate = null;
@@ -205,7 +205,7 @@ public class CategoryService implements ICategoryService {
             }
         }
         Page<MovieCategory> movieCategories = categoryRepository.findMoviesByCategory(
-                categoryId, isInCategory, title, nation, startReleaseDate, endReleaseDate, ranking, directorId, sortedPageable
+                categoryId, title, nation, startReleaseDate, endReleaseDate, ranking, directorId, sortedPageable
         );
 
         List<MovieResponse> movieResponseDTOS = new ArrayList<>();
@@ -220,4 +220,42 @@ public class CategoryService implements ICategoryService {
             return new ApiResponse<>(200, "OK", pageableResponse);
         }
     }
+
+    @Override
+    public ApiResponse<PageableResponse<MovieResponse>> findMoviesNotInCategory(Pageable pageable, Integer categoryId, String title, String nation, String releaseDate, Integer ranking, Integer directorId) {
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
+        Date startReleaseDate = null;
+        Date endReleaseDate = null;
+        if (releaseDate != null && !releaseDate.isEmpty()) {
+            try{
+                String[] dates = releaseDate.split(" - ");
+                if (dates.length == 2) {
+                    startReleaseDate = dateUtil.stringToSqlDate(dates[0]);
+                    endReleaseDate = dateUtil.stringToSqlDate(dates[1]);
+                }
+                else{
+                    throw new CustomDateException("please enter the right date format: dd/MM/yyyy - dd/MM/yyyy");
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        Page<Movie> movies = categoryRepository.findMoviesNotInCategory(
+                categoryId, title, nation, startReleaseDate, endReleaseDate, ranking, directorId, sortedPageable
+        );
+
+        List<MovieResponse> movieResponseDTOS = new ArrayList<>();
+        if (movies.isEmpty()){
+            throw new NotFoundException("Not found exception");
+        }
+        else {
+            for(Movie m : movies){
+                movieResponseDTOS.add(movieMapper.toMovieResponseDTO(m));
+            }
+            PageableResponse<MovieResponse> pageableResponse = new PageableResponse<>(movieResponseDTOS, movies.getTotalElements());
+            return new ApiResponse<>(200, "OK", pageableResponse);
+        }
+    }
+
 }

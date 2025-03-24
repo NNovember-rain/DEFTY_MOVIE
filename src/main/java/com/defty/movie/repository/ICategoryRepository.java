@@ -37,8 +37,7 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
 
     @Query(value = """
         SELECT mc FROM MovieCategory mc 
-        WHERE (:isInCategory = TRUE AND mc.category.id = :categoryId 
-               OR :isInCategory = FALSE AND mc.category.id != :categoryId) 
+        WHERE mc.category.id = :categoryId 
         AND (:title IS NULL OR mc.movie.title LIKE %:title%) 
         AND (:nation IS NULL OR mc.movie.nation LIKE %:nation%) 
         AND (
@@ -52,8 +51,7 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
     """,
             countQuery = """
         SELECT count(mc) FROM MovieCategory mc 
-        WHERE (:isInCategory = TRUE AND mc.category.id = :categoryId 
-               OR :isInCategory = FALSE AND mc.category.id != :categoryId) 
+        WHERE mc.category.id = :categoryId 
         AND (:title IS NULL OR mc.movie.title LIKE %:title%) 
         AND (:nation IS NULL OR mc.movie.nation LIKE %:nation%) 
         AND (
@@ -66,7 +64,6 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
     """)
     Page<MovieCategory> findMoviesByCategory(
             @Param("categoryId") Integer categoryId,
-            @Param("isInCategory") boolean isInCategory,
             @Param("title") String title,
             @Param("nation") String nation,
             @Param("startReleaseDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startReleaseDate,
@@ -74,6 +71,39 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
             @Param("ranking") Integer ranking,
             @Param("directorId") Integer directorId,
             Pageable pageable);
+
+
+
+
+    @Query(value = "SELECT m FROM Movie m WHERE m.id NOT IN " +
+            "(SELECT mc.movie.id FROM MovieCategory mc WHERE mc.category.id = :categoryId) " +
+            "AND (:title IS NULL OR m.title LIKE CONCAT('%', :title, '%')) " +
+            "AND (:nation IS NULL OR m.nation LIKE CONCAT('%', :nation, '%')) " +
+            "AND (:startReleaseDate IS NULL AND :endReleaseDate IS NULL " +
+            "OR m.releaseDate BETWEEN :startReleaseDate AND :endReleaseDate) " +
+            "AND (:ranking IS NULL OR m.ranking = :ranking) " +
+            "AND (:directorId IS NULL OR m.director.id = :directorId) " +
+            "AND m.status != -1 " +
+            "ORDER BY m.createdDate DESC",
+            countQuery = "SELECT COUNT(m) FROM Movie m WHERE m.id NOT IN " +
+                    "(SELECT mc.movie.id FROM MovieCategory mc WHERE mc.category.id = :categoryId) " +
+                    "AND (:title IS NULL OR m.title LIKE CONCAT('%', :title, '%')) " +
+                    "AND (:nation IS NULL OR m.nation LIKE CONCAT('%', :nation, '%')) " +
+                    "AND (:startReleaseDate IS NULL AND :endReleaseDate IS NULL " +
+                    "OR m.releaseDate BETWEEN :startReleaseDate AND :endReleaseDate) " +
+                    "AND (:ranking IS NULL OR m.ranking = :ranking) " +
+                    "AND (:directorId IS NULL OR m.director.id = :directorId) " +
+                    "AND m.status != -1")
+    Page<Movie> findMoviesNotInCategory(
+            @Param("categoryId") Integer categoryId,
+            @Param("title") String title,
+            @Param("nation") String nation,
+            @Param("startReleaseDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startReleaseDate,
+            @Param("endReleaseDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endReleaseDate,
+            @Param("ranking") Integer ranking,
+            @Param("directorId") Integer directorId,
+            Pageable pageable);
+
 
 
 }
