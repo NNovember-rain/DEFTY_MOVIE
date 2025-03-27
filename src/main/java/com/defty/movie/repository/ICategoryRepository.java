@@ -35,6 +35,9 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
             "AND (:title IS NULL OR c.name LIKE %:title%)"+"AND c.status=1")
     List<Category> findAllCategoriesNotInBanner(@Param("title") String title);
 
+    @Query("SELECT c FROM Category c LEFT JOIN c.showons s WHERE s.id IS NULL AND c.status != -1")
+    List<Category> findAllCategoriesNotInShowOn(@Param("title") String title);
+
     @Query(value = """
         SELECT mc FROM MovieCategory mc 
         WHERE mc.category.id = :categoryId 
