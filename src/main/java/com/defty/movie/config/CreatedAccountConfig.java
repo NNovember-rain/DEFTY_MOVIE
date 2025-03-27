@@ -26,10 +26,10 @@
 //    @Bean
 //    ApplicationRunner createAccount(IAccountRepository accountRepository) {
 //        return args -> {
-//            if(accountRepository.findByUsername("vannvUm").isEmpty()) {
-//                Role role = roleRepository.findRoleByName("Manager");
+//            if(accountRepository.findByUsername("dudv").isEmpty()) {
+//                Role role = roleRepository.findByName("Manager");
 //                Account account = Account.builder()
-//                        .username("vannvUm")
+//                        .username("dudv")
 //                        .password(passwordEncoder.encode("123456"))
 //                        .role(role)
 //                        .build();

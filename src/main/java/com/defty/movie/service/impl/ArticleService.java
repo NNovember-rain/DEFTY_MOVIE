@@ -5,7 +5,7 @@ import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.entity.Account;
-import com.defty.movie.exception.ImageUploadException;
+import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.mapper.ArticleMapper;
 import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.entity.Article;
@@ -16,15 +16,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -60,7 +56,7 @@ public class ArticleService implements IArticleService {
                 article.setThumbnail(uploadImageUtil.upload(articleRequest.getThumbnail()));
             } catch (Exception e) {
                 log.error("{}Could not upload the image", PREFIX_ARTICLE);
-                throw new ImageUploadException("Could not upload the image, please try again later !");
+                throw new MediaUploadException("Could not upload the image, please try again later !");
             }
         }
 
@@ -87,7 +83,7 @@ public class ArticleService implements IArticleService {
                 article.setThumbnail(uploadImageUtil.upload(articleRequest.getThumbnail()));
             } catch (Exception e) {
                 log.error("{}Could not upload the image", PREFIX_ARTICLE);
-                throw new ImageUploadException("Could not upload the image, please try again later !");
+                throw new MediaUploadException("Could not upload the image, please try again later !");
             }
         }
 
