@@ -3,7 +3,6 @@ package com.defty.movie.controller.admin;
 import com.defty.movie.dto.request.ShowonRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.service.IShowonService;
-import com.defty.movie.service.impl.ShowonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;

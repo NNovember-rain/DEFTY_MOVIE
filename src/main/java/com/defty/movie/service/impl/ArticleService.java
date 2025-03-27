@@ -1,14 +1,14 @@
 package com.defty.movie.service.impl;
 
-import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.exception.NotFoundException;
-import com.defty.movie.utils.SlugUtil;
+import com.defty.movie.dto.request.ArticleRequest;
 import com.defty.movie.dto.response.ArticleResponse;
+import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Account;
+import com.defty.movie.entity.Article;
+import com.defty.movie.utils.SlugUtil;
 import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.mapper.ArticleMapper;
-import com.defty.movie.dto.request.ArticleRequest;
-import com.defty.movie.entity.Article;
 import com.defty.movie.repository.IArticleRepository;
 import com.defty.movie.service.IArticleService;
 import com.defty.movie.utils.UploadImageUtil;
@@ -118,7 +118,7 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable, String title,Integer status) {
+    public PageableResponse<ArticleResponse> getAllArticles(Pageable pageable, String title, Integer status) {
         List<Article> articles=new ArrayList<>();
         Integer totalElements=0;
         if(title!=null) {

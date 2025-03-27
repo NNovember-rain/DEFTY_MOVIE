@@ -24,6 +24,9 @@ public class Episode extends BaseEntity{
     @Column(name = "link")
     private String link;
 
+    @Column(name = "slug")
+    private String slug;
+
     @Column(name = "status")
     private Integer status;
 

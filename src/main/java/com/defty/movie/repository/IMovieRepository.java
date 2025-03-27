@@ -1,6 +1,6 @@
 package com.defty.movie.repository;
 
-import com.defty.movie.entity.Actor;
+
 import com.defty.movie.entity.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -72,5 +72,9 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
 
     Optional<Movie> findBySlugAndStatus(String slug, Integer status);
 
+    Movie findByStatusAndSlug(Integer status, String slug);
 
+    List<Movie> findByStatusAndTitleContainingIgnoreCase(Integer status, String title, Pageable pageable);
+
+    List<Movie> findByTitleContainingIgnoreCaseAndStatus(String title, Integer status);
 }

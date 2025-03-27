@@ -6,7 +6,6 @@ import com.defty.movie.dto.response.MovieCommentResponse;
 import com.defty.movie.entity.MovieComment;
 import com.defty.movie.entity.MovieCommentReaction;
 import com.defty.movie.repository.IMovieCommentReactionRepository;
-import com.defty.movie.repository.IMovieCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

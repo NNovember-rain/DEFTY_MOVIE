@@ -1,8 +1,7 @@
 package com.defty.movie.controller.user;
 
 
-import com.defty.movie.dto.request.ShowonRequest;
-import com.defty.movie.dto.response.ApiResponse;
+
 import com.defty.movie.service.IShowonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -17,7 +17,8 @@ public class MovieDetailResponse {
     String description;
     String coverImage;
     String trailer;
-    MovieDetailDirectorResponse director;
-    List<MovieDetailCategoryResponse> category;
-    List<MovieDetailActorResponse> actor;
+    String slug;
+    MovieNameResponse director;
+    List<CategoryNameResponse> category;
+    List<ActorNameResponse> actor;
 }

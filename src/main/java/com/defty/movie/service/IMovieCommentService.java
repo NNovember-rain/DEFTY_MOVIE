@@ -1,8 +1,6 @@
 package com.defty.movie.service;
 
-import com.defty.movie.dto.request.ArticleCommentRequest;
 import com.defty.movie.dto.request.MovieCommentRequest;
-import com.defty.movie.dto.response.ArticleCommentResponse;
 import com.defty.movie.dto.response.MovieCommentResponse;
 import com.defty.movie.entity.MovieComment;
 

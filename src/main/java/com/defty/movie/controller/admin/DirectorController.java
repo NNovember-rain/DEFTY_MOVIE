@@ -3,11 +3,9 @@ package com.defty.movie.controller.admin;
 import com.defty.movie.dto.request.DirectorRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.service.IDirectorService;
-import com.defty.movie.service.impl.DirectorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

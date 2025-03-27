@@ -3,12 +3,9 @@ package com.defty.movie.service;
 
 import com.defty.movie.dto.request.LoginRequest;
 import com.defty.movie.dto.request.RegisterRequest;
-import com.defty.movie.dto.request.UserRequest;
-import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.dto.response.LoginResponse;
 import com.defty.movie.dto.response.RefreshTokenResponse;
 import com.defty.movie.dto.response.UserResponse;
-import com.defty.movie.entity.Account;
 import com.defty.movie.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
 

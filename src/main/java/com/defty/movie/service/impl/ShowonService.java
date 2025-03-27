@@ -4,7 +4,6 @@ import com.defty.movie.dto.request.ShowonRequest;
 import com.defty.movie.dto.response.ShowonResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PageableResponse;
-import com.defty.movie.dto.response.ShowonResponse;
 import com.defty.movie.entity.Category;
 import com.defty.movie.entity.Showon;
 import com.defty.movie.exception.NotFoundException;

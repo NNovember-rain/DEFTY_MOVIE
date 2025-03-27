@@ -2,9 +2,7 @@ package com.defty.movie.controller.user;
 
 import com.defty.movie.dto.request.ArticleCommentRequest;
 import com.defty.movie.dto.response.ArticleCommentResponse;
-import com.defty.movie.entity.ArticleComment;
 import com.defty.movie.service.IArticleCommentService;
-import com.defty.movie.service.impl.ArticleCommentService;
 import com.defty.movie.utils.ApiResponeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

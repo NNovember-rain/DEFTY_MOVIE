@@ -2,8 +2,6 @@ package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.BannerRequest;
 import com.defty.movie.dto.response.ApiResponse;
-import com.defty.movie.dto.response.BannerResponse;
-import com.defty.movie.service.IBannerService;
 import com.defty.movie.service.IBannerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

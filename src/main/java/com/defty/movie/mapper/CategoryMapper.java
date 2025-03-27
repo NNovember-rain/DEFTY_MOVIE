@@ -3,7 +3,6 @@ package com.defty.movie.mapper;
 import com.defty.movie.dto.request.CategoryRequest;
 import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.entity.Category;
-import com.defty.movie.entity.MovieCategory;
 import com.defty.movie.repository.IMovieCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

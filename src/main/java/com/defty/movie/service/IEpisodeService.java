@@ -4,9 +4,7 @@ import com.defty.movie.dto.request.EpisodeRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.EpisodeResponse;
 import com.defty.movie.dto.response.PageableResponse;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 

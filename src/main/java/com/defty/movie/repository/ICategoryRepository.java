@@ -1,6 +1,5 @@
 package com.defty.movie.repository;
 
-import com.defty.movie.entity.Actor;
 import com.defty.movie.entity.Category;
 import com.defty.movie.entity.Movie;
 import com.defty.movie.entity.MovieCategory;

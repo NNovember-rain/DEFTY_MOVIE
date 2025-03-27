@@ -1,9 +1,9 @@
 package com.defty.movie.entity;
 
+import com.defty.movie.listener.MovieListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Where;
 
 import java.util.Date;
 import java.util.Set;
@@ -11,6 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@EntityListeners(MovieListener.class)
 @Table(name = "movie")
 public class Movie extends BaseEntity{
     @Column(name = "title")
@@ -48,6 +49,9 @@ public class Movie extends BaseEntity{
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private Set<MovieCategory> movieCategories;
+
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY)
+    Set<MovieHistory> movieHistories;
 
     @ManyToOne
     @JoinColumn(name = "director_id", nullable = false)

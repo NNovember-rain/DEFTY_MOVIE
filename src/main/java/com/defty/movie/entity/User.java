@@ -85,6 +85,9 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     Set<MovieCommentReaction> movieCommentReactions;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    Set<MovieHistory> movieHistories;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

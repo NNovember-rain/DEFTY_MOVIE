@@ -3,7 +3,6 @@ package com.defty.movie.mapper;
 import com.defty.movie.dto.request.ShowonRequest;
 import com.defty.movie.dto.response.ShowonResponse;
 import com.defty.movie.dto.response.SubCategoryResponse;
-import com.defty.movie.entity.Category;
 import com.defty.movie.entity.Movie;
 import com.defty.movie.entity.MovieCategory;
 import com.defty.movie.entity.Showon;
@@ -15,7 +14,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 

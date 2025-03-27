@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/user/access/moviedetail")
+@RequestMapping("${api.prefix}/user/accessible/moviedetail")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MovieDetailController {
 

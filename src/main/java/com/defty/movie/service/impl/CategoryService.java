@@ -6,7 +6,6 @@ import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Category;
-import com.defty.movie.entity.Category;
 import com.defty.movie.entity.Movie;
 import com.defty.movie.entity.MovieCategory;
 import com.defty.movie.exception.CustomDateException;
@@ -29,7 +28,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

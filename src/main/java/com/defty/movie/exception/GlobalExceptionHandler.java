@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
         return errorResponse;
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({Exception.class, JsonHandlerException.class})
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public com.defty.movie.exception.ErrorResponse handleGeneralException(Exception e, WebRequest request) {
         com.defty.movie.exception.ErrorResponse errorResponse = new com.defty.movie.exception.ErrorResponse();

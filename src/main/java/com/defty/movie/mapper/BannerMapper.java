@@ -4,12 +4,14 @@ import com.defty.movie.dto.request.BannerRequest;
 import com.defty.movie.dto.response.BannerResponse;
 import com.defty.movie.dto.response.SubBannerResponse;
 import com.defty.movie.entity.Banner;
+import com.defty.movie.entity.Category;
+import com.defty.movie.entity.Movie;
+import com.defty.movie.entity.MovieCategory;
 import com.defty.movie.repository.ICategoryRepository;
 import com.defty.movie.repository.IMovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import com.defty.movie.entity.*;
 
 import java.util.*;
 

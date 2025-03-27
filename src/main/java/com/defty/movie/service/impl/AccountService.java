@@ -1,6 +1,8 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.AccountRequest;
+import com.defty.movie.dto.request.AccoutProfileRequest;
+import com.defty.movie.dto.request.PasswordChangeRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.entity.Account;
 import com.defty.movie.entity.Role;
@@ -13,11 +15,11 @@ import com.defty.movie.repository.IRoleRepository;
 import com.defty.movie.service.IAccountService;
 import com.defty.movie.service.IAuthService;
 import com.defty.movie.utils.UploadImageUtil;
+import com.defty.movie.validation.ChangePasswordValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,6 +40,7 @@ public class AccountService implements IAccountService {
     UploadImageUtil uploadImageUtil;
     String PREFIX_ACCOUNT = "ACCOUNT | ";
     IAuthService authService;
+    ChangePasswordValidation changePasswordValidation;
 
     @Override
     public AccountResponse createAccount(AccountRequest accountRequest) {
@@ -160,10 +163,15 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public void updateProfile(AccountRequest accountRequest) {
+    public void updateProfile(AccoutProfileRequest accountRequest) {
         Optional<Account> accountOptional= authService.getCurrentAccount();
         Account account= accountOptional.get();
-        BeanUtils.copyProperties(accountRequest, account);
+        account.setFullName(accountRequest.getFullName());
+        account.setPhone(accountRequest.getPhone());
+        account.setAddress(accountRequest.getAddress());
+        account.setGender(accountRequest.getGender());
+        account.setDateOfBirth(accountRequest.getDateOfBirth());
+
         if(!accountRequest.getAvatar().isEmpty()) {
             try {
                 account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
@@ -172,5 +180,17 @@ public class AccountService implements IAccountService {
             }
         }
         accountRepository.save(account);
+    }
+
+    @Override
+    public void updatePassword(PasswordChangeRequest passwordChangeRequest) {
+        changePasswordValidation.fieldValidation(passwordChangeRequest);
+        Optional<Account> accountOptional= authService.getCurrentAccount();
+        Account account= accountOptional.get();
+        if(passwordEncoder.matches(passwordChangeRequest.getOldPassword(), account.getPassword())) {
+            if(passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getOldPassword())) throw new RuntimeException("Please choose another new password !");
+            account.setPassword(passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
+            accountRepository.save(account);
+        }else throw new RuntimeException("Old password is wrong");
     }
 }

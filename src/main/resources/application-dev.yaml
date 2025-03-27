@@ -9,10 +9,9 @@ spring:
       max-request-size: 3000MB
 
   datasource:
-    url: jdbc:mysql://localhost:3306/defty_movie_dev
-#    url: jdbc:mysql://movie-advance.cn2k6s0skt43.ap-southeast-2.rds.amazonaws.com:3306/movie_advance
+    url: jdbc:mysql://localhost:3306/movie
     username: root
-    password: 12345
+    password: 1234
 
   jpa:
     hibernate:
@@ -21,7 +20,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect  # Đảm bảo sử dụng đúng Dialect cho MySQL 8
         format_sql: true  # Hiển thị SQL đã định dạng đẹp (kèm theo tham số)
-#        show_sql: true  # In câu lệnh SQL ra console
+        show_sql: none  # In câu lệnh SQL ra console
         use_sql_comments: true  # Thêm các chú thích SQL (nếu cần thiết)
 
 springdoc:
@@ -50,3 +49,7 @@ aws:
     region: ap-southeast-2
     bucket:
       name: defty-movie
+
+redis:
+  host: localhost
+  port: 6379
