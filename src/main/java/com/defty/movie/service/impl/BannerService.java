@@ -67,6 +67,7 @@ public class BannerService implements IBannerService {
 
         try {
             bannerEntity.setLink(link);
+            bannerEntity.setStatus(1);
             bannerRepository.save(bannerEntity);
             log.info(PREFIX_BANNER_SERVICE + "create banner successfully");
         }

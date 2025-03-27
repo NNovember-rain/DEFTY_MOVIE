@@ -32,7 +32,7 @@ public class Article extends BaseEntity{
     String slug;
 
     @Column
-    Integer status=1;
+    Integer status;
 
     @ManyToOne
     @JoinColumn(name="account_id")

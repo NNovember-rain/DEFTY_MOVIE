@@ -1,14 +1,16 @@
 package com.defty.movie.controller.user;
 
-import com.defty.movie.dto.response.EpisodeResponse;
-import com.defty.movie.dto.response.MovieDetailDirectorActorResponse;
-import com.defty.movie.dto.response.MovieDetailResponse;
+import com.defty.movie.dto.response.*;
 import com.defty.movie.service.IMovieDetailService;
 import com.defty.movie.utils.ApiResponeUtil;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +32,12 @@ public class MovieDetailController {
     }
 
     @GetMapping("/episode")
-    public Object getDetailMovieEpisode(@RequestParam(value = "slugMovie") String slugMovie) {
-        List<EpisodeResponse> episodeResponses = movieDetailService.getEpisodes(slugMovie);
+    public Object getDetailMovieEpisode(@RequestParam(value = "slugMovie") String slugMovie,
+                                        @Valid @RequestParam(value = "page", defaultValue = "0") int page,
+                                        @RequestParam(value = "size", defaultValue = "10") int size)
+    {
+        Pageable pageable = PageRequest.of(page, size);
+        PageableResponse<EpisodeResponse> episodeResponses = movieDetailService.getEpisodes(slugMovie,pageable);
         return ApiResponeUtil.ResponseOK(episodeResponses);
     }
 

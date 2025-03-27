@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface IEpisodeRepository extends JpaRepository<Episode, Integer> {
     @Query(value = "SELECT e FROM Episode e WHERE " +
             "(:number IS NULL OR e.number = :number) AND " +
@@ -25,4 +27,8 @@ public interface IEpisodeRepository extends JpaRepository<Episode, Integer> {
             @Param("status") Integer status,
             @Param("movieId") Integer movieId,
             Pageable pageable);
+
+    Page<Episode> findByMovieIdAndStatusOrderByNumber(Integer movieId, Integer status, Pageable pageable);
+
+    List<Episode> findByMovieIdAndStatus(Integer movieId, Integer status);
 }
