@@ -40,4 +40,5 @@ public class MovieUserController {
             List<MovieRedisDTO> movieNameResponseList = movieUserRedisService.getAllMovie(title);
         return ApiResponeUtil.ResponseOK(movieNameResponseList);
     }
+
 }
