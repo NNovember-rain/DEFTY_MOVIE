@@ -15,4 +15,5 @@ public interface IMovieService {
     ApiResponse<List<Integer>> deleteMovie(List<Integer> ids);
     ApiResponse<Integer> changeStatus(Integer id);
     Object getMovie(Integer id);
+    Object getEpisodeOfMovieDetails(Integer episodeId);
 }

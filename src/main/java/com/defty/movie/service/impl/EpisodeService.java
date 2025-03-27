@@ -2,17 +2,15 @@ package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.EpisodeRequest;
 import com.defty.movie.dto.response.ApiResponse;
-import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.dto.response.EpisodeResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Episode;
-import com.defty.movie.exception.ImageUploadException;
+import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.EpisodeMapper;
 import com.defty.movie.repository.IEpisodeRepository;
 import com.defty.movie.service.IEpisodeService;
 import com.defty.movie.utils.UploadImageUtil;
-import com.defty.movie.utils.UploadVideoUtil;
 import com.defty.movie.validation.EpisodeValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -49,7 +44,7 @@ public class EpisodeService implements IEpisodeService {
                 episode.setThumbnail(uploadImageUtil.upload(episodeRequest.getThumbnail()));
             }
             catch(Exception e){
-                throw new ImageUploadException("Could not upload the image, please try again later!");
+                throw new MediaUploadException("Could not upload the image, please try again later!");
             }
         }
         else {
@@ -95,7 +90,7 @@ public class EpisodeService implements IEpisodeService {
                     updatedEpisode.setThumbnail(uploadImageUtil.upload(episodeRequest.getThumbnail()));
                 }
                 catch(Exception e){
-                    throw new ImageUploadException("Could not upload the image, please try again later!");
+                    throw new MediaUploadException("Could not upload the image, please try again later!");
                 }
             }
             episodeRepository.save(updatedEpisode);

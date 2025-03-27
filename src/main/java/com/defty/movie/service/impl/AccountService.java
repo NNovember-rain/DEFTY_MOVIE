@@ -5,7 +5,7 @@ import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.entity.Account;
 import com.defty.movie.entity.Role;
 import com.defty.movie.exception.AlreadyExitException;
-import com.defty.movie.exception.ImageUploadException;
+import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.AccountMapper;
 import com.defty.movie.repository.IAccountRepository;
@@ -123,7 +123,7 @@ public class AccountService implements IAccountService {
                 account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
             }catch (Exception e){
                 log.error("{}Could not upload the image", PREFIX_ACCOUNT);
-                throw new ImageUploadException("Could not upload the image, please try again later !");
+                throw new MediaUploadException("Could not upload the image, please try again later !");
             }
         }
         account.setDateOfBirth(accountRequest.getDateOfBirth());

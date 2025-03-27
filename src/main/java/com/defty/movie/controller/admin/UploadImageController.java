@@ -1,6 +1,6 @@
 package com.defty.movie.controller.admin;
 
-import com.defty.movie.exception.ImageUploadException;
+import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.utils.ApiResponeUtil;
 import com.defty.movie.utils.UploadImageUtil;
 import lombok.AccessLevel;
@@ -28,8 +28,8 @@ public class UploadImageController {
                 return ApiResponeUtil.ResponseCreatedSuccess(imageLink);
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new ImageUploadException("Could not upload the image, please try again later !");
+                throw new MediaUploadException("Could not upload the image, please try again later !");
             }
-        }else throw new ImageUploadException("Could not upload the image, please choose an image !");
+        }else throw new MediaUploadException("Could not upload the image, please choose an image !");
     }
 }

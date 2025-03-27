@@ -66,7 +66,7 @@ public class CategoryController {
         return categoryService.addMovie(categoryId, movieIds);
     }
 
-    @PatchMapping("/{categoryId}/movies")
+    @GetMapping("/{categoryId}/movies")
     @PreAuthorize("@requiredPermission.checkPermission('GET_MOVIE_BY_CATEGORY')")
     public Object getMoviesByCategory(Pageable pageable,
                                       @PathVariable Integer categoryId,
@@ -84,7 +84,7 @@ public class CategoryController {
         return categoryService.deleteMovie(categoryId, movieIds);
     }
 
-    @PatchMapping("/{categoryId}/other-movies")
+    @GetMapping("/{categoryId}/other-movies")
     @PreAuthorize("@requiredPermission.checkPermission('GET_MOVIE_NOT_IN_CATEGORY')")
     public Object getMoviesNotInCategory(Pageable pageable,
                                          @PathVariable Integer categoryId,
