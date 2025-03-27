@@ -168,7 +168,7 @@ public class AccountService implements IAccountService {
             try {
                 account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
             } catch (Exception e) {
-                throw new ImageUploadException("Could not upload the image, please try again later !");
+                throw new MediaUploadException("Could not upload the image, please try again later !");
             }
         }
         accountRepository.save(account);

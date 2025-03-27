@@ -11,6 +11,7 @@ import com.defty.movie.mapper.EpisodeMapper;
 import com.defty.movie.repository.IEpisodeRepository;
 import com.defty.movie.service.IEpisodeService;
 import com.defty.movie.utils.UploadImageUtil;
+import com.defty.movie.utils.UploadVideoUtil;
 import com.defty.movie.validation.EpisodeValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class EpisodeService implements IEpisodeService {
     IEpisodeRepository episodeRepository;
     EpisodeValidation episodeValidation;
     UploadImageUtil uploadImageUtil;
+    UploadVideoUtil uploadVideoUtil;
 
     @Override
     public ApiResponse<Integer> addEpisode(EpisodeRequest episodeRequest) {
@@ -49,6 +51,16 @@ public class EpisodeService implements IEpisodeService {
         }
         else {
             episode.setThumbnail(null);
+        }
+        if(episodeRequest.getLink() != null && !episodeRequest.getLink().isEmpty()) {
+            try {
+                episode.setLink(uploadVideoUtil.upload(episodeRequest.getLink()));
+            } catch (Exception e) {
+                throw new MediaUploadException("Could not upload the video, please try again later! " + e);
+            }
+        }
+        else{
+            episode.setLink(null);
         }
 
         try{
@@ -91,6 +103,13 @@ public class EpisodeService implements IEpisodeService {
                 }
                 catch(Exception e){
                     throw new MediaUploadException("Could not upload the image, please try again later!");
+                }
+            }
+            if(episodeRequest.getLink() != null && !episodeRequest.getLink().isEmpty()) {
+                try {
+                    updatedEpisode.setLink(uploadVideoUtil.upload(episodeRequest.getLink()));
+                } catch (Exception e) {
+                    throw new MediaUploadException("Could not upload the video, please try again later! " + e);
                 }
             }
             episodeRepository.save(updatedEpisode);
