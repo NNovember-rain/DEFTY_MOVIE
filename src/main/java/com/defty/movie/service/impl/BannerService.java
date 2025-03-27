@@ -181,6 +181,26 @@ public class BannerService implements IBannerService {
     }
 
     @Override
+    public ApiResponse<PageableResponse<BannerResponse>> userGetAllBanners(Pageable pageable, String title, Integer status) {
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
+        Page<Banner> banners = bannerRepository.userFindBanners(title, status, sortedPageable);
+        List<BannerResponse> bannerResponses = new ArrayList<>();
+        if (banners.isEmpty()){
+            throw new NotFoundException("Not found exception");
+        }
+        else {
+            for(Banner c : banners){
+                BannerResponse bannerResponse = bannerMapper.toBannerResponse(c);
+                bannerResponses.add(bannerResponse);
+            }
+            PageableResponse<BannerResponse> pageableResponse= new PageableResponse<>(bannerResponses, banners.getTotalElements());
+            log.info(PREFIX_BANNER_SERVICE + "get banners successfully");
+            return new ApiResponse<>(200, "OK", pageableResponse);
+        }
+    }
+
+
+    @Override
     public Object getBanner(Integer id) {
         Optional<Banner> banner = bannerRepository.findById(id);
         BannerResponse bannerResponse = bannerMapper.toBannerResponse(banner.get());

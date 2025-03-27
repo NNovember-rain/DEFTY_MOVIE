@@ -1,8 +1,6 @@
 package com.defty.movie.controller.user;
 
-import com.defty.movie.dto.response.MovieRedisDTO;
 import com.defty.movie.dto.response.MovieSearchResultResponse;
-import com.defty.movie.service.IMovieUserRedisService;
 import com.defty.movie.service.IMovieUserService;
 import com.defty.movie.utils.ApiResponeUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,22 +21,5 @@ import java.util.List;
 @RequestMapping("${api.prefix}/user/accessible/movie")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MovieUserController {
-
-    IMovieUserService movieUserService;
-    IMovieUserRedisService movieUserRedisService;
-
-
-    @GetMapping("/movie-search/result")
-    public Object getMovies(@RequestParam String title) {
-        List<MovieSearchResultResponse> movieDetailResponse = movieUserService.getMovies(title);
-        return ApiResponeUtil.ResponseOK(movieDetailResponse);
-    }
-
-    // API tìm kiếm phim theo tên
-    @GetMapping("/movie-search")
-    public Object findByMovieName(@RequestParam String title) throws JsonProcessingException {
-            List<MovieRedisDTO> movieNameResponseList = movieUserRedisService.getAllMovie(title);
-        return ApiResponeUtil.ResponseOK(movieNameResponseList);
-    }
 
 }
