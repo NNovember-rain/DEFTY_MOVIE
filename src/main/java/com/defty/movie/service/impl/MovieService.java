@@ -4,18 +4,16 @@ import com.defty.movie.dto.request.MovieRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.dto.response.PageableResponse;
-import com.defty.movie.entity.*;
 import com.defty.movie.exception.CustomDateException;
-import com.defty.movie.exception.ImageUploadException;
+import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.MovieMapper;
+import com.defty.movie.entity.Director;
+import com.defty.movie.entity.Movie;
 import com.defty.movie.repository.IDirectorRepository;
 import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IMovieService;
-import com.defty.movie.utils.DateUtil;
-import com.defty.movie.utils.SlugUtil;
-import com.defty.movie.utils.UploadImageUtil;
-import com.defty.movie.utils.UploadVideoUtil;
+import com.defty.movie.utils.*;
 import com.defty.movie.validation.MovieValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +56,7 @@ public class MovieService implements IMovieService {
             try {
                 newMovie.setTrailer(uploadVideoUtil.upload(movieRequest.getTrailer()));
             } catch (Exception e) {
-                throw new ImageUploadException("Could not upload the video, please try again later!");
+                throw new MediaUploadException("Could not upload the video, please try again later!");
             }
         }
 
@@ -128,30 +126,44 @@ public class MovieService implements IMovieService {
         if(movie.isPresent()){
             Movie updatedMovie = movie.get();
             /*copy different fields from movieRequest to updatedMovie*/
-            BeanUtils.copyProperties(movieRequest, updatedMovie, "id");
+            CopyUtil.copyPropertiesIgnoreNull(movieRequest, updatedMovie);
             updatedMovie.setSlug(slugUtil.createSlug(movieRequest.getTitle(), id));
+
             if (movieRequest.getThumbnail() != null && !movieRequest.getThumbnail().isEmpty()) {
                 try {
                     updatedMovie.setThumbnail(uploadImageUtil.upload(movieRequest.getThumbnail()));
                 }
                 catch (Exception e){
-                    throw new ImageUploadException("Could not upload the image, please try again later!");
+                    throw new MediaUploadException("Could not upload the image, please try again later!" + e);
                 }
             }
             else{
                 updatedMovie.setThumbnail(null);
             }
+
             if (movieRequest.getCoverImage() != null && !movieRequest.getCoverImage().isEmpty()) {
                 try {
                     updatedMovie.setCoverImage(uploadImageUtil.upload(movieRequest.getCoverImage()));
                 }
                 catch (Exception e){
-                    throw new ImageUploadException("Could not upload the image, please try again later!");
+                    throw new MediaUploadException("Could not upload the image, please try again later!" + e);
                 }
             }
             else{
                 updatedMovie.setCoverImage(null);
             }
+
+            if(movieRequest.getTrailer() != null && !movieRequest.getTrailer().isEmpty()) {
+                try {
+                    updatedMovie.setTrailer(uploadVideoUtil.upload(movieRequest.getTrailer()));
+                } catch (Exception e) {
+                    throw new MediaUploadException("Could not upload the video, please try again later! " + e);
+                }
+            }
+            else{
+                updatedMovie.setTrailer(null);
+            }
+
             Optional<Director> director = directorRepository.findByFullName(movieRequest.getDirector());
             director.ifPresent(updatedMovie::setDirector);
             movieRepository.save(updatedMovie);
@@ -201,6 +213,11 @@ public class MovieService implements IMovieService {
             return new ApiResponse<>(200, "OK", movieMapper.toMovieResponseDTO(movie.get()));
         }
         return new ApiResponse<>(200, "Movie doesn't exist", null);
+    }
+
+    @Override
+    public Object getEpisodeOfMovieDetails(Integer episodeId) {
+        return null;
     }
 
 

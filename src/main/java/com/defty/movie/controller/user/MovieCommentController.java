@@ -1,9 +1,7 @@
 package com.defty.movie.controller.user;
 
 import com.defty.movie.dto.request.MovieCommentRequest;
-import com.defty.movie.dto.request.MovieCommentRequest;
 import com.defty.movie.dto.response.MovieCommentResponse;
-import com.defty.movie.entity.MovieComment;
 import com.defty.movie.service.IMovieCommentService;
 import com.defty.movie.utils.ApiResponeUtil;
 import lombok.RequiredArgsConstructor;

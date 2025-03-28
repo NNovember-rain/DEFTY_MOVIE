@@ -3,7 +3,6 @@ package com.defty.movie.controller.admin;
 import com.defty.movie.dto.request.ShowonRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.service.IShowonService;
-import com.defty.movie.service.impl.ShowonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +23,7 @@ public class ShowonController {
         return showonService.addShowon(showonRequest);
 
     }
-
+    
     @PatchMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_SHOWON')")
     public ApiResponse<Integer> patchShowon(@PathVariable Integer id, @ModelAttribute ShowonRequest showonRequest) {
@@ -56,5 +55,12 @@ public class ShowonController {
     @PreAuthorize("@requiredPermission.checkPermission('CHANGE_SHOWON_STATUS')")
     public ApiResponse<Integer> changeStatus(@PathVariable Integer id) {
         return showonService.changeStatus(id);
+    }
+
+    @GetMapping("/all-content")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_CONTENT_BY_CONTENT_TYPE')")
+    public Object getContentByContentType(@RequestParam(name="contentType") String contentType,
+                                 @RequestParam(required = false, name="title") String title) {
+        return showonService.getContentByContentType(contentType,title);
     }
 }

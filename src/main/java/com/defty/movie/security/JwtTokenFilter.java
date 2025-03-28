@@ -65,6 +65,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                 );
                         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                        filterChain.doFilter(request, response);
                     }
                 } else {
                     Optional<User> user = userRepository.findByUsername(username);
@@ -79,11 +80,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     );
                             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                            filterChain.doFilter(request, response);
                         }
                     }
                 }
-            }
-            filterChain.doFilter(request, response);
+            }else filterChain.doFilter(request, response);
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Invalid token");
         }

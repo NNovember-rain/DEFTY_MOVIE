@@ -3,7 +3,6 @@ package com.defty.movie.controller.user;
 import com.defty.movie.dto.request.ArticleCommentReactionRequest;
 import com.defty.movie.dto.request.ArticleCommentReactionUpdateRequest;
 import com.defty.movie.service.IArticleCommentReactionService;
-import com.defty.movie.service.impl.ArticleCommentReactionService;
 import com.defty.movie.utils.ApiResponeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

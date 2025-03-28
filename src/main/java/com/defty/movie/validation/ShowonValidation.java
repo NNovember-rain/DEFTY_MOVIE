@@ -1,6 +1,5 @@
 package com.defty.movie.validation;
 
-import com.defty.movie.dto.request.ActorRequest;
 import com.defty.movie.dto.request.ShowonRequest;
 import com.defty.movie.exception.FieldRequiredException;
 import org.springframework.stereotype.Component;

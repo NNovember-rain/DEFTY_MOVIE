@@ -2,18 +2,13 @@ package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.MovieRequest;
 import com.defty.movie.dto.response.ApiResponse;
-import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.service.IMovieService;
-import com.defty.movie.service.impl.MovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController

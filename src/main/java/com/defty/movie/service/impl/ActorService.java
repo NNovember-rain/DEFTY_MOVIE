@@ -1,14 +1,14 @@
 package com.defty.movie.service.impl;
 
+import com.defty.movie.exception.CustomDateException;
+import com.defty.movie.exception.MediaUploadException;
+import com.defty.movie.exception.NotFoundException;
+import com.defty.movie.mapper.ActorMapper;
 import com.defty.movie.dto.request.ActorRequest;
 import com.defty.movie.dto.response.ActorResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Actor;
-import com.defty.movie.exception.CustomDateException;
-import com.defty.movie.exception.ImageUploadException;
-import com.defty.movie.exception.NotFoundException;
-import com.defty.movie.mapper.ActorMapper;
 import com.defty.movie.repository.IActorRepository;
 import com.defty.movie.service.IActorService;
 import com.defty.movie.utils.DateUtil;
@@ -22,11 +22,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -48,7 +45,7 @@ public class ActorService implements IActorService {
                 actorEntity.setAvatar(uploadImageUtil.upload(actorRequest.getAvatar()));
             }
             catch (Exception e){
-                throw new ImageUploadException("Could not upload the image, please try again later!");
+                throw new MediaUploadException("Could not upload the image, please try again later!");
             }
         }
         else {
@@ -77,7 +74,7 @@ public class ActorService implements IActorService {
                     updatedActor.setAvatar(uploadImageUtil.upload(actorRequest.getAvatar()));
                 }
                 catch (Exception e){
-                    throw new ImageUploadException("Could not upload the image, please try again later!");
+                    throw new MediaUploadException("Could not upload the image, please try again later!");
                 }
             }
 

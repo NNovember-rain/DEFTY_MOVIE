@@ -1,6 +1,8 @@
 package com.defty.movie.service;
 
 import com.defty.movie.dto.request.AccountRequest;
+import com.defty.movie.dto.request.AccoutProfileRequest;
+import com.defty.movie.dto.request.PasswordChangeRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,5 +16,6 @@ public interface IAccountService {
     AccountResponse updateAccount(Integer id, AccountRequest accountRequest);
     AccountResponse getAccount(Integer id);
     Integer switchStatus(Integer id);
-    void updateProfile(AccountRequest accountRequest);
+    void updateProfile(AccoutProfileRequest accountRequest);
+    void updatePassword(PasswordChangeRequest passwordChangeRequest);
 }

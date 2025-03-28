@@ -1,6 +1,8 @@
 package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.AccountRequest;
+import com.defty.movie.dto.request.AccoutProfileRequest;
+import com.defty.movie.dto.request.PasswordChangeRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.service.IAccountService;
@@ -88,8 +90,21 @@ public class AccountController {
 
     @PatchMapping("/profile")
     @PreAuthorize("@requiredPermission.checkPermission('UPDATE_PROFILE')")
-    public ResponseEntity<?> updateProfile(@ModelAttribute AccountRequest accountRequest) {
+    public ResponseEntity<?> updateProfile(@ModelAttribute AccoutProfileRequest accountRequest) {
         accountService.updateProfile(accountRequest);
+        log.info(PREFIX_ACCOUNT + "update profile account success");
+        ApiResponse<?> response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data("update profile account success")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/profile/password")
+    @PreAuthorize("@requiredPermission.checkPermission('UPDATE_PASSWORD_PROFILE')")
+    public ResponseEntity<?> updatePassword(@RequestBody PasswordChangeRequest passwordChangeRequest) {
+        accountService.updatePassword(passwordChangeRequest);
         log.info(PREFIX_ACCOUNT + "update profile account success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())

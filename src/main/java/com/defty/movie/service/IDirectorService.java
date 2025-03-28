@@ -1,12 +1,10 @@
 package com.defty.movie.service;
 
 import com.defty.movie.dto.request.DirectorRequest;
-import com.defty.movie.dto.response.ActorResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.DirectorResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 

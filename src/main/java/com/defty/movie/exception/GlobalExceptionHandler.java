@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
         return errorResponse;
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({Exception.class, JsonHandlerException.class})
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public com.defty.movie.exception.ErrorResponse handleGeneralException(Exception e, WebRequest request) {
         com.defty.movie.exception.ErrorResponse errorResponse = new com.defty.movie.exception.ErrorResponse();
@@ -120,9 +120,9 @@ public class GlobalExceptionHandler {
         return errorResponseDTO;
     }
 
-    @ExceptionHandler(ImageUploadException.class)
+    @ExceptionHandler(MediaUploadException.class)
     @ResponseStatus(HttpStatus.OK)
-    public com.defty.movie.exception.ErrorResponse handleImageUploadException(ImageUploadException e, WebRequest request) {
+    public com.defty.movie.exception.ErrorResponse handleImageUploadException(MediaUploadException e, WebRequest request) {
         com.defty.movie.exception.ErrorResponse errorResponse = new com.defty.movie.exception.ErrorResponse();
         errorResponse.setTimestamp(new Date());
         errorResponse.setPath(request.getDescription(false).replace("uri=", ""));

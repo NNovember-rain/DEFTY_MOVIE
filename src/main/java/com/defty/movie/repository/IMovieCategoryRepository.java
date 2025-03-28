@@ -1,6 +1,5 @@
 package com.defty.movie.repository;
 
-import com.defty.movie.entity.Movie;
 import com.defty.movie.entity.MovieCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

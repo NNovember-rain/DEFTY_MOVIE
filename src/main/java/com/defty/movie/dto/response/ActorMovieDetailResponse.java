@@ -4,33 +4,15 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
 import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ActorMovieDetailResponse {
-    Integer id;
 
     String fullName;
 
-    String gender;
+    String slug;
 
-    Date dateOfBirth;
-
-    Integer weight;
-
-    Integer height;
-
-    String nationality;
-
-    Integer position;
-
-    String description;
-
-    String avatar;
-
-    Integer status;
-
-    List<MovieResponse> movies;
+    List<MovieNameResponse> movies;
 }

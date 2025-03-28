@@ -3,7 +3,6 @@ import com.defty.movie.dto.response.UserResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.User;
-import com.defty.movie.entity.User;
 import com.defty.movie.exception.CustomDateException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.UserMapper;
@@ -19,8 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service

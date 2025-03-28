@@ -3,7 +3,6 @@ package com.defty.movie.controller.user;
 import com.defty.movie.dto.response.DirectorResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.service.IDirectorService;
-import com.defty.movie.service.IDirectorService;
 import com.defty.movie.utils.ApiResponeUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

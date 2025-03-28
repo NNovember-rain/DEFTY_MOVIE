@@ -2,11 +2,7 @@ package com.defty.movie.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-import org.hibernate.annotations.Where;
 
-import java.util.List;
 import java.util.Set;
 
 @Data

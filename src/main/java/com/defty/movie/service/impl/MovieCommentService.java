@@ -1,11 +1,13 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.MovieCommentRequest;
-import com.defty.movie.dto.response.ArticleCommentResponse;
 import com.defty.movie.dto.response.MovieCommentResponse;
-import com.defty.movie.entity.*;
+import com.defty.movie.exception.FieldRequiredException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.MovieCommentMapper;
+import com.defty.movie.entity.Episode;
+import com.defty.movie.entity.MovieComment;
+import com.defty.movie.entity.User;
 import com.defty.movie.repository.IEpisodeRepository;
 import com.defty.movie.repository.IMovieCommentRepository;
 import com.defty.movie.service.IAuthUserService;
@@ -55,6 +57,8 @@ public class MovieCommentService implements IMovieCommentService {
             throw new NotFoundException("Episode not found");
         }
 
+        if(movieCommentRequest.getContent() == null || movieCommentRequest.getContent().isEmpty()) throw new FieldRequiredException("Field ïs required");
+
         if(movieCommentRequest.getParentEpisodeCommentId()!=null) {
             Optional<MovieComment> movieCommentParent= movieCommentRepository.findById(movieCommentRequest.getParentEpisodeCommentId());
             if(movieCommentParent.isPresent()) {
@@ -78,6 +82,7 @@ public class MovieCommentService implements IMovieCommentService {
     @Override
     public void updateMovieComment(Integer id, MovieCommentRequest movieCommentRequest) {
         Optional<MovieComment> movieComment = movieCommentRepository.findById(id);
+        if(movieCommentRequest.getContent() == null || movieCommentRequest.getContent().isEmpty()) throw new FieldRequiredException("Field ïs required");
         if(movieComment.isPresent()) {
             log.info(PREFIX_MOVIE_COMMENT + "Get episode comment by episodeId="+id+ " success");
             MovieComment movieCommentUpdate = movieComment.get();

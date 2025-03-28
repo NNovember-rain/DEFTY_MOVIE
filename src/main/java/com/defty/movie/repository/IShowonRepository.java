@@ -1,11 +1,14 @@
 package com.defty.movie.repository;
 
+import com.defty.movie.entity.Category;
 import com.defty.movie.entity.Showon;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface IShowonRepository extends JpaRepository<Showon, Integer> {
     @Query("SELECT s FROM Showon s " +
@@ -19,6 +22,22 @@ public interface IShowonRepository extends JpaRepository<Showon, Integer> {
                                @Param("status") Integer status,
                                Pageable pageable);
 
+    @Query("SELECT s FROM Showon s " +
+            "LEFT JOIN s.category c " +
+            "WHERE (:contentType IS NULL OR s.contentType = :contentType) " +
+            "AND (:contentName IS NULL OR (s.contentType = 'category' AND c.name LIKE %:contentName%)) " +
+            "AND (:status IS NULL OR s.status = :status) " +
+            "AND s.status = 1")
+    Page<Showon> userGetShowons(@Param("contentType") String contentType,
+                            @Param("contentName") String contentName,
+                            @Param("status") Integer status,
+                            Pageable pageable);
+
+
+
+    List<Showon> findByCategory(Category category);
+
+
 //    @Query("SELECT s FROM Showon s " +
 //            "LEFT JOIN s.category c " +
 ////            "LEFT JOIN s.playlist p " +
@@ -30,6 +49,4 @@ public interface IShowonRepository extends JpaRepository<Showon, Integer> {
 //                               @Param("contentName") String contentName,
 //                               @Param("status") Integer status,
 //                               Pageable pageable);
-
-
 }

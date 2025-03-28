@@ -2,13 +2,10 @@ package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.request.EpisodeRequest;
 import com.defty.movie.dto.response.ApiResponse;
-import com.defty.movie.dto.response.EpisodeResponse;
 import com.defty.movie.service.IEpisodeService;
-import com.defty.movie.service.impl.EpisodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

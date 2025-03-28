@@ -1,7 +1,6 @@
 package com.defty.movie.controller.admin;
 
 import com.defty.movie.dto.response.ApiResponse;
-import com.defty.movie.service.IActorService;
 import com.defty.movie.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

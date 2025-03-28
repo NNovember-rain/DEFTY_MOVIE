@@ -4,12 +4,14 @@ import com.defty.movie.dto.request.BannerRequest;
 import com.defty.movie.dto.response.BannerResponse;
 import com.defty.movie.dto.response.SubBannerResponse;
 import com.defty.movie.entity.Banner;
+import com.defty.movie.entity.Category;
+import com.defty.movie.entity.Movie;
+import com.defty.movie.entity.MovieCategory;
 import com.defty.movie.repository.ICategoryRepository;
 import com.defty.movie.repository.IMovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import com.defty.movie.entity.*;
 
 import java.util.*;
 
@@ -19,8 +21,8 @@ public class BannerMapper {
     private final ModelMapper modelMapper;
     private final ICategoryRepository categoryRepository;
     private final IMovieRepository movieRepository;
-    public Banner toBannerEntity(BannerRequest actorRequest){
-        return modelMapper.map(actorRequest, Banner.class);
+    public Banner toBannerEntity(BannerRequest bannerRequest){
+        return modelMapper.map(bannerRequest, Banner.class);
     }
     public BannerResponse toBannerResponse(Banner banner) {
         BannerResponse bannerResponse = modelMapper.map(banner, BannerResponse.class);

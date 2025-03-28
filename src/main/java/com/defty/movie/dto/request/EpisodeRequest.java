@@ -11,6 +11,6 @@ public class EpisodeRequest {
     Integer number;
     String description;
     MultipartFile thumbnail;
-    String link;
+    MultipartFile link;
     Integer movieId;
 }

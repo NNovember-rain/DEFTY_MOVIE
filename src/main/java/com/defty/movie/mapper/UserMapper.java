@@ -3,7 +3,7 @@ package com.defty.movie.mapper;
 import com.defty.movie.dto.request.UserRequest;
 import com.defty.movie.dto.response.UserResponse;
 import com.defty.movie.entity.User;
-import com.defty.movie.exception.ImageUploadException;
+import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.utils.UploadImageUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class UserMapper {
         }catch (Exception e){
             String PREFIX_ACCOUNT = "ACCOUNT | ";
             log.error("{}Could not upload the image, please try again later !", PREFIX_ACCOUNT);
-            throw new ImageUploadException("Could not upload the image, please try again later !");
+            throw new MediaUploadException("Could not upload the image, please try again later !");
         }
         return user;
     }

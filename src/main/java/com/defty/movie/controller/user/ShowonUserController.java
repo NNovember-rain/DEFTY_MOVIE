@@ -1,8 +1,7 @@
 package com.defty.movie.controller.user;
 
 
-import com.defty.movie.dto.request.ShowonRequest;
-import com.defty.movie.dto.response.ApiResponse;
+
 import com.defty.movie.service.IShowonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,9 @@ public class ShowonUserController {
                               @RequestParam(name = "contentType", required = false) String contentType,
                               @RequestParam(name = "contentName", required = false) String contentName,
                               @RequestParam(name = "status", required = false) Integer status) {
-        return showonService.getAllShowons(pageable, contentType,contentName, status);
+        return showonService.userGetAllShowons(pageable, contentType,contentName, status);
     }
+
+
 }
 

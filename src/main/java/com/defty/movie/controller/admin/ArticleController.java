@@ -1,6 +1,5 @@
 package com.defty.movie.controller.admin;
 
-import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.service.IArticleService;
 import com.defty.movie.utils.ApiResponeUtil;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Slf4j

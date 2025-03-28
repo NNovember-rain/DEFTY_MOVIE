@@ -4,7 +4,7 @@ import com.defty.movie.dto.request.AccountRequest;
 import com.defty.movie.dto.response.AccountResponse;
 import com.defty.movie.entity.Account;
 import com.defty.movie.entity.Role;
-import com.defty.movie.exception.ImageUploadException;
+import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.repository.IRoleRepository;
 import com.defty.movie.utils.UploadImageUtil;
 import lombok.AccessLevel;
@@ -46,7 +46,7 @@ public class AccountMapper {
             }catch (Exception e){
                 String PREFIX_ACCOUNT = "ACCOUNT | ";
                 log.error("{}Could not upload the image, please try again later !", PREFIX_ACCOUNT);
-                throw new ImageUploadException("Could not upload the image, please try again later !");
+                throw new MediaUploadException("Could not upload the image, please try again later !");
             }
         }
         return account;

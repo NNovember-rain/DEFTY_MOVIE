@@ -1,11 +1,8 @@
 package com.defty.movie.controller.user;
 
 import com.defty.movie.dto.response.ActorResponse;
-import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PageableResponse;
-import com.defty.movie.entity.Actor;
 import com.defty.movie.service.IActorService;
-import com.defty.movie.service.impl.ActorService;
 import com.defty.movie.utils.ApiResponeUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
