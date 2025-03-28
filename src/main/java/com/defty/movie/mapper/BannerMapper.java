@@ -21,8 +21,8 @@ public class BannerMapper {
     private final ModelMapper modelMapper;
     private final ICategoryRepository categoryRepository;
     private final IMovieRepository movieRepository;
-    public Banner toBannerEntity(BannerRequest bannerRequest){
-        return modelMapper.map(bannerRequest, Banner.class);
+    public Banner toBannerEntity(BannerRequest actorRequest){
+        return modelMapper.map(actorRequest, Banner.class);
     }
     public BannerResponse toBannerResponse(Banner banner) {
         BannerResponse bannerResponse = modelMapper.map(banner, BannerResponse.class);

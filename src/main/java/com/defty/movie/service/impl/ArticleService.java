@@ -127,8 +127,8 @@ public class ArticleService implements IArticleService {
             log.info(PREFIX_ARTICLE + "Get all Articles by title list and pagination" );
         }
         else{
-            articles= ariticleRepository.findAllByStatus(status,pageable).getContent();
-            totalElements=ariticleRepository.findAllByStatus(status).size();
+            articles= ariticleRepository.findAllByStatus(1,pageable).getContent();
+            totalElements=ariticleRepository.findAllByStatus(1).size();
             log.info(PREFIX_ARTICLE + "Get all Articles list and pagination" );
         }
         List<ArticleResponse> articleResponses=new ArrayList<>();

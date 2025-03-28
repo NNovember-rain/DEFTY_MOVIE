@@ -15,7 +15,5 @@ public interface IShowonService {
     ApiResponse<List<Integer>> deleteShowon(List<Integer> ids);
     ApiResponse<Integer> changeStatus(Integer id);
     ApiResponse<PageableResponse<ShowonResponse>> getAllShowons(Pageable pageable,String contentType, String contentName, Integer status);
-    ApiResponse<PageableResponse<ShowonResponse>> userGetAllShowons(Pageable pageable,String contentType, String contentName, Integer status);
     Object getShowon(Integer id);
-    Object getContentByContentType(String contentType,String title);
 }

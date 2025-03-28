@@ -17,7 +17,6 @@ public class ArticleMapper {
 
     public Article toArticleEntity(ArticleRequest articleRequest) {
         Article article = modelMapper.map(articleRequest, Article.class);
-        article.setStatus(1);
         return article;
     }
 

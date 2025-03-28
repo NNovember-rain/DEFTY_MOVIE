@@ -13,7 +13,10 @@ import com.defty.movie.entity.Movie;
 import com.defty.movie.repository.IDirectorRepository;
 import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IMovieService;
-import com.defty.movie.utils.*;
+import com.defty.movie.utils.DateUtil;
+import com.defty.movie.utils.SlugUtil;
+import com.defty.movie.utils.UploadImageUtil;
+import com.defty.movie.utils.UploadVideoUtil;
 import com.defty.movie.validation.MovieValidation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -126,7 +129,7 @@ public class MovieService implements IMovieService {
         if(movie.isPresent()){
             Movie updatedMovie = movie.get();
             /*copy different fields from movieRequest to updatedMovie*/
-            CopyUtil.copyPropertiesIgnoreNull(movieRequest, updatedMovie);
+            BeanUtils.copyProperties(movieRequest, updatedMovie, "id");
             updatedMovie.setSlug(slugUtil.createSlug(movieRequest.getTitle(), id));
 
             if (movieRequest.getThumbnail() != null && !movieRequest.getThumbnail().isEmpty()) {

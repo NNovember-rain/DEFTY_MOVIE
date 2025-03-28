@@ -3,7 +3,6 @@ package com.defty.movie.service.impl;
 import com.defty.movie.dto.response.*;
 import com.defty.movie.entity.*;
 import com.defty.movie.exception.NotFoundException;
-import com.defty.movie.repository.IEpisodeRepository;
 import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IMovieDetailService;
 import lombok.AccessLevel;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +24,6 @@ import java.util.Set;
 public class MovieDetailServiceImpl implements IMovieDetailService {
 
     IMovieRepository movieRepository;
-    IEpisodeRepository episodeRepository;
     
     @Override
     public MovieDetailResponse getMovieDetails(String slugMovie) {
@@ -38,31 +35,25 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
             Set<MovieCategory> movieCategories = movie.getMovieCategories();
             List<CategoryNameResponse> categoryNames = new ArrayList<>();
             for (MovieCategory movieCategory : movieCategories) {
-                    Category category = movieCategory.getCategory();
-                    if(category.getStatus()==1) {
-                        CategoryNameResponse categoryResponse = new CategoryNameResponse();
-                        categoryResponse.setName(category.getName());
-                        categoryResponse.setSlug(category.getSlug());
-                        categoryNames.add(categoryResponse);
-                    }
+                Category category = movieCategory.getCategory();
+                CategoryNameResponse categoryResponse = new CategoryNameResponse();
+                categoryResponse.setName(category.getName());
+                categoryResponse.setSlug(category.getSlug());
+                categoryNames.add(categoryResponse);
             }
 
             Director director = movie.getDirector();
             MovieNameResponse directorResponse = new MovieNameResponse();
-            if(director.getStatus()==1) {
-                directorResponse.setName(director.getFullName());
-                directorResponse.setSlug(director.getSlug());
-            }
+            directorResponse.setName(director.getFullName());
+            directorResponse.setSlug(director.getSlug());
 
             List<ActorNameResponse> actorNames = new ArrayList<>();
             Set<Actor> actors = movie.getActors();
             for (Actor actor : actors) {
-                if(actor.getStatus()==1) {
-                    ActorNameResponse actorResponse = new ActorNameResponse();
-                    actorResponse.setName(actor.getFullName());
-                    actorResponse.setSlug(actor.getSlug());
-                    actorNames.add(actorResponse);
-                }
+                ActorNameResponse actorResponse = new ActorNameResponse();
+                actorResponse.setName(actor.getFullName());
+                actorResponse.setSlug(actor.getSlug());
+                actorNames.add(actorResponse);
             }
 
             Set<Episode> episodes = movie.getEpisodes();
@@ -83,22 +74,18 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
     }
 
     @Override
-    public PageableResponse<EpisodeResponse> getEpisodes(String slugMovie, Pageable pageable) {
+    public List<EpisodeResponse> getEpisodes(String slugMovie) {
         Optional<Movie> movieOptional = movieRepository.findBySlugAndStatus(slugMovie,1);
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
-            PageableResponse<EpisodeResponse> episodePageable = new PageableResponse<>();
-            Long totalElement= (long) episodeRepository.findByMovieIdAndStatus(movie.getId(),1).size();
-            List<Episode> episodes = episodeRepository.findByMovieIdAndStatusOrderByNumber(movie.getId(),1,pageable).getContent();
+            Set<Episode> episodes = movie.getEpisodes();
             List<EpisodeResponse> episodeResponses = new ArrayList<>();
             for (Episode episode : episodes) {
                 EpisodeResponse episodeResponse = new EpisodeResponse();
                 BeanUtils.copyProperties(episode, episodeResponse);
                 episodeResponses.add(episodeResponse);
             }
-            episodePageable.setContent(episodeResponses);
-            episodePageable.setTotalElements(totalElement);
-            return episodePageable;
+            return episodeResponses;
         }else throw new NotFoundException("Movie not found");
     }
 
@@ -113,35 +100,28 @@ public class MovieDetailServiceImpl implements IMovieDetailService {
 
             List<ActorMovieDetailResponse> actorResponses=new ArrayList<>();
             for(Actor actor:actors){
-                if(actor.getStatus()==1) {
-                    ActorMovieDetailResponse actorResponse = new ActorMovieDetailResponse();
-                    actorResponse.setFullName(actor.getFullName());
-                    actorResponse.setSlug(actor.getSlug());
-                    List<Movie> movies= movieRepository.findTop2NewestMoviesByActorId(actor.getId());
-                    List<MovieNameResponse> movieResponses=new ArrayList<>();
-                    for(Movie movie1:movies){
-                        if(movie1.getStatus()==1) {
-                            MovieNameResponse movieResponse = new MovieNameResponse();
-                            movieResponse.setName(movie1.getTitle());
-                            movieResponse.setSlug(movie1.getSlug());
-                            movieResponses.add(movieResponse);
-                        }
-                    }
-                    actorResponse.setMovies(movieResponses);
-                    actorResponses.add(actorResponse);
-                }
-            }
-
-            List<Movie> movies=movieRepository.findTop2NewestMoviesByDirectorId(director.getId());
-            List<MovieNameResponse> movieResponses=new ArrayList<>();
-            for(Movie movie1:movies){
-                if(movie1.getStatus()==1) {
+                ActorMovieDetailResponse actorResponse = new ActorMovieDetailResponse();
+                actorResponse.setFullName(actor.getFullName());
+                actorResponse.setSlug(actor.getSlug());
+                List<Movie> movies= movieRepository.findTop2NewestMoviesByActorId(actor.getId());
+                List<MovieNameResponse> movieResponses=new ArrayList<>();
+                for(Movie movie1:movies){
                     MovieNameResponse movieResponse = new MovieNameResponse();
                     movieResponse.setName(movie1.getTitle());
                     movieResponse.setSlug(movie1.getSlug());
                     movieResponses.add(movieResponse);
                 }
+                actorResponse.setMovies(movieResponses);
+                actorResponses.add(actorResponse);
+            }
 
+            List<Movie> movies=movieRepository.findTop2NewestMoviesByDirectorId(director.getId());
+            List<MovieNameResponse> movieResponses=new ArrayList<>();
+            for(Movie movie1:movies){
+                MovieNameResponse movieResponse = new MovieNameResponse();
+                movieResponse.setName(movie1.getTitle());
+                movieResponse.setSlug(movie1.getSlug());
+                movieResponses.add(movieResponse);
             }
             DirectorMovieDetailResponse directorResponse=new DirectorMovieDetailResponse();
             directorResponse.setFullName(director.getFullName());
