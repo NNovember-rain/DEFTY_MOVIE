@@ -93,4 +93,5 @@ public class CategoryController {
         return categoryService.findMoviesNotInCategory(pageable, categoryId, title, nation, releaseDate, ranking, directorId);
     }
 
+
 }

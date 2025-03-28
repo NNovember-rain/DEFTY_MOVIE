@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -49,4 +50,7 @@ public class Director extends BaseEntity{
     @OneToMany(mappedBy = "director", cascade = CascadeType.ALL, orphanRemoval = true)
     @Where(clause = "status = 1")
     private Set<Movie> movies;
+
+    @ManyToMany(mappedBy = "directors")
+    private Set<Collection> collections = new HashSet<>();
 }

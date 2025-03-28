@@ -1,5 +1,6 @@
 package com.defty.movie.dto.response;
 
+import com.defty.movie.entity.Director;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -34,4 +35,11 @@ public class DirectorResponse {
     Integer status;
 
     String slug;
+
+    public static DirectorResponse fromEntity(Director director) {
+        DirectorResponse response = new DirectorResponse();
+        response.setId(director.getId());
+        response.setFullName(director.getFullName());
+        return response;
+    }
 }

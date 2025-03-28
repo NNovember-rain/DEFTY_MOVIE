@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -70,4 +71,7 @@ public class Movie extends BaseEntity{
 
     @OneToMany(mappedBy = "movie")
     private Set<UserMovie> userMovies;
+
+    @ManyToMany(mappedBy = "movies")
+    private Set<Collection> collections = new HashSet<>();
 }
