@@ -3,6 +3,7 @@ package com.defty.movie.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -34,4 +35,7 @@ public class Category extends BaseEntity {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private Set<Showon> showons;
+
+    @ManyToMany(mappedBy = "categories")
+    private Set<Collection> collections = new HashSet<>();
 }

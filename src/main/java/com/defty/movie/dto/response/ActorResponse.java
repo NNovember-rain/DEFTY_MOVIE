@@ -1,5 +1,6 @@
 package com.defty.movie.dto.response;
 
+import com.defty.movie.entity.Actor;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -33,4 +34,11 @@ public class ActorResponse {
     Integer status;
 
     String slug;
+
+    public static ActorResponse fromEntity(Actor actor) {
+        ActorResponse response = new ActorResponse();
+        response.setId(actor.getId());
+        response.setFullName(actor.getFullName());
+        return response;
+    }
 }

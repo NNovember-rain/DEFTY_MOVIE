@@ -1,5 +1,6 @@
 package com.defty.movie.dto.response;
 
+import com.defty.movie.entity.Movie;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -43,4 +44,14 @@ public class MovieResponse {
     Date modifiedDate;
 
     String modifiedBy;
+
+    public static MovieResponse fromEntity(Movie movie) {
+        MovieResponse response = new MovieResponse();
+        response.setId(movie.getId());
+        response.setTitle(movie.getTitle());
+        response.setNation(movie.getNation());
+        response.setReleaseDate(movie.getReleaseDate());
+        response.setRanking(movie.getRanking());
+        return response;
+    }
 }

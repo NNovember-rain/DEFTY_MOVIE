@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -51,4 +52,7 @@ public class Actor extends BaseEntity{
 
     @ManyToMany(mappedBy = "actors")
     private Set<Movie> movies;
+
+    @ManyToMany(mappedBy = "actors")
+    private Set<Collection> collections = new HashSet<>();
 }
