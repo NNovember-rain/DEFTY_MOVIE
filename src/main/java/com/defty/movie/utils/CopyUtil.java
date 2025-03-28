@@ -9,44 +9,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CopyUtil {
-    // Lấy danh sách thuộc tính null hoặc có kiểu dữ liệu khác nhau giữa source và target
-    public static String[] getIgnoredPropertyNames(Object source, Object target) {
-        final BeanWrapper srcWrapper = new BeanWrapperImpl(source);
-        final BeanWrapper targetWrapper = new BeanWrapperImpl(target);
+    // trả về tên các thuộc tính null của đối tượng
+    public static String[] getNullPropertyNames(Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        PropertyDescriptor[] pds = src.getPropertyDescriptors();
 
-        PropertyDescriptor[] srcPds = srcWrapper.getPropertyDescriptors();
-        Set<String> ignoredNames = new HashSet<>();
-
-        for (PropertyDescriptor srcPd : srcPds) {
-            String propName = srcPd.getName();
-            Object srcValue = srcWrapper.getPropertyValue(propName);
-
-            // Kiểm tra nếu giá trị null -> bỏ qua
-            if (srcValue == null) {
-                ignoredNames.add(propName);
-                continue;
-            }
-
-            // Kiểm tra target có thuộc tính này không
-            if (targetWrapper.isWritableProperty(propName)) {
-                Class<?> srcType = srcPd.getPropertyType();
-                Class<?> targetType = targetWrapper.getPropertyType(propName);
-
-                // Nếu kiểu dữ liệu khác nhau -> bỏ qua
-                if (!srcType.equals(targetType)) {
-                    ignoredNames.add(propName);
-                }
-            } else {
-                // Nếu target không có thuộc tính này -> bỏ qua
-                ignoredNames.add(propName);
-            }
+        Set<String> emptyNames = new HashSet<>();
+        for(PropertyDescriptor pd : pds) {
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (srcValue == null) emptyNames.add(pd.getName());
         }
-
-        return ignoredNames.toArray(new String[0]);
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
     }
 
-    // Copy properties từ source vào target, bỏ qua thuộc tính null hoặc khác kiểu dữ liệu
+    // copy các thuộc tính từ source vào target, bỏ qua các thuộc tính null
     public static void copyPropertiesIgnoreNull(Object src, Object target) {
-        BeanUtils.copyProperties(src, target, getIgnoredPropertyNames(src, target));
+        BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
     }
 }

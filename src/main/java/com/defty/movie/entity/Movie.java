@@ -1,4 +1,6 @@
 package com.defty.movie.entity;
+
+import com.defty.movie.listener.MovieListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@EntityListeners(MovieListener.class)
 @Table(name = "movie")
 public class Movie extends BaseEntity{
     @Column(name = "title")

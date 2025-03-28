@@ -23,7 +23,7 @@ public class ShowonUserController {
                               @RequestParam(name = "contentType", required = false) String contentType,
                               @RequestParam(name = "contentName", required = false) String contentName,
                               @RequestParam(name = "status", required = false) Integer status) {
-        return showonService.userGetAllShowons(pageable, contentType,contentName, status);
+        return showonService.getAllShowons(pageable, contentType,contentName, status);
     }
 
 
