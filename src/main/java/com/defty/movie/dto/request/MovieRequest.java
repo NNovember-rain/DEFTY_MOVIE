@@ -35,6 +35,6 @@ public class MovieRequest {
 
 //    String slug;
 
-    String director;
+    Integer directorId;
 }
 

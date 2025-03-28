@@ -30,7 +30,7 @@ public class MembershipPackage extends BaseEntity {
     @Column
     Integer status;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     String description;
 
     @OneToMany(mappedBy = "membershipPackage")

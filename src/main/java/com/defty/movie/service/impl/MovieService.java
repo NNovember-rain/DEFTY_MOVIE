@@ -47,7 +47,7 @@ public class MovieService implements IMovieService {
         movieValidation.fieldValidation(movieRequest);
 
         Movie movie = movieMapper.toMovieEntity(movieRequest);
-        Optional<Director> director = directorRepository.findByFullName(movieRequest.getDirector());
+        Optional<Director> director = directorRepository.findById(movieRequest.getDirectorId());
         director.ifPresent(movie::setDirector);
         Movie newMovie = movieRepository.save(movie);
         newMovie.setSlug(slugUtil.createSlug(newMovie.getTitle(), newMovie.getId()));
@@ -137,9 +137,6 @@ public class MovieService implements IMovieService {
                     throw new MediaUploadException("Could not upload the image, please try again later!" + e);
                 }
             }
-            else{
-                updatedMovie.setThumbnail(null);
-            }
 
             if (movieRequest.getCoverImage() != null && !movieRequest.getCoverImage().isEmpty()) {
                 try {
@@ -149,9 +146,6 @@ public class MovieService implements IMovieService {
                     throw new MediaUploadException("Could not upload the image, please try again later!" + e);
                 }
             }
-            else{
-                updatedMovie.setCoverImage(null);
-            }
 
             if(movieRequest.getTrailer() != null && !movieRequest.getTrailer().isEmpty()) {
                 try {
@@ -160,11 +154,8 @@ public class MovieService implements IMovieService {
                     throw new MediaUploadException("Could not upload the video, please try again later! " + e);
                 }
             }
-            else{
-                updatedMovie.setTrailer(null);
-            }
 
-            Optional<Director> director = directorRepository.findByFullName(movieRequest.getDirector());
+            Optional<Director> director = directorRepository.findById(movieRequest.getDirectorId());
             director.ifPresent(updatedMovie::setDirector);
             movieRepository.save(updatedMovie);
         }

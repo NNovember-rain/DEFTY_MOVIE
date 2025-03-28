@@ -20,7 +20,7 @@ public class Permission extends BaseEntity {
     @Column(nullable = false, length = 255)
     String name;
 
-    @Column(length = 255)
+    @Column(length = 255, columnDefinition = "TEXT")
     String description;
 
     @OneToMany(mappedBy = "permission", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)

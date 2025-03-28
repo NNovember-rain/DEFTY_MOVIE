@@ -17,21 +17,20 @@
 //@RequiredArgsConstructor
 //@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 //@Slf4j
-//
 //public class CreatedAccountConfig {
-//
 //    PasswordEncoder passwordEncoder;
 //    IRoleRepository roleRepository;
 //
 //    @Bean
 //    ApplicationRunner createAccount(IAccountRepository accountRepository) {
 //        return args -> {
-//            if(accountRepository.findByUsername("dudv").isEmpty()) {
-//                Role role = roleRepository.findByName("Manager");
+//            if(accountRepository.findByUsername("admin").isEmpty()) {
+//                Role role = roleRepository.findByName("Admin");
 //                Account account = Account.builder()
-//                        .username("dudv")
+//                        .username("admin")
 //                        .password(passwordEncoder.encode("123456"))
 //                        .role(role)
+//                        .status(1)
 //                        .build();
 //                accountRepository.save(account);
 //                log.info("Created account successfully: {}", account.getUsername());

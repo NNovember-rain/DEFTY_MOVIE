@@ -1,8 +1,10 @@
 package com.defty.movie.config;
 
 import com.defty.movie.security.JwtTokenFilter;
+import jakarta.servlet.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -15,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.http.HttpMethod.GET;
@@ -45,6 +48,7 @@ public class WebSecurityConfig {
                         .requestMatchers(GET, String.format("%s/admin/auth/check-account", apiPrefix)).permitAll()
                         .requestMatchers(POST, String.format("%s/user/auth/**", apiPrefix)).permitAll()
                         .requestMatchers(GET, String.format("%s/user/auth/check-account", apiPrefix)).permitAll()
+                        .requestMatchers(POST, String.format("%s/admin/upload-image", apiPrefix)).permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
@@ -54,10 +58,34 @@ public class WebSecurityConfig {
         );
         return http.build();
     }
+    @Bean
+    public FilterRegistrationBean<Filter> loggingFilter() {
+        FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new Filter() {
+            public void init(javax.servlet.FilterConfig filterConfig) throws ServletException {
+                // Optionally initialize filter
+            }
+
+            @Override
+            public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
+                    throws IOException, ServletException {
+                // Custom filter logic here
+                chain.doFilter(servletRequest, servletResponse);
+            }
+
+            @Override
+            public void destroy() {
+                // Optionally cleanup resources
+            }
+        });
+        registrationBean.addUrlPatterns("/api/*"); // Customize the URL patterns as needed
+        return registrationBean;
+    }
 
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        corsConfiguration.setAllowedOrigins(List.of("https://movie-fe-43um.vercel.app"));
         corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         corsConfiguration.setAllowedHeaders(List.of("authorization", "content-type", "x-auth-token"));

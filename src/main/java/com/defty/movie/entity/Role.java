@@ -21,7 +21,7 @@ public class Role extends BaseEntity {
     @Column(nullable = false, length = 255)
     String name;
 
-    @Column(length = 255)
+    @Column(length = 255, columnDefinition = "TEXT")
     String description;
 
     @Builder.Default
