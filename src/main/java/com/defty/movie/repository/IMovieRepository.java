@@ -77,4 +77,6 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
     List<Movie> findByStatusAndTitleContainingIgnoreCase(Integer status, String title, Pageable pageable);
 
     List<Movie> findByTitleContainingIgnoreCaseAndStatus(String title, Integer status);
+
+    List<Movie> findAllByStatus(Integer status);
 }

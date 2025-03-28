@@ -37,7 +37,7 @@ public class MovieUserRedisServiceImpl implements IMovieUserRedisService {
     @Override
     public List<MovieRedisDTO> getAllMovie(String title) throws JsonProcessingException {
         if (!hasMovieData()) {
-            List<Movie> movies = getMovieRepository().findAll();
+            List<Movie> movies = getMovieRepository().findAllByStatus(1);
             saveAllMovie(movies); // Lưu data vào cache
         }
 
@@ -90,10 +90,10 @@ public class MovieUserRedisServiceImpl implements IMovieUserRedisService {
 
     @Override
     public void saveAllMovie(List<Movie> movies) throws JsonProcessingException {
-        createIndex();
-        Gson gson = new Gson();
-        for (Movie movie : movies) {
-            if(movie.getStatus()==1) {
+        if(movies.size()>0 && movies!=null) {
+            createIndex();
+            Gson gson = new Gson();
+            for (Movie movie : movies) {
                 MovieRedisDTO movieRedisDTO = new MovieRedisDTO();
                 movieRedisDTO.setName(movie.getTitle());
                 movieRedisDTO.setSlug(movie.getSlug());
@@ -128,7 +128,7 @@ public class MovieUserRedisServiceImpl implements IMovieUserRedisService {
             keys.forEach(jedis::del);
         }
         try {
-            jedis.ftDropIndex("movie-idx");
+            jedis.ftDropIndexDD("movie-idx");
         } catch (Exception e) {
             log.warn("Index movie-idx (Redis) không tồn tại hoặc đã bị xóa trước đó.");
         }
