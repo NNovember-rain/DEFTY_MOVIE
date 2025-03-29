@@ -32,9 +32,10 @@ public class MembershipPacketController {
     @PreAuthorize("@requiredPermission.checkPermission('GET_ALL_MEMBERSHIP_PACKETS')")
     public ResponseEntity<?> getPermissions(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                             @RequestParam(value = "size", defaultValue = "10") Integer size,
-                                            @RequestParam(value = "name", required = false) String name) {
+                                            @RequestParam(value = "name", required = false) String name,
+                                            @RequestParam(value = "duration", required = false) Integer duration) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<MembershipPacketResponse> membershipPacketResponses = membershipPackageService.getAllMembershipPackets(name, pageable);
+        Page<MembershipPacketResponse> membershipPacketResponses = membershipPackageService.getAllMembershipPackets(duration, name, pageable);
         log.info(PREFIX_MEMBERSHIP_PACKET + "Get all membership packet success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())

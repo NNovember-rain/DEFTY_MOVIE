@@ -16,4 +16,6 @@ public class MembershipPacketResponse {
     Integer duration;
     Integer status;
     String description;
+    Integer basePrice;
+    Integer membershipType;
 }

@@ -12,6 +12,6 @@ public interface IMembershipPackageService {
     MembershipPacketResponse createMembershipPacket(MembershipPacketRequest membershipPacketRequest);
     void updateMembershipPacket(Integer id, MembershipPacketRequest membershipPacketRequest);
     void deleteMembershipPacket(List<Integer> ids);
-    Page<MembershipPacketResponse> getAllMembershipPackets(String search, Pageable pageable);
+    Page<MembershipPacketResponse> getAllMembershipPackets(Integer duration, String name, Pageable pageable);
     Integer switchStatus(Integer id);
 }

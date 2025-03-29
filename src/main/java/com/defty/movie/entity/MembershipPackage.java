@@ -30,6 +30,12 @@ public class MembershipPackage extends BaseEntity {
     @Column
     Integer status;
 
+    @Column
+    Integer basePrice;
+
+    @Column
+    Integer membershipType;
+
     @Column(columnDefinition = "TEXT")
     String description;
 

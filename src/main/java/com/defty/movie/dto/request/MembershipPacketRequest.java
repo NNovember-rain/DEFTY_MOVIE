@@ -9,10 +9,12 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MembershipPacketRequest {
+    Integer basePrice;
     String name;
     Integer price;
     Integer discount;
     Integer duration;
     Integer status;
     String description;
+    Integer membershipType;
 }
