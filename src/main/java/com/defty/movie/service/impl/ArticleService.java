@@ -127,8 +127,8 @@ public class ArticleService implements IArticleService {
             log.info(PREFIX_ARTICLE + "Get all Articles by title list and pagination" );
         }
         else{
-            articles= ariticleRepository.findAllByStatus(1,pageable).getContent();
-            totalElements=ariticleRepository.findAllByStatus(1).size();
+            articles= ariticleRepository.findAllByStatus(status,pageable).getContent();
+            totalElements=ariticleRepository.findAllByStatus(status).size();
             log.info(PREFIX_ARTICLE + "Get all Articles list and pagination" );
         }
         List<ArticleResponse> articleResponses=new ArrayList<>();
@@ -151,15 +151,15 @@ public class ArticleService implements IArticleService {
         Optional<Article> articleOptional=ariticleRepository.findById(id);
         if(articleOptional.isPresent()) {
             Article article=articleOptional.get();
-           if(article.getStatus()==1) {
-               article.setStatus(0);
-               ariticleRepository.save(article);
-               return "Disable article successfully";
-           }else{
-               article.setStatus(1);
-               ariticleRepository.save(article);
-               return "Enable article successfully";
-           }
+            if(article.getStatus()==1) {
+                article.setStatus(0);
+                ariticleRepository.save(article);
+                return "Disable article successfully";
+            }else{
+                article.setStatus(1);
+                ariticleRepository.save(article);
+                return "Enable article successfully";
+            }
         }else throw new NotFoundException(" Article not found !");
     }
 

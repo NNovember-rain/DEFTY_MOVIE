@@ -26,7 +26,7 @@ public class RedisConfig {
 
     @Bean
     public JedisPooled jedisPooled() {
-        return new JedisPooled("localhost", 6379);
+        return new JedisPooled(redisHost, redisPort);
     }
 
     @Bean

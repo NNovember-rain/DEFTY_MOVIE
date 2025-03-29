@@ -12,6 +12,7 @@ public class EpisodeResponse {
     String description;
     String thumbnail;
     String link;
+    String slug;
     Integer movieId;
     Integer status;
 }

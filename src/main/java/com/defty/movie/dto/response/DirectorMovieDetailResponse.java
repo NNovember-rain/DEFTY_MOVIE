@@ -12,6 +12,8 @@ public class DirectorMovieDetailResponse {
 
     String fullName;
 
+    String avatar;
+
     String slug;
 
     List<MovieNameResponse> movies;

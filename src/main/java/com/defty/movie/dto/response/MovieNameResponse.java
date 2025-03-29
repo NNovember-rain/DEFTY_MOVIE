@@ -9,5 +9,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MovieNameResponse {
     String name;
+    String thumbnail;
     String slug;
 }

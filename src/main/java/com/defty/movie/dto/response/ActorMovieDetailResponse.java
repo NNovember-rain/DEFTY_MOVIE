@@ -12,6 +12,8 @@ public class ActorMovieDetailResponse {
 
     String fullName;
 
+    String avatar;
+
     String slug;
 
     List<MovieNameResponse> movies;
