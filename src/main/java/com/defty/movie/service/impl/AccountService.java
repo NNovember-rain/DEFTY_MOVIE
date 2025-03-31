@@ -172,7 +172,7 @@ public class AccountService implements IAccountService {
         account.setGender(accountRequest.getGender());
         account.setDateOfBirth(accountRequest.getDateOfBirth());
 
-        if(!accountRequest.getAvatar().isEmpty()) {
+        if(accountRequest.getAvatar() != null) {
             try {
                 account.setAvatar(uploadImageUtil.upload(accountRequest.getAvatar()));
             } catch (Exception e) {

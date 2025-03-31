@@ -25,6 +25,12 @@ public class MovieDetailController {
 
     private final IMovieDetailService movieDetailService;
 
+    @GetMapping()
+    public Object getDetailMovie(@RequestParam(value = "slugMovie") String slugMovie) {
+        MovieDetailResponse movieDetailResponse = movieDetailService.getMovieDetails(slugMovie);
+        return ApiResponeUtil.ResponseOK(movieDetailResponse);
+    }
+
     @GetMapping("/episode")
     public Object getDetailMovieEpisode(@RequestParam(value = "slugMovie") String slugMovie,
                                         @Valid @RequestParam(value = "page", defaultValue = "0") int page,
