@@ -20,7 +20,7 @@ public class Banner extends BaseEntity{
     @Column(name = "position")
     private Integer position;
     @Column(name = "status")
-    private Integer status;
+    private Integer status = 1;
     @Column(name = "contentType")
     private String contentType;
     @Column(name = "contentId")

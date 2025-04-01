@@ -5,6 +5,8 @@ import com.defty.movie.dto.response.BannerResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ public interface IBannerService {
     ApiResponse<List<Integer>> deleteBanner(List<Integer> ids);
     ApiResponse<Integer> changeStatus(Integer id);
     ApiResponse<PageableResponse<BannerResponse>> getAllBanners(Pageable pageable, String title, Integer status);
+    ApiResponse<PageableResponse<BannerResponse>> userGetAllBanners(Pageable pageable, String title, Integer status);
     Object getBanner(Integer id);
     Object getContentNameByContentType(String contentType,String title);
 }

@@ -1,5 +1,6 @@
 package com.defty.movie.repository;
 
+import com.defty.movie.entity.Actor;
 import com.defty.movie.entity.Category;
 import com.defty.movie.entity.Movie;
 import com.defty.movie.entity.MovieCategory;
@@ -33,6 +34,9 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
             "SELECT b FROM Banner b WHERE b.contentType = 'Category' AND b.contentId = c.id) " +
             "AND (:title IS NULL OR c.name LIKE %:title%)"+"AND c.status=1")
     List<Category> findAllCategoriesNotInBanner(@Param("title") String title);
+
+    @Query("SELECT c FROM Category c LEFT JOIN c.showons s WHERE s.id IS NULL AND c.status != -1")
+    List<Category> findAllCategoriesNotInShowOn(@Param("title") String title);
 
     @Query(value = """
         SELECT mc FROM MovieCategory mc 
