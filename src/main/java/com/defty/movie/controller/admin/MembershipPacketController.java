@@ -98,7 +98,7 @@ public class MembershipPacketController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/status/{id}")
+    @PatchMapping("/status/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('STATUS_MEMBERSHIP_PACKET')")
     public ResponseEntity<?> switchStatus(@PathVariable("id") Integer id) {
         Integer status = membershipPackageService.switchStatus(id);
