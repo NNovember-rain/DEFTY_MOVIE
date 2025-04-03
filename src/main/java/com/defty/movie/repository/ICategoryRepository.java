@@ -49,7 +49,7 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
         ) 
         AND (:ranking IS NULL OR mc.movie.ranking = :ranking) 
         AND (:directorId IS NULL OR mc.movie.director.id = :directorId) 
-        AND mc.movie.status != -1 
+        AND mc.movie.status = 1 
         ORDER BY mc.movie.createdDate DESC
     """,
             countQuery = """
@@ -63,7 +63,7 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
         ) 
         AND (:ranking IS NULL OR mc.movie.ranking = :ranking) 
         AND (:directorId IS NULL OR mc.movie.director.id = :directorId) 
-        AND mc.movie.status != -1
+        AND mc.movie.status = 1
     """)
     Page<MovieCategory> findMoviesByCategory(
             @Param("categoryId") Integer categoryId,

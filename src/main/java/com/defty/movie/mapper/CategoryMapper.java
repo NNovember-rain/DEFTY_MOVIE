@@ -3,6 +3,7 @@ package com.defty.movie.mapper;
 import com.defty.movie.dto.request.CategoryRequest;
 import com.defty.movie.dto.response.CategoryResponse;
 import com.defty.movie.entity.Category;
+import com.defty.movie.entity.MovieCategory;
 import com.defty.movie.repository.IMovieCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,7 +19,13 @@ public class CategoryMapper {
     }
     public CategoryResponse toCategoryResponse(Category categoryEntity){
         CategoryResponse categoryResponse = modelMapper.map(categoryEntity, CategoryResponse.class);
-        categoryResponse.setNumberOfMovies(categoryEntity.getMovieCategories().size());
+        Integer numberOfMovie = 0;
+        for(MovieCategory c : categoryEntity.getMovieCategories()){
+            if(c.getMovie().getStatus() == 1){
+                numberOfMovie += 1;
+            }
+        }
+        categoryResponse.setNumberOfMovies(numberOfMovie);
         return categoryResponse;
     }
 }

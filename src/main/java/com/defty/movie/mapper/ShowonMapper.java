@@ -37,14 +37,16 @@ public class ShowonMapper {
 
             for(MovieCategory m : movieCategories){
                 Movie movie = m.getMovie();
-                SubCategoryResponse subCategoryResponse = new SubCategoryResponse();
-                subCategoryResponse.setMovieTitle(movie.getTitle());
-                subCategoryResponse.setMovieThumbnail(movie.getThumbnail());
-                subCategoryResponse.setDescription(movie.getDescription());
-                subCategoryResponse.setNumberOfChild(movie.getEpisodes().size());
-                subCategoryResponse.setReleaseDate(movie.getReleaseDate());
+                if(movie.getStatus() == 1){
+                    SubCategoryResponse subCategoryResponse = new SubCategoryResponse();
+                    subCategoryResponse.setMovieTitle(movie.getTitle());
+                    subCategoryResponse.setMovieThumbnail(movie.getThumbnail());
+                    subCategoryResponse.setDescription(movie.getDescription());
+                    subCategoryResponse.setNumberOfChild(movie.getEpisodes().size());
+                    subCategoryResponse.setReleaseDate(movie.getReleaseDate());
 
-                subCategoryResponses.add(subCategoryResponse);
+                    subCategoryResponses.add(subCategoryResponse);
+                }
             }
 //            showonResponse.setContentItems(Collections.singletonList(subCategoryResponses));
             showonResponse.setContentItems(subCategoryResponses);
