@@ -1,6 +1,8 @@
 package com.defty.movie.service.impl;
 
 
+import com.defty.movie.dto.response.MovieDetailResponse;
+import com.defty.movie.entity.Movie;
 import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.EpisodeMapper;
@@ -10,7 +12,10 @@ import com.defty.movie.dto.response.EpisodeResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Episode;
 import com.defty.movie.repository.IEpisodeRepository;
+import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IEpisodeService;
+import com.defty.movie.service.IMovieService;
+import com.defty.movie.service.IMovieUserService;
 import com.defty.movie.utils.UploadImageUtil;
 import com.defty.movie.utils.UploadVideoUtil;
 import com.defty.movie.validation.EpisodeValidation;
@@ -35,6 +40,7 @@ public class EpisodeService implements IEpisodeService {
     EpisodeValidation episodeValidation;
     UploadImageUtil uploadImageUtil;
     UploadVideoUtil uploadVideoUtil;
+
 
     @Override
     public ApiResponse<Integer> addEpisode(EpisodeRequest episodeRequest) {
@@ -163,4 +169,5 @@ public class EpisodeService implements IEpisodeService {
         }
         return new ApiResponse<>(404, "Episode doesn't exist", null);
     }
+
 }

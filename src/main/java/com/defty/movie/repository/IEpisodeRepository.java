@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IEpisodeRepository extends JpaRepository<Episode, Integer> {
     @Query(value = "SELECT e FROM Episode e WHERE " +
@@ -31,4 +32,8 @@ public interface IEpisodeRepository extends JpaRepository<Episode, Integer> {
     Page<Episode> findByMovieIdAndStatusOrderByNumber(Integer movieId, Integer status, Pageable pageable);
 
     List<Episode> findByMovieIdAndStatus(Integer movieId, Integer status);
+
+    Optional<Episode> findBySlugAndStatus(String slug, Integer status);
+
+    Optional<Episode> findBySlug(String slug);
 }

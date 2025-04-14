@@ -3,7 +3,9 @@ package com.defty.movie.service;
 import com.defty.movie.dto.request.EpisodeRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.EpisodeResponse;
+import com.defty.movie.dto.response.MovieDetailResponse;
 import com.defty.movie.dto.response.PageableResponse;
+import com.defty.movie.entity.Movie;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -15,4 +17,5 @@ public interface IEpisodeService {
     ApiResponse<List<Integer>> deleteEpisode(List<Integer> ids);
     ApiResponse<Integer> changeStatus(Integer id);
     Object getEpisode(Integer id);
+
 }
