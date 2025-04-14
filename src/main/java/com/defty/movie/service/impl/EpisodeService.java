@@ -53,6 +53,9 @@ public class EpisodeService implements IEpisodeService {
         Optional<Movie> movie = movieRepository.findById(episodeRequest.getMovieId());
         if(movie.isPresent()){
             episode.setMovie(movie.get());
+            if(movie.get().getSlug() != null){
+                episode.setSlug(movie.get().getSlug() + episode.getNumber());
+            }
         }
         else {
             throw new NotFoundException("Movie not found exception");
@@ -116,6 +119,7 @@ public class EpisodeService implements IEpisodeService {
                 throw new AlreadyExitException("Episode number already exists");
 
             }
+            updatedEpisode.setSlug(updatedEpisode.getMovie().getSlug() + updatedEpisode.getNumber());
             /*copy different fields from episodeRequest to updatedEpisode*/
             CopyUtil.copyPropertiesIgnoreNull(episodeRequest, updatedEpisode);
             if (episodeRequest.getThumbnail() != null && !episodeRequest.getThumbnail().isEmpty()) {

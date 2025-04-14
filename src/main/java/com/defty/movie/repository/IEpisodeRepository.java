@@ -36,4 +36,5 @@ public interface IEpisodeRepository extends JpaRepository<Episode, Integer> {
     Optional<Episode> findBySlugAndStatus(String slug, Integer status);
 
     Optional<Episode> findBySlug(String slug);
+    List<Episode> findAllByNumber(Integer episodeNumber);
 }
