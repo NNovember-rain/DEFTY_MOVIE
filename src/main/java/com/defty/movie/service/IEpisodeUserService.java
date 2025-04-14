@@ -8,4 +8,5 @@ import org.springframework.data.domain.Pageable;
 public interface IEpisodeUserService {
     MovieDetailResponse getEpispdeDetails(String slug);
     PageableResponse<EpisodeResponse> getEpisodes(String slugEpisode, Pageable pageable);
+    EpisodeResponse getVideoUrl(String slug);
 }
