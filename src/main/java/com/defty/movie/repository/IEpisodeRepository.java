@@ -16,7 +16,7 @@ public interface IEpisodeRepository extends JpaRepository<Episode, Integer> {
             "(:status IS NULL OR e.status = :status) AND " +
             "(e.status != -1) AND " +
             "(:movieId IS NULL OR e.movie.id = :movieId) " +
-            "ORDER BY e.createdDate DESC",
+            "ORDER BY e.number ASC, e.createdDate DESC",
             countQuery = "SELECT count(e) FROM Episode e WHERE " +
                     "(:number IS NULL OR e.number = :number) AND " +
                     "(e.status != -1) AND " +
@@ -36,4 +36,5 @@ public interface IEpisodeRepository extends JpaRepository<Episode, Integer> {
     Optional<Episode> findBySlugAndStatus(String slug, Integer status);
 
     Optional<Episode> findBySlug(String slug);
+    List<Episode> findAllByNumber(Integer episodeNumber);
 }
