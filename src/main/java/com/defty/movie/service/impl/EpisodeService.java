@@ -47,6 +47,7 @@ public class EpisodeService implements IEpisodeService {
         List<Episode> episodes = episodeRepository.findAllByNumber(episodeRequest.getNumber());
         if (!episodes.isEmpty()){
             throw new AlreadyExitException("Episode number already exists");
+
         }
         Episode episode = episodeMapper.toEpisodeEntity(episodeRequest);
         Optional<Movie> movie = movieRepository.findById(episodeRequest.getMovieId());
@@ -113,6 +114,7 @@ public class EpisodeService implements IEpisodeService {
             List<Episode> episodes = episodeRepository.findAllByNumber(episodeRequest.getNumber());
             if (!episodes.isEmpty() && updatedEpisode.getNumber() != episodeRequest.getNumber()){
                 throw new AlreadyExitException("Episode number already exists");
+
             }
             /*copy different fields from episodeRequest to updatedEpisode*/
             CopyUtil.copyPropertiesIgnoreNull(episodeRequest, updatedEpisode);
