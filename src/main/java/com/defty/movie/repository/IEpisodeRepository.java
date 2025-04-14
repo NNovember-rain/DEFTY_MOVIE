@@ -32,4 +32,5 @@ public interface IEpisodeRepository extends JpaRepository<Episode, Integer> {
 
     List<Episode> findByMovieIdAndStatus(Integer movieId, Integer status);
     List<Episode> findAllByNumber(Integer episodeNumber);
+
 }
