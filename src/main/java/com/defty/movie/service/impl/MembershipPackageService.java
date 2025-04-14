@@ -41,6 +41,15 @@ public class MembershipPackageService implements IMembershipPackageService {
     @Override
     public MembershipPacketResponse createMembershipPacket(MembershipPacketRequest membershipPacketRequest) {
         MembershipPackage membershipPackage = membershipPackageMapper.toMembershipPacket(membershipPacketRequest);
+        if (membershipPacketRequest.getName().equals("Premium")){
+            membershipPackage.setMembershipType(1);
+        }
+        else if (membershipPacketRequest.getName().equals("Free Trial")){
+            membershipPackage.setMembershipType(1);
+        }
+        else if (membershipPacketRequest.getName().equals("Normal")){
+            membershipPackage.setMembershipType(3);
+        }
         membershipPackage.setStatus(1);
         membershipPacketRepository.save(membershipPackage);
         log.info(PREFIX_MEMBERSHIP_PACKET + "Create successfully");
@@ -60,6 +69,16 @@ public class MembershipPackageService implements IMembershipPackageService {
         membershipPackage.setPrice(membershipPacketRequest.getPrice());
         membershipPackage.setDuration(membershipPacketRequest.getDuration());
         membershipPackage.setDiscount(membershipPacketRequest.getDiscount());
+        membershipPackage.setBasePrice(membershipPacketRequest.getBasePrice());
+        if (membershipPacketRequest.getName().equals("Premium")){
+            membershipPackage.setMembershipType(1);
+        }
+        else if (membershipPacketRequest.getName().equals("Free Trial")){
+            membershipPackage.setMembershipType(1);
+        }
+        else if (membershipPacketRequest.getName().equals("Normal")){
+            membershipPackage.setMembershipType(3);
+        }
         membershipPacketRepository.save(membershipPackage);
         log.info(PREFIX_MEMBERSHIP_PACKET + "Update successfully");
     }
@@ -75,11 +94,14 @@ public class MembershipPackageService implements IMembershipPackageService {
     }
 
     @Override
-    public Page<MembershipPacketResponse> getAllMembershipPackets(String search, Pageable pageable) {
+    public Page<MembershipPacketResponse> getAllMembershipPackets(Integer duration, String name, Pageable pageable) {
         Page<MembershipPackage> membershipPackages;
-        if (search != null && !search.isEmpty()) {
-            membershipPackages = membershipPacketRepository.findMembershipPackage(search, pageable);
-            log.info("{}Get all membership package by name: {}", PREFIX_MEMBERSHIP_PACKET, search);
+        if ((name != null && !name.isEmpty()) || duration != null) {
+            if(name != null && !name.isEmpty()) {
+                name = name.trim();
+            }
+            membershipPackages = membershipPacketRepository.findMembershipPackage(name, duration, pageable);
+            log.info("{}Get all membership package by name: {}", PREFIX_MEMBERSHIP_PACKET, name);
         } else {
             membershipPackages = membershipPacketRepository.findAllWithStatus(pageable);
             log.info("{}Get all membership package with pageable", PREFIX_MEMBERSHIP_PACKET);

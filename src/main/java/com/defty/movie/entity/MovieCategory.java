@@ -1,9 +1,6 @@
 package com.defty.movie.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +9,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "movie_category")
 public class MovieCategory extends BaseEntity{
+//    @Column(name = "status")
+//    private Integer status = 1;
+
     @ManyToOne
     @JoinColumn(name = "movie_id")
     private Movie movie;

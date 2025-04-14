@@ -32,9 +32,10 @@ public class MembershipPacketController {
     @PreAuthorize("@requiredPermission.checkPermission('GET_ALL_MEMBERSHIP_PACKETS')")
     public ResponseEntity<?> getPermissions(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                             @RequestParam(value = "size", defaultValue = "10") Integer size,
-                                            @RequestParam(value = "name", required = false) String name) {
+                                            @RequestParam(value = "name", required = false) String name,
+                                            @RequestParam(value = "duration", required = false) Integer duration) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<MembershipPacketResponse> membershipPacketResponses = membershipPackageService.getAllMembershipPackets(name, pageable);
+        Page<MembershipPacketResponse> membershipPacketResponses = membershipPackageService.getAllMembershipPackets(duration, name, pageable);
         log.info(PREFIX_MEMBERSHIP_PACKET + "Get all membership packet success");
         ApiResponse<?> response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -97,7 +98,7 @@ public class MembershipPacketController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/status/{id}")
+    @PatchMapping("/status/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('STATUS_MEMBERSHIP_PACKET')")
     public ResponseEntity<?> switchStatus(@PathVariable("id") Integer id) {
         Integer status = membershipPackageService.switchStatus(id);

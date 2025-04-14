@@ -56,4 +56,12 @@ public class ShowonController {
     public ApiResponse<Integer> changeStatus(@PathVariable Integer id) {
         return showonService.changeStatus(id);
     }
+
+
+    @GetMapping("/all-content")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_CONTENT_BY_CONTENT_TYPE')")
+    public Object getContentByContentType(@RequestParam(name="contentType") String contentType,
+                                          @RequestParam(required = false, name="title") String title) {
+        return showonService.getContentByContentType(contentType,title);
+    }
 }

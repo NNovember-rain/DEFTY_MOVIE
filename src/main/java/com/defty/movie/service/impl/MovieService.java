@@ -4,6 +4,7 @@ import com.defty.movie.dto.request.MovieRequest;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.dto.response.PageableResponse;
+import com.defty.movie.entity.MovieCategory;
 import com.defty.movie.exception.CustomDateException;
 import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.exception.NotFoundException;
@@ -11,6 +12,7 @@ import com.defty.movie.mapper.MovieMapper;
 import com.defty.movie.entity.Director;
 import com.defty.movie.entity.Movie;
 import com.defty.movie.repository.IDirectorRepository;
+import com.defty.movie.repository.IMovieCategoryRepository;
 import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IMovieService;
 import com.defty.movie.utils.DateUtil;
@@ -43,6 +45,7 @@ public class MovieService implements IMovieService {
     UploadImageUtil uploadImageUtil;
     UploadVideoUtil uploadVideoUtil;
     DateUtil dateUtil;
+    IMovieCategoryRepository movieCategoryRepository;
 
     @Override
     public ApiResponse<Integer> addMovie(MovieRequest movieRequest) {
@@ -194,7 +197,12 @@ public class MovieService implements IMovieService {
                 movie.get().setStatus(0);
                 message += "Disable movies successfully";
             }
-            movieRepository.save(movie.get());
+            try{
+                movieRepository.save(movie.get());
+            }
+            catch (Exception e){
+                return new ApiResponse<>(200, e.getMessage(), id);
+            }
             return new ApiResponse<>(200, message, id);
         }
         else throw new NotFoundException("Not found exception");

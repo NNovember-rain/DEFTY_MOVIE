@@ -28,7 +28,7 @@ public class Episode extends BaseEntity{
     private String slug;
 
     @Column(name = "status")
-    private Integer status;
+    private Integer status = 1;
 
     @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)

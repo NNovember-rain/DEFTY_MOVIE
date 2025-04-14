@@ -1,16 +1,16 @@
 package com.defty.movie.service.impl;
 
-
+import com.defty.movie.dto.request.BannerRequest;
 import com.defty.movie.dto.response.*;
+import com.defty.movie.dto.response.BannerResponse;
+import com.defty.movie.entity.Banner;
+import com.defty.movie.entity.Category;
+import com.defty.movie.entity.Movie;
 import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.BannerMapper;
 import com.defty.movie.mapper.CategoryMapper;
 import com.defty.movie.mapper.MovieMapper;
-import com.defty.movie.dto.request.BannerRequest;
-import com.defty.movie.entity.Banner;
-import com.defty.movie.entity.Category;
-import com.defty.movie.entity.Movie;
 import com.defty.movie.repository.IBannerRepository;
 import com.defty.movie.repository.ICategoryRepository;
 import com.defty.movie.repository.IMovieRepository;
@@ -178,6 +178,26 @@ public class BannerService implements IBannerService {
             return new ApiResponse<>(200, "OK", pageableResponse);
         }
     }
+
+    @Override
+    public ApiResponse<PageableResponse<BannerResponse>> userGetAllBanners(Pageable pageable, String title, Integer status) {
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
+        Page<Banner> banners = bannerRepository.userFindBanners(title, status, sortedPageable);
+        List<BannerResponse> bannerResponses = new ArrayList<>();
+        if (banners.isEmpty()){
+            throw new NotFoundException("Not found exception");
+        }
+        else {
+            for(Banner c : banners){
+                BannerResponse bannerResponse = bannerMapper.toBannerResponse(c);
+                bannerResponses.add(bannerResponse);
+            }
+            PageableResponse<BannerResponse> pageableResponse= new PageableResponse<>(bannerResponses, banners.getTotalElements());
+            log.info(PREFIX_BANNER_SERVICE + "get banners successfully");
+            return new ApiResponse<>(200, "OK", pageableResponse);
+        }
+    }
+
 
     @Override
     public Object getBanner(Integer id) {

@@ -14,5 +14,5 @@ public class BannerRequest {
     String contentType;
     Integer contentId;
     Integer position;
-    Integer status;
+//    Integer status;
 }

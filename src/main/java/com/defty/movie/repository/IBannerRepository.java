@@ -1,6 +1,7 @@
 package com.defty.movie.repository;
 
 import com.defty.movie.entity.Banner;
+import com.defty.movie.entity.Banner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,13 +13,28 @@ public interface IBannerRepository extends JpaRepository<Banner, Integer> {
             "(:title IS NULL OR m.title LIKE %:title%) AND" +
             "(m.status != -1) AND " +
             "(:status IS NULL OR m.status = :status) " +
-            "ORDER BY m.createdDate DESC",
+            "ORDER BY m.position ASC, m.createdDate DESC",
             countQuery = "SELECT count(m) FROM Banner m WHERE " +
                     "(:title IS NULL OR m.title LIKE %:title%) AND " +
                     "(m.status != -1) AND " +
                     "(:status IS NULL OR m.status = :status)",
             nativeQuery = false)
     Page<Banner> findBanners(
+            @Param("title") String title,
+            @Param("status") Integer status,
+            Pageable pageable);
+
+    @Query(value = "SELECT m FROM Banner m WHERE " +
+            "(:title IS NULL OR m.title LIKE %:title%) AND " +
+            "(m.status = 1) AND " +
+            "(:status IS NULL OR m.status = :status) " +
+            "ORDER BY m.position ASC, m.createdDate DESC",
+            countQuery = "SELECT count(m) FROM Banner m WHERE " +
+                    "(:title IS NULL OR m.title LIKE %:title%) AND " +
+                    "(m.status = 1) AND " +
+                    "(:status IS NULL OR m.status = :status)",
+            nativeQuery = false)
+    Page<Banner> userFindBanners(
             @Param("title") String title,
             @Param("status") Integer status,
             Pageable pageable);

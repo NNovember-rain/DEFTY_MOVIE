@@ -20,12 +20,12 @@ public class Category extends BaseEntity {
     @Column(name = "status")
     private Integer status = 1;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_category_id")
-    private Category parentCategory;
-
-    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
-    private Set<Category> subCategories;
+//    @ManyToOne
+//    @JoinColumn(name = "parent_category_id")
+//    private Category parentCategory;
+//
+//    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
+//    private Set<Category> subCategories;
 
     @Column(name = "slug")
     private String slug;

@@ -19,6 +19,6 @@ public class BannerUserController {
                               @RequestParam(name = "title", required = false) String title,
                               @RequestParam(name = "status", required = false) Integer status) {
         log.info(PREFIX_BANNER_CONTROLLER + "Going to get banners");
-        return bannerService.getAllBanners(pageable, title, status);
+        return bannerService.userGetAllBanners(pageable, title, status);
     }
 }

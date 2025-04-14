@@ -1,5 +1,6 @@
 package com.defty.movie.repository;
 
+import com.defty.movie.entity.Actor;
 import com.defty.movie.entity.Category;
 import com.defty.movie.entity.Movie;
 import com.defty.movie.entity.MovieCategory;
@@ -34,6 +35,9 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
             "AND (:title IS NULL OR c.name LIKE %:title%)"+"AND c.status=1")
     List<Category> findAllCategoriesNotInBanner(@Param("title") String title);
 
+    @Query("SELECT c FROM Category c LEFT JOIN c.showons s WHERE s.id IS NULL AND c.status != -1")
+    List<Category> findAllCategoriesNotInShowOn(@Param("title") String title);
+
     @Query(value = """
         SELECT mc FROM MovieCategory mc 
         WHERE mc.category.id = :categoryId 
@@ -45,7 +49,7 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
         ) 
         AND (:ranking IS NULL OR mc.movie.ranking = :ranking) 
         AND (:directorId IS NULL OR mc.movie.director.id = :directorId) 
-        AND mc.movie.status != -1 
+        AND mc.movie.status = 1 
         ORDER BY mc.movie.createdDate DESC
     """,
             countQuery = """
@@ -59,7 +63,7 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
         ) 
         AND (:ranking IS NULL OR mc.movie.ranking = :ranking) 
         AND (:directorId IS NULL OR mc.movie.director.id = :directorId) 
-        AND mc.movie.status != -1
+        AND mc.movie.status = 1
     """)
     Page<MovieCategory> findMoviesByCategory(
             @Param("categoryId") Integer categoryId,

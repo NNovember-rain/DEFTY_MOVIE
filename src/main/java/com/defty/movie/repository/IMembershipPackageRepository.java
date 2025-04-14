@@ -15,8 +15,13 @@ public interface IMembershipPackageRepository extends JpaRepository<MembershipPa
     MembershipPackage findByName(String name);
 
     @Query("SELECT r FROM MembershipPackage r " +
-            "WHERE LOWER(r.name) " +
-            "LIKE LOWER(CONCAT('%', :name, '%')) " +
+            "WHERE (:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
+            "AND (:duration IS NULL OR r.duration = :duration) " +
             "AND r.status >= 0")
-    Page<MembershipPackage> findMembershipPackage(@Param("name") String name, Pageable pageable);
+    Page<MembershipPackage> findMembershipPackage(
+            @Param("name") String name,
+            @Param("duration") Integer duration,
+            Pageable pageable
+    );
+
 }
