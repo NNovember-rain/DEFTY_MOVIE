@@ -39,18 +39,21 @@ public class EpisodeUserService implements IEpisodeUserService {
     @Override
     public PageableResponse<EpisodeResponse> getEpisodes(String slugEpisode, Pageable pageable) {
         Movie movie=movieUserService.getMovieBySlugEpisode(slugEpisode);
-        List<EpisodeResponse> episodeResponses=new ArrayList<>();
-        for(Episode episode:movie.getEpisodes()){
-            EpisodeResponse episodeResponse=new EpisodeResponse();
-            BeanUtils.copyProperties(episode,episodeResponse);
-            episodeResponses.add(episodeResponse);
-        }
+        PageableResponse<EpisodeResponse> episodes=movieUserService.getEpisodes(movie.getSlug(),pageable);
         int totalElements=episodeRepository.findByMovieIdAndStatus(movie.getId(),1).size();
+        episodes.setTotalElements(totalElements+0L);
 
-        PageableResponse<EpisodeResponse> pageableResponse=new PageableResponse<>();
-        pageableResponse.setContent(episodeResponses);
-        pageableResponse.setTotalElements(0L+totalElements);
-        return pageableResponse;
+        return episodes;
+    }
 
+    @Override
+    public EpisodeResponse getVideoUrl(String slug) {
+        Optional<Episode> episode=episodeRepository.findBySlugAndStatus(slug,1);
+        if(episode.isPresent()){
+            EpisodeResponse episodeResponse=new EpisodeResponse();
+            BeanUtils.copyProperties(episode.get(),episodeResponse);
+            return episodeResponse;
+        }
+        else throw new NotFoundException("Episode not found");
     }
 }
