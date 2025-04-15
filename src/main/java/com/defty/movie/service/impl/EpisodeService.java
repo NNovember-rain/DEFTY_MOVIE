@@ -1,6 +1,8 @@
 package com.defty.movie.service.impl;
 
 
+import com.defty.movie.entity.Movie;
+import com.defty.movie.exception.AlreadyExitException;
 import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.EpisodeMapper;
@@ -10,7 +12,9 @@ import com.defty.movie.dto.response.EpisodeResponse;
 import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.Episode;
 import com.defty.movie.repository.IEpisodeRepository;
+import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IEpisodeService;
+import com.defty.movie.utils.CopyUtil;
 import com.defty.movie.utils.UploadImageUtil;
 import com.defty.movie.utils.UploadVideoUtil;
 import com.defty.movie.validation.EpisodeValidation;
@@ -35,13 +39,27 @@ public class EpisodeService implements IEpisodeService {
     EpisodeValidation episodeValidation;
     UploadImageUtil uploadImageUtil;
     UploadVideoUtil uploadVideoUtil;
+    IMovieRepository movieRepository;
 
     @Override
     public ApiResponse<Integer> addEpisode(EpisodeRequest episodeRequest) {
         episodeValidation.fieldValidation(episodeRequest);
+        List<Episode> episodes = episodeRepository.findAllByNumber(episodeRequest.getNumber());
+        if (!episodes.isEmpty()){
+            throw new AlreadyExitException("Episode number already exists");
 
+        }
         Episode episode = episodeMapper.toEpisodeEntity(episodeRequest);
-
+        Optional<Movie> movie = movieRepository.findById(episodeRequest.getMovieId());
+        if(movie.isPresent()){
+            episode.setMovie(movie.get());
+            if(movie.get().getSlug() != null){
+                episode.setSlug(movie.get().getSlug() + episode.getNumber());
+            }
+        }
+        else {
+            throw new NotFoundException("Movie not found exception");
+        }
         if (episodeRequest.getThumbnail() != null && !episodeRequest.getThumbnail().isEmpty()) {
             try{
                 episode.setThumbnail(uploadImageUtil.upload(episodeRequest.getThumbnail()));
@@ -96,8 +114,14 @@ public class EpisodeService implements IEpisodeService {
         Optional<Episode> episode = episodeRepository.findById(id);
         if(episode.isPresent()){
             Episode updatedEpisode = episode.get();
+            List<Episode> episodes = episodeRepository.findAllByNumber(episodeRequest.getNumber());
+            if (!episodes.isEmpty() && updatedEpisode.getNumber() != episodeRequest.getNumber()){
+                throw new AlreadyExitException("Episode number already exists");
+
+            }
+            updatedEpisode.setSlug(updatedEpisode.getMovie().getSlug() + updatedEpisode.getNumber());
             /*copy different fields from episodeRequest to updatedEpisode*/
-            BeanUtils.copyProperties(episodeRequest, updatedEpisode, "id");
+            CopyUtil.copyPropertiesIgnoreNull(episodeRequest, updatedEpisode);
             if (episodeRequest.getThumbnail() != null && !episodeRequest.getThumbnail().isEmpty()) {
                 try{
                     updatedEpisode.setThumbnail(uploadImageUtil.upload(episodeRequest.getThumbnail()));

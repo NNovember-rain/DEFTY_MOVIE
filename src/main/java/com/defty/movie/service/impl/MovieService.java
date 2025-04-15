@@ -197,7 +197,12 @@ public class MovieService implements IMovieService {
                 movie.get().setStatus(0);
                 message += "Disable movies successfully";
             }
-            movieRepository.save(movie.get());
+            try{
+                movieRepository.save(movie.get());
+            }
+            catch (Exception e){
+                return new ApiResponse<>(200, e.getMessage(), id);
+            }
             return new ApiResponse<>(200, message, id);
         }
         else throw new NotFoundException("Not found exception");

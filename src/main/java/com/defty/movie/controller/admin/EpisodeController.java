@@ -16,17 +16,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/admin/movie/episode")
 public class EpisodeController {
+
     private final IEpisodeService episodeService;
     @PostMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('CREATE_EPISODE')")
     public ApiResponse<Integer> addEpisode(@ModelAttribute EpisodeRequest episodeRequest) {
         return episodeService.addEpisode(episodeRequest);
     }
+
     @GetMapping("/{id}")
     @PreAuthorize("@requiredPermission.checkPermission('GET_EPISODE')")
     public Object getEpisode(@PathVariable Integer id){
         return episodeService.getEpisode(id);
     }
+
     @GetMapping("")
     @PreAuthorize("@requiredPermission.checkPermission('GET_EPISODES')")
     public Object getEpisodes(Pageable pageable,

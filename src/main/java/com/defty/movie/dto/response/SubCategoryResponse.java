@@ -10,4 +10,5 @@ public class SubCategoryResponse {
     String description;
     Integer numberOfChild;
     Date releaseDate;
+    String slug;
 }
