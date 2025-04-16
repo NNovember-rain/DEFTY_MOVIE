@@ -36,17 +36,17 @@ public class EpisodeUserController {
     }
 
     @GetMapping("/list")
-    public Object getListEpisode(@RequestParam(value = "slug-episode") String slugEpisode,
+    public Object getListEpisode(@RequestParam(value = "slug") String slug,
                                  @Valid @RequestParam(value = "page", defaultValue = "0") int page,
                                  @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("number").ascending());
-        PageableResponse<EpisodeResponse> episodes = episodeUserService.getEpisodes(slugEpisode,pageable);
+        PageableResponse<EpisodeResponse> episodes = episodeUserService.getEpisodes(slug,pageable);
         return ApiResponeUtil.ResponseOK(episodes);
     }
 
     @GetMapping("/video")
-    public Object getVideoEpisode(@RequestParam String slugEpisode) {
-        EpisodeResponse data=episodeUserService.getVideoUrl(slugEpisode);
+    public Object getVideoEpisode(@RequestParam String slug) {
+        EpisodeResponse data=episodeUserService.getVideoUrl(slug);
         return ApiResponeUtil.ResponseOK(data);
     }
 }
