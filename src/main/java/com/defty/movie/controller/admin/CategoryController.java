@@ -68,7 +68,7 @@ public class CategoryController {
     public Object getMoviesByCategory(Pageable pageable,
                                       @PathVariable Integer categoryId,
                                       @RequestParam(name = "title", required = false) String title,
-                                      @RequestParam(name = "nation", required = false) String nation,
+                                      @RequestParam(name = "nationality", required = false) String nation,
                                       @RequestParam(name = "releaseDate", required = false) String releaseDate,
                                       @RequestParam(name = "ranking", required = false) Integer ranking,
                                       @RequestParam(name = "directorId", required = false) Integer directorId) {
@@ -86,7 +86,7 @@ public class CategoryController {
     public Object getMoviesNotInCategory(Pageable pageable,
                                          @PathVariable Integer categoryId,
                                          @RequestParam(name = "title", required = false) String title,
-                                         @RequestParam(name = "nation", required = false) String nation,
+                                         @RequestParam(name = "nationality", required = false) String nation,
                                          @RequestParam(name = "releaseDate", required = false) String releaseDate,
                                          @RequestParam(name = "ranking", required = false) Integer ranking,
                                          @RequestParam(name = "directorId", required = false) Integer directorId) {
