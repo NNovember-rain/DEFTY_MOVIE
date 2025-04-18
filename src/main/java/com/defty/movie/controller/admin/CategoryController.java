@@ -92,6 +92,4 @@ public class CategoryController {
                                          @RequestParam(name = "directorId", required = false) Integer directorId) {
         return categoryService.findMoviesNotInCategory(pageable, categoryId, title, nation, releaseDate, ranking, directorId);
     }
-
-
 }

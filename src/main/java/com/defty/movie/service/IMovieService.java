@@ -1,6 +1,7 @@
 package com.defty.movie.service;
 
 import com.defty.movie.dto.request.MovieRequest;
+import com.defty.movie.dto.response.ActorResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.dto.response.PageableResponse;
@@ -16,4 +17,8 @@ public interface IMovieService {
     ApiResponse<Integer> changeStatus(Integer id);
     Object getMovie(Integer id);
     Object getEpisodeOfMovieDetails(Integer episodeId);
+    ApiResponse<Integer> addActor(Integer movieId, List<Integer> ids);
+    ApiResponse<Integer> deleteActor(Integer movieId, List<Integer> ids);
+    ApiResponse<PageableResponse<ActorResponse>> findActorsByMovie(Pageable pageable, Integer movieId, String name, String gender, String date_of_birth, String nationality);
+    ApiResponse<PageableResponse<ActorResponse>> findActorsNotInMovie(Pageable pageable, Integer movieId, String name, String gender, String date_of_birth, String nationality);
 }
