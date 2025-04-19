@@ -1,6 +1,7 @@
 package com.defty.movie.mapper;
 
 import com.defty.movie.dto.request.UserRequest;
+import com.defty.movie.dto.response.EpisodeCommentUserResponse;
 import com.defty.movie.dto.response.UserResponse;
 import com.defty.movie.entity.User;
 import com.defty.movie.exception.MediaUploadException;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -38,5 +40,12 @@ public class UserMapper {
             throw new MediaUploadException("Could not upload the image, please try again later !");
         }
         return user;
+    }
+
+    public EpisodeCommentUserResponse toEpisodeCommentUserResponse(User user) {
+        EpisodeCommentUserResponse episodeCommentUserResponse = new EpisodeCommentUserResponse();
+        BeanUtils.copyProperties(user, episodeCommentUserResponse);
+        episodeCommentUserResponse.setAvatar(user.getAvatar());
+        return episodeCommentUserResponse;
     }
 }

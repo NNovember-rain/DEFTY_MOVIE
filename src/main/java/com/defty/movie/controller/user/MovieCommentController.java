@@ -1,15 +1,22 @@
 package com.defty.movie.controller.user;
 
 import com.defty.movie.dto.request.MovieCommentRequest;
+import com.defty.movie.dto.request.MovieCommentUpdateRequest;
 import com.defty.movie.dto.response.MovieCommentResponse;
+import com.defty.movie.entity.MovieComment;
 import com.defty.movie.service.IMovieCommentService;
 import com.defty.movie.utils.ApiResponeUtil;
+import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import com.defty.movie.view.Views;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -26,26 +33,29 @@ public class MovieCommentController {
         return ApiResponeUtil.ResponseCreatedSuccess(commentId);
     }
 
-    @PatchMapping("/{id}")
-    public Object updateMovieComment(@PathVariable Integer id,@RequestBody MovieCommentRequest movieCommentRequest) {
-        movieCommentService.updateMovieComment(id, movieCommentRequest);
+    @PatchMapping("/{commentId}")
+    public Object updateMovieComment(@PathVariable Integer commentId, @RequestBody MovieCommentUpdateRequest movieCommentUpdateRequest) {
+        movieCommentService.updateMovieComment(commentId, movieCommentUpdateRequest);
         String massage="Updated episode comment";
         log.info(PREFIX_MOVIE_COMMENT + "Updated Episode Comment successfully");
         return ApiResponeUtil.ResponseOK(massage);
     }
 
-    @DeleteMapping("/{ids}")
-    public Object deletarMovieComment(@PathVariable List<Integer> ids) {
-        movieCommentService.deleteMovieComment(ids);
+    @DeleteMapping("/{commentId}")
+    public Object deleteMovieComment(@PathVariable Integer commentId) {
+        movieCommentService.deleteMovieComment(commentId);
         String massage="Deleted episode comment";
         log.info(PREFIX_MOVIE_COMMENT + "Deleted Episode Comment successfully");
         return ApiResponeUtil.ResponseOK(massage);
     }
 
-    @GetMapping("/{episodeid}")
-    public Object getMovieComment(@PathVariable Integer episodeid) {
-        List<MovieCommentResponse> movieComments= movieCommentService.getMovieComment(episodeid);
-        log.info(PREFIX_MOVIE_COMMENT + "Get all Episode Comment by movieId successfully");
+    @GetMapping("/{episodeId}")
+    public Object getMovieComment(@PathVariable Integer episodeId,
+                                  @Valid @RequestParam(value = "page", defaultValue = "0") int page,
+                                  @RequestParam(value = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        List<MovieCommentResponse> movieComments= movieCommentService.getMovieComment(episodeId,pageable);
+        log.info("{}Get all Episode Comment by movieId successfully", PREFIX_MOVIE_COMMENT);
         return ApiResponeUtil.ResponseOK(movieComments);
     }
 }

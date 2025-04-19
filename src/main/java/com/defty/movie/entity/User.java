@@ -53,6 +53,9 @@ public class User extends BaseEntity implements UserDetails {
     String address;
 
     @Column(length = 255)
+    String slug;
+
+    @Column(length = 255)
     String avatar;
 
     Integer status;

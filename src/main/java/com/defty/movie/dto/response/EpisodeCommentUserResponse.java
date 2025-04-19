@@ -1,17 +1,16 @@
 package com.defty.movie.dto.response;
 
-
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CommentReactionResponse {
-    String content;
-    Date createdDate;
-    EpisodeCommentUserResponse user;
+public class EpisodeCommentUserResponse {
+    Integer id;
+    String fullName;
+    String avatar;
+    String slug;
 }

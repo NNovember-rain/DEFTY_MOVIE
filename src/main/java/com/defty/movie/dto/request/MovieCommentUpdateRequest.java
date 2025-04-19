@@ -4,10 +4,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MovieCommentRequest {
-    Integer episodeId;
-    Integer parentId;
+@Data
+public class MovieCommentUpdateRequest {
     String content;
 }
