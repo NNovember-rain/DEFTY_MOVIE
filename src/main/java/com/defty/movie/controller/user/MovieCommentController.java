@@ -57,5 +57,6 @@ public class MovieCommentController {
         List<MovieCommentResponse> movieComments= movieCommentService.getMovieComment(episodeId,pageable);
         log.info("{}Get all Episode Comment by movieId successfully", PREFIX_MOVIE_COMMENT);
         return ApiResponeUtil.ResponseOK(movieComments);
+
     }
 }
