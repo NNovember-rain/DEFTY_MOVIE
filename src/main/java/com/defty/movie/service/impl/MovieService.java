@@ -1,16 +1,20 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.MovieRequest;
+import com.defty.movie.dto.response.ActorResponse;
 import com.defty.movie.dto.response.ApiResponse;
 import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.dto.response.PageableResponse;
+import com.defty.movie.entity.Actor;
 import com.defty.movie.entity.MovieCategory;
 import com.defty.movie.exception.CustomDateException;
 import com.defty.movie.exception.MediaUploadException;
 import com.defty.movie.exception.NotFoundException;
+import com.defty.movie.mapper.ActorMapper;
 import com.defty.movie.mapper.MovieMapper;
 import com.defty.movie.entity.Director;
 import com.defty.movie.entity.Movie;
+import com.defty.movie.repository.IActorRepository;
 import com.defty.movie.repository.IDirectorRepository;
 import com.defty.movie.repository.IMovieCategoryRepository;
 import com.defty.movie.repository.IMovieRepository;
@@ -31,6 +35,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -45,7 +50,8 @@ public class MovieService implements IMovieService {
     UploadImageUtil uploadImageUtil;
     UploadVideoUtil uploadVideoUtil;
     DateUtil dateUtil;
-    IMovieCategoryRepository movieCategoryRepository;
+    IActorRepository actorRepository;
+    ActorMapper actorMapper;
 
     @Override
     public ApiResponse<Integer> addMovie(MovieRequest movieRequest) {
@@ -220,6 +226,135 @@ public class MovieService implements IMovieService {
     @Override
     public Object getEpisodeOfMovieDetails(Integer episodeId) {
         return null;
+    }
+
+    @Override
+    public ApiResponse<Integer> addActor(Integer movieId, List<Integer> ids) {
+        Optional<Movie> movieOpt = movieRepository.findById(movieId);
+        if (movieOpt.isEmpty()) {
+            throw new NotFoundException("Movie not found");
+        }
+
+        List<Actor> actorsToAdd = actorRepository.findAllById(ids);
+        if (actorsToAdd.isEmpty()) {
+            throw new NotFoundException("Actors not found");
+        }
+
+        Movie movie = movieOpt.get();
+        List<Actor> currentActors = movie.getActors();
+        
+        Set<Integer> currentActorIds = currentActors.stream()
+                .map(Actor::getId)
+                .collect(Collectors.toSet());
+
+        List<Actor> filteredToAdd = actorsToAdd.stream()
+                .filter(actor -> !currentActorIds.contains(actor.getId()))
+                .collect(Collectors.toList());
+
+        currentActors.addAll(filteredToAdd);
+        movie.setActors(currentActors);
+
+        try {
+            movieRepository.save(movie);
+            return new ApiResponse<>(200, "Add actors to movie successfully", movieId);
+        } catch (Exception e) {
+            return new ApiResponse<>(500, "Exception | " + e.getMessage(), movieId);
+        }
+    }
+
+
+    @Override
+    public ApiResponse<Integer> deleteActor(Integer movieId, List<Integer> ids) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new NotFoundException("Movie isn't existed"));
+
+        List<Actor> updatedList = movie.getActors().stream()
+                .filter(actor -> !ids.contains(actor.getId()))
+                .collect(Collectors.toList());
+
+        movie.setActors(updatedList);
+
+        movieRepository.save(movie);
+
+        return new ApiResponse<>(200, "delete actors from movie successfully", movieId);
+    }
+
+    @Override
+    public ApiResponse<PageableResponse<ActorResponse>> findActorsByMovie(Pageable pageable, Integer movieId, String name, String gender, String date_of_birth, String nationality) {
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
+
+        Date startDate = null;
+        Date endDate = null;
+        if (date_of_birth != null && !date_of_birth.isEmpty()) {
+            try {
+                String[] dates = date_of_birth.split(" - ");
+                if (dates.length == 2) {
+                    startDate = dateUtil.stringToSqlDate(dates[0]);
+                    endDate = dateUtil.stringToSqlDate(dates[1]);
+                }
+                else{
+                    throw new CustomDateException("please enter the right date format: dd/MM/yyyy - dd/MM/yyyy");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        Page<Actor> actorEntities = movieRepository.findActorByMovieId(movieId,
+                name, gender, startDate, endDate, nationality, sortedPageable
+        );
+
+        List<ActorResponse> actorResponseDTOS = new ArrayList<>();
+        if (actorEntities.isEmpty()){
+            throw new NotFoundException("Not found exception");
+        }
+        else {
+            for(Actor d : actorEntities){
+                actorResponseDTOS.add(actorMapper.toActorResponse(d));
+            }
+
+            PageableResponse<ActorResponse> pageableResponse= new PageableResponse<>(actorResponseDTOS, actorEntities.getTotalElements());
+            ApiResponse<PageableResponse<ActorResponse>> apiResponse = new ApiResponse<>(200, "OK", pageableResponse);
+            return apiResponse;
+        }
+    }
+
+    @Override
+    public ApiResponse<PageableResponse<ActorResponse>> findActorsNotInMovie(Pageable pageable, Integer movieId, String name, String gender, String date_of_birth, String nationality) {
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdDate").descending());
+
+        Date startDate = null;
+        Date endDate = null;
+        if (date_of_birth != null && !date_of_birth.isEmpty()) {
+            try {
+                String[] dates = date_of_birth.split(" - ");
+                if (dates.length == 2) {
+                    startDate = dateUtil.stringToSqlDate(dates[0]);
+                    endDate = dateUtil.stringToSqlDate(dates[1]);
+                }
+                else{
+                    throw new CustomDateException("please enter the right date format: dd/MM/yyyy - dd/MM/yyyy");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        Page<Actor> actorEntities = movieRepository.findActorNotInMovie(movieId,
+                name, gender, startDate, endDate, nationality, sortedPageable
+        );
+
+        List<ActorResponse> actorResponseDTOS = new ArrayList<>();
+        if (actorEntities.isEmpty()){
+            throw new NotFoundException("Not found exception");
+        }
+        else {
+            for(Actor d : actorEntities){
+                actorResponseDTOS.add(actorMapper.toActorResponse(d));
+            }
+
+            PageableResponse<ActorResponse> pageableResponse= new PageableResponse<>(actorResponseDTOS, actorEntities.getTotalElements());
+            ApiResponse<PageableResponse<ActorResponse>> apiResponse = new ApiResponse<>(200, "OK", pageableResponse);
+            return apiResponse;
+        }
     }
 
 

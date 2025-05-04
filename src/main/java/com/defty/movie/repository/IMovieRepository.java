@@ -1,6 +1,7 @@
 package com.defty.movie.repository;
 
 
+import com.defty.movie.entity.Actor;
 import com.defty.movie.entity.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
@@ -79,4 +82,44 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
     List<Movie> findByTitleContainingIgnoreCaseAndStatus(String title, Integer status);
 
     List<Movie> findAllByStatus(Integer status);
+
+    @Query(value = "SELECT a FROM Movie m JOIN m.actors a " +
+            "WHERE m.id = :movieId " +
+            "AND (:name IS NULL OR a.fullName LIKE %:name%) " +
+            "AND (:gender IS NULL OR a.gender = :gender) " +
+            "AND (:startDate IS NULL AND :endDate IS NULL OR a.dateOfBirth BETWEEN :startDate AND :endDate) " +
+            "AND (:nationality IS NULL OR a.nationality LIKE %:nationality%)" +
+            "AND a.status = 1",
+            countQuery = "SELECT count (a) FROM Movie m JOIN m.actors a " +
+                    "WHERE m.id = :movieId " +
+                    "AND (:name IS NULL OR a.fullName LIKE %:name%) " +
+                    "AND (:gender IS NULL OR a.gender = :gender) " +
+                    "AND (:startDate IS NULL AND :endDate IS NULL OR a.dateOfBirth BETWEEN :startDate AND :endDate) " +
+                    "AND (:nationality IS NULL OR a.nationality LIKE %:nationality%)" +
+                    "AND a.status = 1")
+    Page<Actor> findActorByMovieId(@Param("movieId") Integer movieId,
+                                   @Param("name") String name,
+                                   @Param("gender") String gender,
+                                   @Param("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                   @Param("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+                                   @Param("nationality") String nationality,
+                                   Pageable pageable
+    );
+
+    @Query(value = "SELECT a FROM Actor a " +
+            "WHERE a.id NOT IN (SELECT a2.id FROM Movie m JOIN m.actors a2 WHERE m.id = :movieId)" +
+            " AND (:name IS NULL OR a.fullName LIKE %:name%) " +
+            " AND (:gender IS NULL OR a.gender = :gender) " +
+            " AND (:startDate IS NULL AND :endDate IS NULL OR a.dateOfBirth BETWEEN :startDate AND :endDate) " +
+            " AND (:nationality IS NULL OR a.nationality LIKE %:nationality%) " +
+            " AND a.status = 1 ",
+            countQuery = "")
+    Page<Actor> findActorNotInMovie(@Param("movieId") Integer movieId,
+                                   @Param("name") String name,
+                                   @Param("gender") String gender,
+                                   @Param("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                   @Param("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+                                   @Param("nationality") String nationality,
+                                   Pageable pageable
+    );
 }

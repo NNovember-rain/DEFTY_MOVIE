@@ -48,7 +48,7 @@ public class MovieUserService implements IMovieUserService {
                 episodeNameResponses.add(episodeNameResponse);
             }
 
-            Set<Actor> actors=movie.getActors();
+            List<Actor> actors=movie.getActors();
             List<ActorNameResponse> actorNameResponses = new ArrayList<>();
             for(Actor actor : actors){
                 ActorNameResponse actorNameResponse = new ActorNameResponse();
@@ -112,7 +112,7 @@ public class MovieUserService implements IMovieUserService {
             }
 
             List<ActorNameResponse> actorNames = new ArrayList<>();
-            Set<Actor> actors = movie.getActors();
+            List<Actor> actors = movie.getActors();
             for (Actor actor : actors) {
                 if(actor.getStatus()==1) {
                     ActorNameResponse actorResponse = new ActorNameResponse();
@@ -166,7 +166,7 @@ public class MovieUserService implements IMovieUserService {
         if(movieOptional.isPresent()){
             Movie movie = movieOptional.get();
             MovieDetailDirectorActorResponse movieDetailDirectorActorResponse = new MovieDetailDirectorActorResponse();
-            Set<Actor> actors=movie.getActors();
+            List<Actor> actors=movie.getActors();
             Director director=movie.getDirector();
 
             List<ActorMovieDetailResponse> actorResponses=new ArrayList<>();

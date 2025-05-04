@@ -59,4 +59,38 @@ public class MovieController {
     public ApiResponse<Integer> changeStatus(@PathVariable Integer id) {
         return movieService.changeStatus(id);
     }
+
+    @PostMapping("/{movieId}/{actorIds}")
+    @PreAuthorize("@requiredPermission.checkPermission('ADD_ACTOR_TO_MOVIE')")
+    public ApiResponse<Integer> addActor(@PathVariable Integer movieId, @PathVariable List<Integer> actorIds) {
+        return movieService.addActor(movieId, actorIds);
+    }
+
+    @GetMapping("/{movieId}/actors")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_ACTOR_BY_MOVIE')")
+    public Object getActorsByMovie(Pageable pageable,
+                                      @PathVariable Integer movieId,
+                                      @RequestParam(name = "name", required = false) String name,
+                                      @RequestParam(name = "gender", required = false) String gender,
+                                      @RequestParam(name = "date_of_birth", required = false) String date_of_birth,
+                                      @RequestParam(name = "nationality", required = false) String nationality) {
+        return movieService.findActorsByMovie(pageable, movieId, name, gender, date_of_birth, nationality);
+    }
+
+    @DeleteMapping("/{movieId}/{actorIds}")
+    @PreAuthorize("@requiredPermission.checkPermission('DELETE_ACTOR_FROM_MOVIE')")
+    public ApiResponse<Integer> deleteActor(@PathVariable Integer movieId, @PathVariable List<Integer> actorIds) {
+        return movieService.deleteActor(movieId, actorIds);
+    }
+
+    @GetMapping("/{movieId}/other-actors")
+    @PreAuthorize("@requiredPermission.checkPermission('GET_ACTOR_NOT_IN_MOVIE')")
+    public Object getActorsNotInMovie(Pageable pageable,
+                                      @PathVariable Integer movieId,
+                                      @RequestParam(name = "name", required = false) String name,
+                                      @RequestParam(name = "gender", required = false) String gender,
+                                      @RequestParam(name = "date_of_birth", required = false) String date_of_birth,
+                                      @RequestParam(name = "nationality", required = false) String nationality) {
+        return movieService.findActorsNotInMovie(pageable, movieId, name, gender, date_of_birth, nationality);
+    }
 }
