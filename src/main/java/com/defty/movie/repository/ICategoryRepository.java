@@ -107,6 +107,6 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
             @Param("directorId") Integer directorId,
             Pageable pageable);
 
-
-
+    @Query("SELECT c.name FROM Category c WHERE c.status = 1")
+    List<String> findAllCategories();
 }
