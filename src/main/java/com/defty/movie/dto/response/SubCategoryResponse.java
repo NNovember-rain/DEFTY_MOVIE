@@ -7,6 +7,7 @@ import java.util.Date;
 public class SubCategoryResponse {
     String movieThumbnail;
     String movieTitle;
+    Integer membershipType;
     String description;
     Integer numberOfChild;
     Date releaseDate;

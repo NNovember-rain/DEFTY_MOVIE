@@ -111,7 +111,7 @@ public class AuthUserService implements IAuthUserService {
             log.error("{}Email already exit", PREFIX_AUTH_USER);
             throw new AlreadyExitException("Email already exit");
         }
-        if(userRepository.findByPhone(registerRequest.getPhone()).isPresent()){
+        if(userRepository.findByPhone(registerRequest.getPhone()).isPresent() && registerRequest.getPhone() != null) {
             log.error("{}Phone already exit", PREFIX_AUTH_USER);
             throw new AlreadyExitException("Phone already exit");
         }
