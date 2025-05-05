@@ -27,7 +27,6 @@ import java.util.Set;
 public class MovieUserService implements IMovieUserService {
 
     IMovieRepository movieRepository;
-    IMovieRepository movieUserRepository;
     IEpisodeRepository episodeRepository;
 
 
@@ -88,8 +87,10 @@ public class MovieUserService implements IMovieUserService {
     public MovieDetailResponse getMovieDetails(String slugMovie) {
         Optional<Movie> movieOptional = movieRepository.findBySlugAndStatus(slugMovie,1);
         if(movieOptional.isPresent()){
+
             Movie movie = movieOptional.get();
             MovieDetailResponse movieDetailResponse= new MovieDetailResponse();
+            Episode firstEpisode = episodeRepository.findByMovieIdAndNumberAndStatus(movie.getId(),1,1);
 
             Set<MovieCategory> movieCategories = movie.getMovieCategories();
             List<CategoryNameResponse> categoryNames = new ArrayList<>();
@@ -135,6 +136,7 @@ public class MovieUserService implements IMovieUserService {
             movieDetailResponse.setCoverImage(movie.getCoverImage());
             movieDetailResponse.setDuration(episodes.size());
             movieDetailResponse.setTrailer(movie.getTrailer());
+            movieDetailResponse.setFirstEpisodeSlug(firstEpisode.getSlug());
 
             return movieDetailResponse;
         }else throw new NotFoundException("Movie not found");
@@ -223,6 +225,21 @@ public class MovieUserService implements IMovieUserService {
             Movie movie = episode.get().getMovie();
             return movie;
         }else throw new NotFoundException("The episode doesn't exist with slug Movie");
+    }
+
+    @Override
+    public List<MovieNameResponse> getAllMovies() {
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Movie> movies=movieRepository.findAll(pageable).getContent();
+        List<MovieNameResponse> movieResponses=new ArrayList<>();
+        for (Movie movie : movies) {
+            MovieNameResponse movieResponse = new MovieNameResponse();
+            movieResponse.setThumbnail(movie.getThumbnail());
+            movieResponse.setName(movie.getTitle());
+            movieResponse.setSlug(movie.getSlug());
+            movieResponses.add(movieResponse);
+        }
+        return movieResponses;
     }
 }
 

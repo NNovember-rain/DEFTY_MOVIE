@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MovieUserRedisServiceImpl implements IMovieUserRedisService {
-    StringUtil util;
+
     ApplicationContext applicationContext;
     JedisPooled jedis;
 
