@@ -20,20 +20,20 @@ import com.defty.movie.view.Views;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/user/movie-comment")
+@RequestMapping("${api.prefix}/user")
 public class MovieCommentController {
 
     private final IMovieCommentService movieCommentService;
     String PREFIX_MOVIE_COMMENT = "MOVIE_COMMENT | ";
 
-    @PostMapping()
+    @PostMapping("/movie-comment")
     public Object addMovieComment(@RequestBody MovieCommentRequest movieCommentRequest) {
         Integer commentId = movieCommentService.addMovieComment(movieCommentRequest);
         log.info(PREFIX_MOVIE_COMMENT + "Add Episode Comment successfully");
         return ApiResponeUtil.ResponseCreatedSuccess(commentId);
     }
 
-    @PatchMapping("/{commentId}")
+    @PatchMapping("/movie-comment/{commentId}")
     public Object updateMovieComment(@PathVariable Integer commentId, @RequestBody MovieCommentUpdateRequest movieCommentUpdateRequest) {
         movieCommentService.updateMovieComment(commentId, movieCommentUpdateRequest);
         String massage="Updated episode comment";
@@ -41,7 +41,7 @@ public class MovieCommentController {
         return ApiResponeUtil.ResponseOK(massage);
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/movie-comment/{commentId}")
     public Object deleteMovieComment(@PathVariable Integer commentId) {
         movieCommentService.deleteMovieComment(commentId);
         String massage="Deleted episode comment";
@@ -49,7 +49,7 @@ public class MovieCommentController {
         return ApiResponeUtil.ResponseOK(massage);
     }
 
-    @GetMapping("/{episodeId}")
+    @GetMapping("/accessible/episode/{episodeId}")
     public Object getMovieComment(@PathVariable Integer episodeId,
                                   @Valid @RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "size", defaultValue = "10") int size) {
