@@ -15,11 +15,12 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class MovieCommentResponse {
-    int id;
+    Integer id;
     String content;
     Date createdAt;
-    String replyFrom;
+    String replyTo; // Trường này sẽ chỉ có giá trị khi lấy replies bằng API thứ 21
+    Integer parenCommentId;
     EpisodeCommentUserResponse user;
     List<CommentReactionResponse> reactions;
-    List<MovieCommentResponse> replies;
+    Integer toTalReply;
 }

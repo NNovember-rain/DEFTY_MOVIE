@@ -21,53 +21,32 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class MovieCommentMapper {
-    private final ModelMapper modelMapper;
+    // ... các dependency khác ...
     private final IMovieCommentReactionRepository movieCommentReactionRepository;
     private final UserMapper userMapper;
-    private final IMovieCommentRepository movieCommentRepository;
+    // private final IMovieCommentRepository movieCommentRepository; // Có thể không cần ở đây nữa nếu service xử lý hết
 
-    public MovieComment toMovieComment(MovieCommentRequest movieCommentRequest) {
-        return modelMapper.map(movieCommentRequest, MovieComment.class);
-    }
-
-    public MovieCommentResponse toMovieCommentResponse(MovieComment movieComment) {
-        MovieCommentResponse movieCommentResponse = mapperMovieCommentResponse(movieComment);
-        // Lấy tất cả replies từ các cấp con và gộp vào danh sách replies
-        List<MovieCommentResponse> allReplies = new ArrayList<>();
-        collectAllReplies(movieComment.getId(), allReplies);
-        movieCommentResponse.setReplies(allReplies);
-        return movieCommentResponse;
-    }
-
-    // Phương thức đệ quy để thu thập tất cả replies từ các cấp con
-    private void collectAllReplies(Integer parentCommentId, List<MovieCommentResponse> allReplies) {
-        Optional<List<MovieComment>> movieCommentsOptional = movieCommentRepository.findByParentMovieCommentIdAndStatus(parentCommentId, 1);
-        if (movieCommentsOptional.isPresent()) {
-            List<MovieComment> movieComments = movieCommentsOptional.get();
-            for (MovieComment reply : movieComments) {
-                // Chuyển đổi reply thành MovieCommentResponse
-                MovieCommentResponse replyResponse = mapperMovieCommentResponse(reply);
-                replyResponse.setReplyFrom(reply.getParentMovieComment().getUser().getUsername());
-                allReplies.add(replyResponse);
-                // Đệ quy để thu thập các replies của reply hiện tại
-                collectAllReplies(reply.getId(), allReplies);
-            }
-        }
-    }
-
+    // Phương thức map các trường cơ bản, user, reactions
     public MovieCommentResponse mapperMovieCommentResponse(MovieComment movieComment) {
-        List<MovieCommentReaction> movieCommentReactions = movieCommentReactionRepository.findByMovieCommentId(movieComment.getId());
         MovieCommentResponse movieCommentResponse = new MovieCommentResponse();
         movieCommentResponse.setId(movieComment.getId());
         movieCommentResponse.setContent(movieComment.getContent());
+        movieCommentResponse.setCreatedAt(movieComment.getCreatedDate()); // Hoặc .getCreatedAt()
+        if(movieComment.getParentMovieComment()!=null) {
+            movieCommentResponse.setParenCommentId(movieComment.getParentMovieComment().getId());
+        }
+
+        EpisodeCommentUserResponse episodeCommentUserResponse = userMapper.toEpisodeCommentUserResponse(movieComment.getUser());
+        movieCommentResponse.setUser(episodeCommentUserResponse);
+
+        List<MovieCommentReaction> movieCommentReactions = movieCommentReactionRepository.findByMovieCommentId(movieComment.getId());
         List<CommentReactionResponse> commentReactionResponses = new ArrayList<>();
         for (MovieCommentReaction movieCommentReaction : movieCommentReactions) {
             commentReactionResponses.add(toCommentReactionResponse(movieCommentReaction));
         }
-        movieCommentResponse.setCreatedAt(movieComment.getCreatedDate());
         movieCommentResponse.setReactions(commentReactionResponses);
-        EpisodeCommentUserResponse episodeCommentUserResponse = userMapper.toEpisodeCommentUserResponse(movieComment.getUser());
-        movieCommentResponse.setUser(episodeCommentUserResponse);
+
+        // replyFrom và replyCount sẽ được service set cụ thể cho từng API
         return movieCommentResponse;
     }
 

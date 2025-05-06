@@ -2,7 +2,9 @@ package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.MovieCommentRequest;
 import com.defty.movie.dto.request.MovieCommentUpdateRequest;
+import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.dto.response.MovieCommentResponse;
+import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.exception.FieldRequiredException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.MovieCommentMapper;
@@ -13,18 +15,19 @@ import com.defty.movie.repository.IEpisodeRepository;
 import com.defty.movie.repository.IMovieCommentRepository;
 import com.defty.movie.service.IAuthUserService;
 import com.defty.movie.service.IMovieCommentService;
+import com.defty.movie.utils.ApiResponeUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -112,28 +115,63 @@ public class MovieCommentService implements IMovieCommentService {
 
 
     @Override
-    public List<MovieCommentResponse> getMovieComment(Integer movieId, Pageable pageable) {
-        Page<MovieComment> movieCommentPage = movieCommentRepository.findByEpisodeIdAndParentMovieCommentIsNullAndStatus(movieId, 1,pageable);
-        if(!movieCommentPage.getContent().isEmpty()) {
-            List<MovieComment> movieCommentList = movieCommentPage.getContent();
-            List<MovieCommentResponse> movieCommentResponses = new ArrayList<>();
-            for(MovieComment movieComment:movieCommentList) {
-                if(movieComment.getParentMovieComment()==null) {
-                    movieCommentResponses.add(movieCommentMapper.toMovieCommentResponse(movieComment));
-                }
+    public PageableResponse<MovieCommentResponse> getMovieComment(Integer episodeId, Pageable pageable) {
 
-            }
-            return movieCommentResponses;
-        }else{
-            log.error("{}Episode Comment not found", PREFIX_MOVIE_COMMENT);
-            throw new NotFoundException("Episode Comment not found");
+        Page<MovieComment> movieCommentPage = movieCommentRepository.findByEpisodeIdAndParentMovieCommentIsNullAndStatus(episodeId, 1, pageable);
+        if (!movieCommentPage.hasContent()) {
+            throw new NotFoundException("No movie comment found");
         }
+        int totalElements = movieCommentRepository.findByEpisodeIdAndParentMovieCommentIsNullAndStatus(episodeId, 1).size();
+        List<MovieCommentResponse> responseList = movieCommentPage.getContent().stream()
+                .map(comment -> {
+                    MovieCommentResponse response = movieCommentMapper.mapperMovieCommentResponse(comment);
+                    long replyCount = movieCommentRepository.countByParentMovieCommentIdAndStatus(comment.getId(), 1);
+                    response.setToTalReply((int) replyCount);
+                    response.setReplyTo(null);
+                    return response;
+                })
+                .collect(Collectors.toList());
+        return PageableResponse.<MovieCommentResponse>builder()
+                .content(responseList)
+                .totalElements(totalElements+0L)
+                .build();
     }
 
     @Override
     public MovieComment getMovieCommentById(Integer id) {
         return movieCommentRepository.findById(id).orElseThrow(() -> new NotFoundException("Movie Comment not found"));
     }
+
+    @Override
+    public List<MovieCommentResponse> getMovieCommentReplies(Integer parentCommentId, Pageable pageable) {
+        // 1. (Tùy chọn nhưng nên có) Kiểm tra comment cha có tồn tại không
+        MovieComment movieParentComment=movieCommentRepository.findByIdAndStatus(parentCommentId, 1)
+                .orElseThrow(() -> {
+                    return new NotFoundException("Parent comment not found with id: " + parentCommentId);
+                });
+
+        User user= movieParentComment.getUser();
+        // 2. Sử dụng native query đã tạo trong Repository để lấy những thằng con
+        Page<MovieComment> repliesPage = movieCommentRepository.findCommentDescendantsBreadthFirstPaginated(parentCommentId, 1, pageable);
+
+        List<MovieComment> commentsInPage = repliesPage.getContent();
+        if (commentsInPage.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<MovieCommentResponse> responseList = commentsInPage.stream().map(comment -> {
+            // lấy cmt cha
+            MovieComment parentComment= movieCommentRepository.findByIdAndStatus(comment.getParentMovieComment().getId(), 1).orElseThrow(() -> new NotFoundException("Parent comment not found"));
+
+            MovieCommentResponse response = movieCommentMapper.mapperMovieCommentResponse(comment);
+            long ownRepliesCount = movieCommentRepository.countByParentMovieCommentIdAndStatus(comment.getId(), 1);
+            response.setToTalReply((int) ownRepliesCount);
+            response.setReplyTo(parentComment.getUser().getFullName());
+            return response;
+        }).collect(Collectors.toList());
+
+        return responseList; // Trả về danh sách comment của trang hiện tại
+    }
+
 
     private void disableCommentAndChildren(MovieComment comment) {
         comment.setStatus(0);

@@ -3,6 +3,7 @@ package com.defty.movie.controller.user;
 import com.defty.movie.dto.request.MovieCommentRequest;
 import com.defty.movie.dto.request.MovieCommentUpdateRequest;
 import com.defty.movie.dto.response.MovieCommentResponse;
+import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.entity.MovieComment;
 import com.defty.movie.service.IMovieCommentService;
 import com.defty.movie.utils.ApiResponeUtil;
@@ -54,8 +55,21 @@ public class MovieCommentController {
                                   @Valid @RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        List<MovieCommentResponse> movieComments= movieCommentService.getMovieComment(episodeId,pageable);
+        PageableResponse<MovieCommentResponse> movieComments= movieCommentService.getMovieComment(episodeId,pageable);
         log.info("{}Get all Episode Comment by movieId successfully", PREFIX_MOVIE_COMMENT);
         return ApiResponeUtil.ResponseOK(movieComments);
+    }
+
+    @GetMapping("/accessible/movie-comment/{commentId}/replies")
+    public Object getMovieCommentReplies(
+            @PathVariable Integer commentId,
+            @Valid @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size) { // Có thể dùng size khác cho replies
+        // Sắp xếp replies theo ngày tạo tăng dần thường hợp lý hơn để đọc theo thứ tự
+        Pageable pageable = PageRequest.of(page, size);
+        List<MovieCommentResponse> replies = movieCommentService.getMovieCommentReplies(commentId, pageable);
+        log.info("{} Get replies for comment {} successfully", PREFIX_MOVIE_COMMENT, commentId);
+        // Tương tự, xem xét trả về Page<> nếu cần thông tin phân trang đầy đủ
+        return ApiResponeUtil.ResponseOK(replies);
     }
 }
