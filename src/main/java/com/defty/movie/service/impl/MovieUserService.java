@@ -125,6 +125,7 @@ public class MovieUserService implements IMovieUserService {
 
             Set<Episode> episodes = movie.getEpisodes();
 
+            movieDetailResponse.setId(movie.getId());
             movieDetailResponse.setTitle(movie.getTitle());
             movieDetailResponse.setCategory(categoryNames);
             movieDetailResponse.setDirector(directorResponse);

@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MovieDetailResponse {
+    Integer id;
     String title;
     String rating;
     Date releaseDate;

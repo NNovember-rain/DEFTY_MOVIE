@@ -1,14 +1,15 @@
 package com.defty.movie.controller.user;
 
-import com.defty.movie.dto.response.ApiResponse;
-import com.defty.movie.dto.response.CategoryUserResponse;
-import com.defty.movie.dto.response.MovieResponse;
+import com.defty.movie.dto.response.*;
 import com.defty.movie.entity.Movie;
 import com.defty.movie.service.ICategoryUserService;
+import com.defty.movie.service.IMovieService;
+import com.defty.movie.utils.ApiResponeUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,5 +52,16 @@ public class CategoryUserController {
                 .data(result)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    @GetMapping("/movies")
+    public ResponseEntity<ApiResponse<PageableResponse<MovieResponse>>> getMoviesByCategory(
+            @RequestParam String slug,
+            @RequestParam(required = false) String nation,
+            @RequestParam(required = false) String releaseDate,
+            @RequestParam(required = false) String sortType,
+            Pageable pageable) {
+        return ResponseEntity.ok(categoryUserService.findMoviesByCategory(pageable, slug, nation, releaseDate, sortType));
     }
 }
