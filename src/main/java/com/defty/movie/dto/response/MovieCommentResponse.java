@@ -19,8 +19,8 @@ public class MovieCommentResponse {
     String content;
     Date createdAt;
     String replyTo; // Trường này sẽ chỉ có giá trị khi lấy replies bằng API thứ 21
-    Integer parenCommentId;
+    Integer parentCommentId;
     EpisodeCommentUserResponse user;
     List<CommentReactionResponse> reactions;
-    Integer toTalReply;
+    Integer totalReply;
 }

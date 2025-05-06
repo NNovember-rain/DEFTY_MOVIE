@@ -12,7 +12,8 @@ import java.util.Optional;
 
 public interface IMovieCommentRepository extends JpaRepository<MovieComment, Integer> {
     Optional<List<MovieComment>> findByParentMovieComment_Id(Integer movieCommentId);
-    Page<MovieComment> findByEpisode_IdAndStatus(Integer episodeId, int status, Pageable pageable);
+
+    List<MovieComment> findAllByEpisodeIdAndStatus(Integer id,Integer status);
     Optional<MovieComment> findByIdAndStatus(Integer id, int status);
     Optional<List<MovieComment>> findByParentMovieCommentIdAndStatus(Integer movieCommentId, int status);
     Page<MovieComment> findByEpisodeIdAndParentMovieCommentIsNullAndStatus(Integer episodeId, int status, Pageable pageable);

@@ -33,7 +33,7 @@ public class MovieCommentMapper {
         movieCommentResponse.setContent(movieComment.getContent());
         movieCommentResponse.setCreatedAt(movieComment.getCreatedDate()); // Hoặc .getCreatedAt()
         if(movieComment.getParentMovieComment()!=null) {
-            movieCommentResponse.setParenCommentId(movieComment.getParentMovieComment().getId());
+            movieCommentResponse.setParentCommentId(movieComment.getParentMovieComment().getId());
         }
 
         EpisodeCommentUserResponse episodeCommentUserResponse = userMapper.toEpisodeCommentUserResponse(movieComment.getUser());

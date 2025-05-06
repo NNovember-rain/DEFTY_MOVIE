@@ -121,12 +121,12 @@ public class MovieCommentService implements IMovieCommentService {
         if (!movieCommentPage.hasContent()) {
             throw new NotFoundException("No movie comment found");
         }
-        int totalElements = movieCommentRepository.findByEpisodeIdAndParentMovieCommentIsNullAndStatus(episodeId, 1).size();
+        int totalElements = movieCommentRepository.findAllByEpisodeIdAndStatus(episodeId,1).size();
         List<MovieCommentResponse> responseList = movieCommentPage.getContent().stream()
                 .map(comment -> {
                     MovieCommentResponse response = movieCommentMapper.mapperMovieCommentResponse(comment);
                     long replyCount = movieCommentRepository.countByParentMovieCommentIdAndStatus(comment.getId(), 1);
-                    response.setToTalReply((int) replyCount);
+                    response.setTotalReply((int) replyCount);
                     response.setReplyTo(null);
                     return response;
                 })
@@ -156,7 +156,7 @@ public class MovieCommentService implements IMovieCommentService {
 
         List<MovieComment> commentsInPage = repliesPage.getContent();
         if (commentsInPage.isEmpty()) {
-            return Collections.emptyList();
+            throw new NotFoundException("No movie comment found");
         }
         List<MovieCommentResponse> responseList = commentsInPage.stream().map(comment -> {
             // lấy cmt cha
@@ -164,7 +164,7 @@ public class MovieCommentService implements IMovieCommentService {
 
             MovieCommentResponse response = movieCommentMapper.mapperMovieCommentResponse(comment);
             long ownRepliesCount = movieCommentRepository.countByParentMovieCommentIdAndStatus(comment.getId(), 1);
-            response.setToTalReply((int) ownRepliesCount);
+            response.setTotalReply((int) ownRepliesCount);
             response.setReplyTo(parentComment.getUser().getFullName());
             return response;
         }).collect(Collectors.toList());
