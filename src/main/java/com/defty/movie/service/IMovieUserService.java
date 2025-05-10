@@ -14,4 +14,5 @@ public interface IMovieUserService {
     MovieDetailDirectorActorResponse getMovieDetailActor(String slugMovie);
     Movie getMovieBySlugEpisode(String slugEpisode);
     List<MovieNameResponse> getAllMovies();
+    List<MovieAppSearchResultResponse> getMoviesAppResult(String title);
 }

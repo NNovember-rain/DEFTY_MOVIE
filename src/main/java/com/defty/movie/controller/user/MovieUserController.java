@@ -38,6 +38,12 @@ public class MovieUserController {
         return ApiResponeUtil.ResponseOK(movieDetailResponse);
     }
 
+    @GetMapping("/movie-search/app/result")
+    public Object getMoviesAppResult(@RequestParam String title) {
+        List<MovieAppSearchResultResponse> movieDetailResponse = movieUserService.getMoviesAppResult(title);
+        return ApiResponeUtil.ResponseOK(movieDetailResponse);
+    }
+
     @GetMapping("/hot-search")
     public Object getMovies() {
         List<MovieNameResponse> movies = movieUserService.getAllMovies();

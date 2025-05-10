@@ -231,7 +231,7 @@ public class MovieUserService implements IMovieUserService {
     @Override
     public List<MovieNameResponse> getAllMovies() {
         Pageable pageable = PageRequest.of(0, 10);
-        List<Movie> movies=movieRepository.findAll(pageable).getContent();
+        List<Movie> movies=movieRepository.findAllByStatus(pageable,1);
         List<MovieNameResponse> movieResponses=new ArrayList<>();
         for (Movie movie : movies) {
             MovieNameResponse movieResponse = new MovieNameResponse();
@@ -241,6 +241,32 @@ public class MovieUserService implements IMovieUserService {
             movieResponses.add(movieResponse);
         }
         return movieResponses;
+    }
+
+    @Override
+    public List<MovieAppSearchResultResponse> getMoviesAppResult(String title) {
+        List<Movie> movies =movieRepository.findByTitleContainingIgnoreCaseAndStatus(title,1);
+        List<MovieAppSearchResultResponse> movieAppSearchResultResponses=new ArrayList<>();
+        for (Movie movie : movies) {
+            MovieAppSearchResultResponse movieAppSearchResultResponse = new MovieAppSearchResultResponse();
+            BeanUtils.copyProperties(movie,movieAppSearchResultResponse);
+
+            List<Actor> actors=movie.getActors();
+            List<String> actorNameResponses = new ArrayList<>();
+            for(Actor actor : actors){
+                actorNameResponses.add(actor.getFullName());
+            }
+            movieAppSearchResultResponse.setActors(actorNameResponses);
+            Set<MovieCategory> movieCategories=movie.getMovieCategories();
+            List<String> categorys=new ArrayList<>();
+            for(MovieCategory movieCategory : movieCategories){
+                Category category = movieCategory.getCategory();
+                categorys.add(category.getName());
+            }
+            movieAppSearchResultResponse.setCategories(categorys);
+            movieAppSearchResultResponses.add(movieAppSearchResultResponse);
+        }
+        return movieAppSearchResultResponses;
     }
 }
 

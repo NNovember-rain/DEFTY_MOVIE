@@ -83,6 +83,7 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
     List<Movie> findByTitleContainingIgnoreCaseAndStatus(String title, Integer status);
 
     List<Movie> findAllByStatus(Integer status);
+    List<Movie> findAllByStatus(Pageable pageable, Integer status);
 
     @Query("SELECT DISTINCT m.nation FROM Movie m" +
             " WHERE m.status = 1")

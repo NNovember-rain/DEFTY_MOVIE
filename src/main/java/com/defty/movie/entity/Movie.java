@@ -13,7 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-//@EntityListeners(MovieListener.class)
+@EntityListeners(MovieListener.class)
 @Table(name = "movie")
 public class Movie extends BaseEntity{
     @Column(name = "title")
