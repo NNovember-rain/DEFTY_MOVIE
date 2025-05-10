@@ -45,6 +45,7 @@ public class ShowonMapper {
                     subCategoryResponse.setNumberOfChild(movie.getEpisodes().size());
                     subCategoryResponse.setReleaseDate(movie.getReleaseDate());
                     subCategoryResponse.setSlug(movie.getSlug());
+                    subCategoryResponse.setMembershipType(movie.getMembershipType());
 
                     subCategoryResponses.add(subCategoryResponse);
                 }

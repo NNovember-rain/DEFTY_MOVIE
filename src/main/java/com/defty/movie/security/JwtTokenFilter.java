@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +27,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
@@ -84,8 +86,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                         }
                     }
                 }
-            }else filterChain.doFilter(request, response);
+            }
         } catch (Exception e) {
+            log.info("Unauthorized: Invalid token");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Invalid token");
         }
     }
@@ -100,7 +103,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/user/auth/register", apiPrefix), "POST"),
                 Pair.of(String.format("%s/user/auth/logout", apiPrefix), "POST"),
                 Pair.of(String.format("%s/user/auth/check-account", apiPrefix), "GET"),
+                Pair.of(String.format("%s/user/auth/check-account-token", apiPrefix), "GET"),
                 Pair.of(String.format("%s/user/accessible/.*", apiPrefix), "GET"),
+                Pair.of(String.format("%s/admin/upload-image", apiPrefix), "POST"),
 
                 // Swagger
                 Pair.of("/v3/api-docs", "GET"),

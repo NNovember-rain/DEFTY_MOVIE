@@ -1,9 +1,42 @@
 package com.defty.movie.specication;
 
+import com.defty.movie.entity.Category;
 import com.defty.movie.entity.Movie;
+import com.defty.movie.entity.MovieCategory;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MovieSpecification {
+    public static Specification<Movie> filterByCategoryAndOthers(
+            String slug, String nation, String releaseDate) {
+
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            predicates.add(cb.equal(root.get("status"), 1));
+
+            if (slug != null) {
+                Join<Movie, MovieCategory> movieCategoryJoin = root.join("movieCategories");
+                Join<MovieCategory, Category> categoryJoin = movieCategoryJoin.join("category");
+                predicates.add((Predicate) cb.equal(categoryJoin.get("slug"), slug));
+            }
+
+            if (nation != null) {
+                predicates.add((Predicate) cb.equal(root.get("nation"), nation));
+            }
+
+            if (releaseDate != null) {
+                predicates.add((Predicate) cb.like(root.get("releaseDate").as(String.class), "%" + releaseDate + "%"));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
     public static Specification<Movie> hasTitle(String title) {
         return (root, query, criteriaBuilder) -> {
             if (title == null) {

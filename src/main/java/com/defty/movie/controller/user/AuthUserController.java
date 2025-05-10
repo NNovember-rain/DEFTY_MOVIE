@@ -61,6 +61,38 @@ public class AuthUserController {
                     .data("ok")
                     .data(null)
                     .build();
+            log.error(PREFIX_AUTH_USER + "Not logged in or do not have a valid token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+        try {
+            UserResponse userResponse = authUserService.getUserFromToken(token);
+            log.info(PREFIX_AUTH_USER + "Check account success");
+            ApiResponse<?> response = ApiResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.getReasonPhrase())
+                    .data(userResponse)
+                    .build();
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            log.error(PREFIX_AUTH_USER + "Token is expired or invalid");
+            ApiResponse<?> response = ApiResponse.builder()
+                    .status(HttpStatus.UNAUTHORIZED.value())
+                    .message("Token is expired or invalid")
+                    .data(null)
+                    .build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+    }
+
+    @GetMapping("/check-account-token")
+    public ResponseEntity<?> checkAccountWithToken(@RequestParam String token) {
+        if (token == null || token.isEmpty()) {
+            ApiResponse<?> response = ApiResponse.builder()
+                    .status(HttpStatus.UNAUTHORIZED.value())
+                    .message("Token is null or empty")
+                    .data("ok")
+                    .build();
+            log.error(PREFIX_AUTH_USER + "Token is null or empty");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
         try {

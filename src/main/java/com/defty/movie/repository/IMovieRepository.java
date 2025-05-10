@@ -1,6 +1,7 @@
 package com.defty.movie.repository;
 
 
+import com.defty.movie.dto.response.MovieResponse;
 import com.defty.movie.entity.Actor;
 import com.defty.movie.entity.Movie;
 import org.springframework.data.domain.Page;
@@ -82,6 +83,33 @@ public interface IMovieRepository extends JpaRepository<Movie, Integer>, JpaSpec
     List<Movie> findByTitleContainingIgnoreCaseAndStatus(String title, Integer status);
 
     List<Movie> findAllByStatus(Integer status);
+
+    @Query("SELECT DISTINCT m.nation FROM Movie m" +
+            " WHERE m.status = 1")
+    List<String> findAllNations();
+
+    @Query("SELECT DISTINCT FUNCTION('YEAR', m.releaseDate) FROM Movie m WHERE m.status = 1 ORDER BY FUNCTION('YEAR', m.releaseDate) DESC")
+    List<Integer> findDistinctReleaseYearsOfActiveMovies();
+
+    @Query("""
+    SELECT DISTINCT m FROM Movie m
+    JOIN m.movieCategories mc
+    JOIN mc.category c
+    WHERE
+        (:region IS NULL OR m.nation = :region)
+        AND (:releaseYear IS NULL OR FUNCTION('YEAR', m.releaseDate) = :releaseYear)
+        AND (:paidCategory IS NULL OR m.membershipType = :paidCategory)
+        AND (:category IS NULL OR c.name = :category)
+        AND m.status = 1
+""")
+    List<Movie> searchByAnyFilter(
+            @Param("category") String category,
+            @Param("region") String region,
+            @Param("paidCategory") Integer paidCategory,
+            @Param("releaseYear") Integer releaseYear
+
+    );
+
 
     @Query(value = "SELECT a FROM Movie m JOIN m.actors a " +
             "WHERE m.id = :movieId " +

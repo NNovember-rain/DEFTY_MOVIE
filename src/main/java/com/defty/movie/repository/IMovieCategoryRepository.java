@@ -9,7 +9,5 @@ import java.util.List;
 @Repository
 public interface IMovieCategoryRepository extends JpaRepository<MovieCategory, Integer> {
     MovieCategory findByCategoryIdAndMovieId(Integer categoryId, Integer MovieId);
-    MovieCategory findByCategoryId(Integer categoryId);
-
     void deleteByCategoryIdAndMovieId(Integer categoryId, Integer movieId);
 }

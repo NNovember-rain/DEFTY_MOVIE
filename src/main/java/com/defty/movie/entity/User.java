@@ -65,6 +65,9 @@ public class User extends BaseEntity implements UserDetails {
     LocalDate dateOfBirth;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    Set<RefreshToken> tokens;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     Set<WatchedHistory> watchedHistories;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

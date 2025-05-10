@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                         .requestMatchers(GET, String.format("%s/admin/auth/check-account", apiPrefix)).permitAll()
                         .requestMatchers(POST, String.format("%s/user/auth/**", apiPrefix)).permitAll()
                         .requestMatchers(GET, String.format("%s/user/auth/check-account", apiPrefix)).permitAll()
+                        .requestMatchers(GET, String.format("%s/user/auth/check-account-token", apiPrefix)).permitAll()
                         .requestMatchers(POST, String.format("%s/admin/upload-image", apiPrefix)).permitAll()
                         .anyRequest().authenticated()
                 )
