@@ -35,6 +35,12 @@ public class EpisodeUserController {
         return ApiResponeUtil.ResponseOK(movieDetailResponse);
     }
 
+    @GetMapping("/first")
+    public Object getEpisodeFirst(@RequestParam String slug) { //slugMovie
+        MovieDetailResponse movieDetailResponse = episodeUserService.getEpisodeFirst(slug);
+        return ApiResponeUtil.ResponseOK(movieDetailResponse);
+    }
+
     @GetMapping("/list")
     public Object getListEpisode(@RequestParam(value = "slug") String slug,
                                  @Valid @RequestParam(value = "page", defaultValue = "0") int page,
@@ -47,6 +53,12 @@ public class EpisodeUserController {
     @GetMapping("/video")
     public Object getVideoEpisode(@RequestParam String slug) {
         EpisodeResponse data=episodeUserService.getVideoUrl(slug);
+        return ApiResponeUtil.ResponseOK(data);
+    }
+
+    @GetMapping("/first/video")
+    public Object getVideoEpisodeFirst(@RequestParam String slug) { // slugMovie
+        EpisodeResponse data = episodeUserService.getVideoUrlFirst(slug);
         return ApiResponeUtil.ResponseOK(data);
     }
 }
