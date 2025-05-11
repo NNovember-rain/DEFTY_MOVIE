@@ -225,7 +225,10 @@ public class MovieUserService implements IMovieUserService {
         if(episode.isPresent()){
             Movie movie = episode.get().getMovie();
             return movie;
-        }else throw new NotFoundException("The episode doesn't exist with slug Movie");
+        }else {
+            log.error("Episode not found with slug: {}", slug);
+            throw new NotFoundException("The episode doesn't exist with slug Movie");
+        }
     }
 
     @Override
