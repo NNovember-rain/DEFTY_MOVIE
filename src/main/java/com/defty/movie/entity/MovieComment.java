@@ -1,5 +1,7 @@
 package com.defty.movie.entity;
 
+import com.defty.movie.view.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

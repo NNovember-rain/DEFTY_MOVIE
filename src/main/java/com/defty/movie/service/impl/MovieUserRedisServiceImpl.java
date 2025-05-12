@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.context.ApplicationContext;
 import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.exceptions.JedisDataException;
 import redis.clients.jedis.search.*;
 
 
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MovieUserRedisServiceImpl implements IMovieUserRedisService {
-    StringUtil util;
+
     ApplicationContext applicationContext;
     JedisPooled jedis;
 
@@ -122,15 +123,18 @@ public class MovieUserRedisServiceImpl implements IMovieUserRedisService {
 
     @Override
     public void clearCache() {
-        // Lấy danh sách tất cả các key movie:*
         Set<String> keys = jedis.keys("movie:*");
-        if (!keys.isEmpty()) {
-            keys.forEach(jedis::del);
+        if (keys != null && !keys.isEmpty()) {
+            jedis.del(keys.toArray(new String[0]));
         }
         try {
             jedis.ftDropIndexDD("movie-idx");
+        } catch (JedisDataException e) {
+            if (e.getMessage() == null || !e.getMessage().toLowerCase().contains("unknown index")) {
+                log.error("Redis Search: Error dropping index 'movie-idx': {}", e.getMessage(), e);
+            }
         } catch (Exception e) {
-            log.warn("Index movie-idx (Redis) không tồn tại hoặc đã bị xóa trước đó.");
+            log.error("Redis Search: Unexpected error while trying to drop index 'movie-idx': {}", e.getMessage(), e);
         }
     }
 

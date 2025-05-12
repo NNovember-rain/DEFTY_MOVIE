@@ -1,6 +1,7 @@
 package com.defty.movie.controller.user;
 
 import com.defty.movie.dto.response.*;
+import com.defty.movie.entity.Movie;
 import com.defty.movie.service.IMovieUserRedisService;
 import com.defty.movie.service.IMovieUserService;
 import com.defty.movie.utils.ApiResponeUtil;
@@ -37,6 +38,18 @@ public class MovieUserController {
         return ApiResponeUtil.ResponseOK(movieDetailResponse);
     }
 
+    @GetMapping("/movie-search/app/result")
+    public Object getMoviesAppResult(@RequestParam String title) {
+        List<MovieAppSearchResultResponse> movieDetailResponse = movieUserService.getMoviesAppResult(title);
+        return ApiResponeUtil.ResponseOK(movieDetailResponse);
+    }
+
+    @GetMapping("/hot-search")
+    public Object getMovies() {
+        List<MovieNameResponse> movies = movieUserService.getAllMovies();
+        return ApiResponeUtil.ResponseOK(movies);
+    }
+
     @GetMapping("/movie-search")
     public Object findByMovieName(@RequestParam String title) throws JsonProcessingException {
             List<MovieRedisDTO> movieNameResponseList = movieUserRedisService.getAllMovie(title);
@@ -64,4 +77,6 @@ public class MovieUserController {
         MovieDetailDirectorActorResponse episodeResponses = movieUserService.getMovieDetailActor(slugMovie);
         return ApiResponeUtil.ResponseOK(episodeResponses);
     }
+
+
 }

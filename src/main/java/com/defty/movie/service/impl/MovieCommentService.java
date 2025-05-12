@@ -1,7 +1,10 @@
 package com.defty.movie.service.impl;
 
 import com.defty.movie.dto.request.MovieCommentRequest;
+import com.defty.movie.dto.request.MovieCommentUpdateRequest;
+import com.defty.movie.dto.response.ArticleResponse;
 import com.defty.movie.dto.response.MovieCommentResponse;
+import com.defty.movie.dto.response.PageableResponse;
 import com.defty.movie.exception.FieldRequiredException;
 import com.defty.movie.exception.NotFoundException;
 import com.defty.movie.mapper.MovieCommentMapper;
@@ -12,16 +15,19 @@ import com.defty.movie.repository.IEpisodeRepository;
 import com.defty.movie.repository.IMovieCommentRepository;
 import com.defty.movie.service.IAuthUserService;
 import com.defty.movie.service.IMovieCommentService;
+import com.defty.movie.utils.ApiResponeUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -59,10 +65,10 @@ public class MovieCommentService implements IMovieCommentService {
 
         if(movieCommentRequest.getContent() == null || movieCommentRequest.getContent().isEmpty()) throw new FieldRequiredException("Field ïs required");
 
-        if(movieCommentRequest.getParentEpisodeCommentId()!=null) {
-            Optional<MovieComment> movieCommentParent= movieCommentRepository.findById(movieCommentRequest.getParentEpisodeCommentId());
+        if(movieCommentRequest.getParentId()!=null) {
+            Optional<MovieComment> movieCommentParent= movieCommentRepository.findByIdAndStatus(movieCommentRequest.getParentId(),1);
             if(movieCommentParent.isPresent()) {
-                log.info(PREFIX_MOVIE_COMMENT + "Get EpisodeCommentParent by episodeCommentParentId="+movieCommentRequest.getParentEpisodeCommentId()+ " success");
+                log.info(PREFIX_MOVIE_COMMENT + "Get EpisodeCommentParent by episodeCommentParentId="+movieCommentRequest.getParentId()+ " success");
                 movieComment.setParentMovieComment(movieCommentParent.get());
             }else {
                 log.error("{}Parent episode comment not found", PREFIX_MOVIE_COMMENT);
@@ -80,14 +86,15 @@ public class MovieCommentService implements IMovieCommentService {
     }
 
     @Override
-    public void updateMovieComment(Integer id, MovieCommentRequest movieCommentRequest) {
-        Optional<MovieComment> movieComment = movieCommentRepository.findById(id);
-        if(movieCommentRequest.getContent() == null || movieCommentRequest.getContent().isEmpty()) throw new FieldRequiredException("Field ïs required");
-        if(movieComment.isPresent()) {
-            log.info(PREFIX_MOVIE_COMMENT + "Get episode comment by episodeId="+id+ " success");
-            MovieComment movieCommentUpdate = movieComment.get();
-            BeanUtils.copyProperties(movieCommentRequest,movieCommentUpdate);
-            movieCommentRepository.save(movieCommentUpdate);
+    public void updateMovieComment(Integer id, MovieCommentUpdateRequest movieCommentUpdateRequest) {
+        if (movieCommentUpdateRequest.getContent() == null || movieCommentUpdateRequest.getContent().isEmpty())
+            throw new FieldRequiredException("Field ïs required");
+
+        Optional<MovieComment> movieCommentOptional = movieCommentRepository.findById(id);
+        if(movieCommentOptional.isPresent()) {
+            MovieComment movieComment = movieCommentOptional.get();
+            movieComment.setContent(movieCommentUpdateRequest.getContent());
+            movieCommentRepository.save(movieComment);
         }else {
             log.error("{}Movie Comment not found", PREFIX_MOVIE_COMMENT);
             throw new NotFoundException("Movie Comment not found");
@@ -95,50 +102,86 @@ public class MovieCommentService implements IMovieCommentService {
     }
 
     @Override
-    public void deleteMovieComment(List<Integer> ids) {
-        List<MovieComment> movieComments = movieCommentRepository.findAllById(ids);
-        if(movieComments.size()!=ids.size()) {
+    public void deleteMovieComment(Integer id) {
+        Optional<MovieComment> movieCommentOptional = movieCommentRepository.findById(id);
+        if (movieCommentOptional.isPresent()) {
+            MovieComment movieComment = movieCommentOptional.get();
+            disableCommentAndChildren(movieComment);
+        } else {
             log.error("{}Some Movie Comment not found", PREFIX_MOVIE_COMMENT);
             throw new NotFoundException("Some Movie Comment not found");
         }
-        else {
-            // xoa "cmt" bao gom ca "cmt con"
-            for(MovieComment movieComment:movieComments) {
-                if(movieComment.getParentMovieComment()==null) { // check xem cmt nay la cha hay con
-                    Optional<List<MovieComment>> movieCommentSub= movieCommentRepository.findByParentMovieComment_Id(movieComment.getId());
-                    log.info(PREFIX_MOVIE_COMMENT + "Get movie comment by movieId="+movieComment.getId()+ " success");
-                    if(movieCommentSub.isPresent() && movieCommentSub.get().size()>0) {
-                        List<MovieComment> movieCommentSubUpdates = movieCommentSub.get();
-                        for(MovieComment movieCommentUpdate:movieCommentSubUpdates) {
-                            movieCommentUpdate.setStatus(0);
-                        }
-                        movieCommentRepository.saveAll(movieCommentSubUpdates);
-                    }
-                }
-                movieComment.setStatus(0);
-            }
-            movieCommentRepository.saveAll(movieComments);
-        }
     }
 
+
     @Override
-    public List<MovieCommentResponse> getMovieComment(Integer movieId) {
-        Optional<List<MovieComment>> movieComments = movieCommentRepository.findByEpisode_IdAndStatus(movieId, 1);
-        if(movieComments.isPresent() && movieComments.get().size()>0) {
-            List<MovieComment> movieCommentList = movieComments.get();
-            List<MovieCommentResponse> movieCommentResponses = new ArrayList<>();
-            for(MovieComment movieComment:movieCommentList) {
-                movieCommentResponses.add(movieCommentMapper.toMovieCommentReSponse(movieComment));
-            }
-            return movieCommentResponses;
-        }else{
-            log.error("{}Episode Comment not found", PREFIX_MOVIE_COMMENT);
-            throw new NotFoundException("Episode Comment not found");
+    public PageableResponse<MovieCommentResponse> getMovieComment(Integer episodeId, Pageable pageable) {
+
+        Page<MovieComment> movieCommentPage = movieCommentRepository.findByEpisodeIdAndParentMovieCommentIsNullAndStatus(episodeId, 1, pageable);
+        if (!movieCommentPage.hasContent()) {
+            throw new NotFoundException("No movie comment found");
         }
+        int totalElements = movieCommentRepository.findAllByEpisodeIdAndStatus(episodeId,1).size();
+        List<MovieCommentResponse> responseList = movieCommentPage.getContent().stream()
+                .map(comment -> {
+                    MovieCommentResponse response = movieCommentMapper.mapperMovieCommentResponse(comment);
+                    long replyCount = movieCommentRepository.countByParentMovieCommentIdAndStatus(comment.getId(), 1);
+                    response.setTotalReply((int) replyCount);
+                    response.setReplyTo(null);
+                    return response;
+                })
+                .collect(Collectors.toList());
+        return PageableResponse.<MovieCommentResponse>builder()
+                .content(responseList)
+                .totalElements(totalElements+0L)
+                .build();
     }
 
     @Override
     public MovieComment getMovieCommentById(Integer id) {
         return movieCommentRepository.findById(id).orElseThrow(() -> new NotFoundException("Movie Comment not found"));
     }
+
+    @Override
+    public List<MovieCommentResponse> getMovieCommentReplies(Integer parentCommentId, Pageable pageable) {
+        // 1. (Tùy chọn nhưng nên có) Kiểm tra comment cha có tồn tại không
+        MovieComment movieParentComment=movieCommentRepository.findByIdAndStatus(parentCommentId, 1)
+                .orElseThrow(() -> {
+                    return new NotFoundException("Parent comment not found with id: " + parentCommentId);
+                });
+
+        User user= movieParentComment.getUser();
+        // 2. Sử dụng native query đã tạo trong Repository để lấy những thằng con
+        Page<MovieComment> repliesPage = movieCommentRepository.findCommentDescendantsBreadthFirstPaginated(parentCommentId, 1, pageable);
+
+        List<MovieComment> commentsInPage = repliesPage.getContent();
+        if (commentsInPage.isEmpty()) {
+            throw new NotFoundException("No movie comment found");
+        }
+        List<MovieCommentResponse> responseList = commentsInPage.stream().map(comment -> {
+            // lấy cmt cha
+            MovieComment parentComment= movieCommentRepository.findByIdAndStatus(comment.getParentMovieComment().getId(), 1).orElseThrow(() -> new NotFoundException("Parent comment not found"));
+
+            MovieCommentResponse response = movieCommentMapper.mapperMovieCommentResponse(comment);
+            long ownRepliesCount = movieCommentRepository.countByParentMovieCommentIdAndStatus(comment.getId(), 1);
+            response.setTotalReply((int) ownRepliesCount);
+            response.setReplyTo(parentComment.getUser().getFullName());
+            return response;
+        }).collect(Collectors.toList());
+
+        return responseList; // Trả về danh sách comment của trang hiện tại
+    }
+
+
+    private void disableCommentAndChildren(MovieComment comment) {
+        comment.setStatus(0);
+        movieCommentRepository.save(comment);
+        Optional<List<MovieComment>> subCommentsOpt = movieCommentRepository.findByParentMovieComment_Id(comment.getId());
+        if (subCommentsOpt.isPresent() && !subCommentsOpt.get().isEmpty()) {
+            for (MovieComment subComment : subCommentsOpt.get()) {
+                disableCommentAndChildren(subComment);
+            }
+        }
+    }
+
 }

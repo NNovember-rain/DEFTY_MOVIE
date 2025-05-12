@@ -19,6 +19,7 @@ public class MovieDetailResponse {
     String coverImage;
     String trailer;
     String slug;
+    String firstEpisodeSlug;
     MovieNameResponse director;
     List<CategoryNameResponse> category;
     List<ActorNameResponse> actor;

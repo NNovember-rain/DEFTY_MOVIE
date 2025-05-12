@@ -13,4 +13,6 @@ public interface IMovieUserService {
     PageableResponse<EpisodeResponse> getEpisodes(String slugMovie, Pageable pageable);
     MovieDetailDirectorActorResponse getMovieDetailActor(String slugMovie);
     Movie getMovieBySlugEpisode(String slugEpisode);
+    List<MovieNameResponse> getAllMovies();
+    List<MovieAppSearchResultResponse> getMoviesAppResult(String title);
 }

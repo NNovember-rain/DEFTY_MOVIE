@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -14,13 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class MovieCommentResponse {
-    Integer id;
+public class MovieCommentReplyResponse {
+    int id;
     String content;
     Date createdAt;
-    String replyTo; // Trường này sẽ chỉ có giá trị khi lấy replies bằng API thứ 21
-    Integer parentCommentId;
     EpisodeCommentUserResponse user;
     List<CommentReactionResponse> reactions;
-    Integer totalReply;
 }

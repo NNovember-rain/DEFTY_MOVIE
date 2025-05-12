@@ -32,7 +32,7 @@ public class ArticleCommentMapper {
         for(ArticleCommentReaction a: articleCommentReactions){
             CommentReactionResponse commentReactionResponse = new CommentReactionResponse();
             commentReactionResponse.setContent(a.getContent());
-            commentReactionResponse.setUserResponse(userMapper.toUserResponse(a.getUser()));
+            commentReactionResponse.setUser(userMapper.toEpisodeCommentUserResponse(a.getUser()));
             commentReactionRespons.add(commentReactionResponse);
         }
         articleCommentResponse.setCommentReactionRespons(commentReactionRespons);

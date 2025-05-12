@@ -27,7 +27,6 @@ import java.util.Set;
 public class MovieUserService implements IMovieUserService {
 
     IMovieRepository movieRepository;
-    IMovieRepository movieUserRepository;
     IEpisodeRepository episodeRepository;
 
 
@@ -88,8 +87,10 @@ public class MovieUserService implements IMovieUserService {
     public MovieDetailResponse getMovieDetails(String slugMovie) {
         Optional<Movie> movieOptional = movieRepository.findBySlugAndStatus(slugMovie,1);
         if(movieOptional.isPresent()){
+
             Movie movie = movieOptional.get();
             MovieDetailResponse movieDetailResponse= new MovieDetailResponse();
+            Episode firstEpisode = episodeRepository.findByMovieIdAndNumberAndStatus(movie.getId(),1,1);
 
             Set<MovieCategory> movieCategories = movie.getMovieCategories();
             List<CategoryNameResponse> categoryNames = new ArrayList<>();
@@ -136,6 +137,7 @@ public class MovieUserService implements IMovieUserService {
             movieDetailResponse.setCoverImage(movie.getCoverImage());
             movieDetailResponse.setDuration(episodes.size());
             movieDetailResponse.setTrailer(movie.getTrailer());
+            movieDetailResponse.setFirstEpisodeSlug(firstEpisode.getSlug());
 
             return movieDetailResponse;
         }else throw new NotFoundException("Movie not found");
@@ -227,6 +229,47 @@ public class MovieUserService implements IMovieUserService {
             log.error("Episode not found with slug: {}", slug);
             throw new NotFoundException("The episode doesn't exist with slug Movie");
         }
+    }
+
+    @Override
+    public List<MovieNameResponse> getAllMovies() {
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Movie> movies=movieRepository.findAllByStatus(pageable,1);
+        List<MovieNameResponse> movieResponses=new ArrayList<>();
+        for (Movie movie : movies) {
+            MovieNameResponse movieResponse = new MovieNameResponse();
+            movieResponse.setThumbnail(movie.getThumbnail());
+            movieResponse.setName(movie.getTitle());
+            movieResponse.setSlug(movie.getSlug());
+            movieResponses.add(movieResponse);
+        }
+        return movieResponses;
+    }
+
+    @Override
+    public List<MovieAppSearchResultResponse> getMoviesAppResult(String title) {
+        List<Movie> movies =movieRepository.findByTitleContainingIgnoreCaseAndStatus(title,1);
+        List<MovieAppSearchResultResponse> movieAppSearchResultResponses=new ArrayList<>();
+        for (Movie movie : movies) {
+            MovieAppSearchResultResponse movieAppSearchResultResponse = new MovieAppSearchResultResponse();
+            BeanUtils.copyProperties(movie,movieAppSearchResultResponse);
+
+            List<Actor> actors=movie.getActors();
+            List<String> actorNameResponses = new ArrayList<>();
+            for(Actor actor : actors){
+                actorNameResponses.add(actor.getFullName());
+            }
+            movieAppSearchResultResponse.setActors(actorNameResponses);
+            Set<MovieCategory> movieCategories=movie.getMovieCategories();
+            List<String> categorys=new ArrayList<>();
+            for(MovieCategory movieCategory : movieCategories){
+                Category category = movieCategory.getCategory();
+                categorys.add(category.getName());
+            }
+            movieAppSearchResultResponse.setCategories(categorys);
+            movieAppSearchResultResponses.add(movieAppSearchResultResponse);
+        }
+        return movieAppSearchResultResponses;
     }
 }
 
