@@ -76,8 +76,6 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
             Pageable pageable);
 
 
-
-
     @Query(value = "SELECT m FROM Movie m WHERE m.id NOT IN " +
             "(SELECT mc.movie.id FROM MovieCategory mc WHERE mc.category.id = :categoryId) " +
             "AND (:title IS NULL OR m.title LIKE CONCAT('%', :title, '%')) " +
@@ -109,4 +107,7 @@ public interface ICategoryRepository extends JpaRepository<Category, Integer> {
 
     @Query("SELECT c.name FROM Category c WHERE c.status = 1")
     List<String> findAllCategories();
+
+    @Query("SELECT c.slug FROM Category c WHERE c.status = 1")
+    List<String> findAllSlugCategories();
 }

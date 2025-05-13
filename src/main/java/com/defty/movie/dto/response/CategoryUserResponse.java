@@ -15,4 +15,5 @@ public class CategoryUserResponse {
     List<String> paidCategories;
     List<Integer> releaseDates;
     List<String> categories;
+    List<String> slugCategories;
 }
