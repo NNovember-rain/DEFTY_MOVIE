@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,4 +23,5 @@ public class MovieDetailResponse {
     MovieNameResponse director;
     List<CategoryNameResponse> category;
     List<ActorNameResponse> actor;
+    List<EpisodeResponse> episode = new ArrayList<>();
 }
