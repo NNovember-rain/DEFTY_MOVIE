@@ -44,10 +44,9 @@ public class EpisodeService implements IEpisodeService {
     @Override
     public ApiResponse<Integer> addEpisode(EpisodeRequest episodeRequest) {
         episodeValidation.fieldValidation(episodeRequest);
-        List<Episode> episodes = episodeRepository.findAllByNumber(episodeRequest.getNumber());
+        List<Episode> episodes = episodeRepository.findAllByNumberAndMovieId(episodeRequest.getNumber(), episodeRequest.getMovieId());
         if (!episodes.isEmpty()){
             throw new AlreadyExitException("Episode number already exists");
-
         }
         Episode episode = episodeMapper.toEpisodeEntity(episodeRequest);
         Optional<Movie> movie = movieRepository.findById(episodeRequest.getMovieId());
@@ -114,7 +113,7 @@ public class EpisodeService implements IEpisodeService {
         Optional<Episode> episode = episodeRepository.findById(id);
         if(episode.isPresent()){
             Episode updatedEpisode = episode.get();
-            List<Episode> episodes = episodeRepository.findAllByNumber(episodeRequest.getNumber());
+            List<Episode> episodes = episodeRepository.findAllByNumberAndMovieId(episodeRequest.getNumber(), episodeRequest.getMovieId());
             if (!episodes.isEmpty() && updatedEpisode.getNumber() != episodeRequest.getNumber()){
                 throw new AlreadyExitException("Episode number already exists");
 

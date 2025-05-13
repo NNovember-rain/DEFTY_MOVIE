@@ -32,10 +32,10 @@ public interface IEpisodeRepository extends JpaRepository<Episode, Integer> {
     Page<Episode> findByMovieIdAndStatusOrderByNumber(Integer movieId, Integer status, Pageable pageable);
 
     List<Episode> findByMovieIdAndStatus(Integer movieId, Integer status);
-
+    List<Episode> findByMovieIdAndStatusOrderByNumberAsc(Integer movieId, Integer status);
     Optional<Episode> findBySlugAndStatus(String slug, Integer status);
 
     Optional<Episode> findBySlug(String slug);
-    List<Episode> findAllByNumber(Integer episodeNumber);
+    List<Episode> findAllByNumberAndMovieId(Integer episodeNumber, Integer movieId);
     Episode findByMovieIdAndNumberAndStatus(Integer movieId,Integer number,Integer status);
 }

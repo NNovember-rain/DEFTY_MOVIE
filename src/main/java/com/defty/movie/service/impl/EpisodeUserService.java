@@ -33,7 +33,7 @@ public class EpisodeUserService implements IEpisodeUserService {
     IMovieRepository movieRepository;
 
     @Override
-    public MovieDetailResponse getEpispdeDetails(String slug) {
+    public MovieDetailResponse getEpisodeDetails(String slug) {
         Movie movie=movieUserService.getMovieBySlugEpisode(slug);
         MovieDetailResponse movieDetailResponse=movieUserService.getMovieDetails(movie.getSlug());
         return movieDetailResponse;
@@ -48,7 +48,7 @@ public class EpisodeUserService implements IEpisodeUserService {
     public PageableResponse<EpisodeResponse> getEpisodes(String slugEpisode, Pageable pageable) {
         Movie movie=movieUserService.getMovieBySlugEpisode(slugEpisode);
         PageableResponse<EpisodeResponse> episodes=movieUserService.getEpisodes(movie.getSlug(),pageable);
-        int totalElements=episodeRepository.findByMovieIdAndStatus(movie.getId(),1).size();
+        int totalElements=episodeRepository.findByMovieIdAndStatusOrderByNumberAsc(movie.getId(),1).size();
         episodes.setTotalElements(totalElements+0L);
 
         return episodes;
@@ -68,7 +68,7 @@ public class EpisodeUserService implements IEpisodeUserService {
     @Override
     public EpisodeResponse getVideoUrlFirst(String slugMovie) {
         Movie movie = movieRepository.findByStatusAndSlug(1, slugMovie);
-        List<Episode> episodeList = episodeRepository.findByMovieIdAndStatus(movie.getId(), 1);
+        List<Episode> episodeList = episodeRepository.findByMovieIdAndStatusOrderByNumberAsc(movie.getId(), 1);
         if (!episodeList.isEmpty()){
             Episode episode = episodeList.get(0);
             EpisodeResponse episodeResponse=new EpisodeResponse();
