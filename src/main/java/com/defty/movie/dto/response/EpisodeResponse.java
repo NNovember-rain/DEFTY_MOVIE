@@ -15,4 +15,5 @@ public class EpisodeResponse {
     String slug;
     Integer movieId;
     Integer status;
+    String processedLink;
 }
