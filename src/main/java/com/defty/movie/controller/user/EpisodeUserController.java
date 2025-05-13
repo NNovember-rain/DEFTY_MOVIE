@@ -31,7 +31,7 @@ public class EpisodeUserController {
 
     @GetMapping
     public Object getEpisodeDetail(@RequestParam String slug) {
-        MovieDetailResponse movieDetailResponse = episodeUserService.getEpispdeDetails(slug);
+        MovieDetailResponse movieDetailResponse = episodeUserService.getEpisodeDetails(slug);
         return ApiResponeUtil.ResponseOK(movieDetailResponse);
     }
 

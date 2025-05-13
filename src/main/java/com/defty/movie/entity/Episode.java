@@ -24,6 +24,9 @@ public class Episode extends BaseEntity{
     @Column(name = "link")
     private String link;
 
+    @Column(name = "processed_link")
+    private String processedLink;
+
     @Column(name = "slug")
     private String slug;
 

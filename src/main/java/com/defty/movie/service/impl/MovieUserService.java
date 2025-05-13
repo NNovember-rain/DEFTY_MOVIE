@@ -3,6 +3,7 @@ package com.defty.movie.service.impl;
 import com.defty.movie.dto.response.*;
 import com.defty.movie.entity.*;
 import com.defty.movie.exception.NotFoundException;
+import com.defty.movie.mapper.EpisodeMapper;
 import com.defty.movie.repository.IEpisodeRepository;
 import com.defty.movie.repository.IMovieRepository;
 import com.defty.movie.service.IMovieUserService;
@@ -15,10 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
@@ -28,6 +28,7 @@ public class MovieUserService implements IMovieUserService {
 
     IMovieRepository movieRepository;
     IEpisodeRepository episodeRepository;
+    EpisodeMapper episodeMapper;
 
 
     @Override
@@ -124,7 +125,17 @@ public class MovieUserService implements IMovieUserService {
                 }
             }
 
+            int episodeSize = 0;
             Set<Episode> episodes = movie.getEpisodes();
+            List<Episode> sortedEpisodes = new ArrayList<>(episodes);
+            Collections.sort(sortedEpisodes, Comparator.comparingInt(e -> e.getNumber()));
+            for(Episode episode : sortedEpisodes){
+                if (episode.getStatus() == 1){
+                    episodeSize++;
+                    EpisodeResponse episodeResponse = episodeMapper.toEpisodeResponseDTO(episode);
+                    movieDetailResponse.getEpisode().add(episodeResponse);
+                }
+            }
 
             movieDetailResponse.setId(movie.getId());
             movieDetailResponse.setTitle(movie.getTitle());
@@ -135,7 +146,7 @@ public class MovieUserService implements IMovieUserService {
             movieDetailResponse.setDescription(movie.getDescription());
             movieDetailResponse.setReleaseDate(movie.getReleaseDate());
             movieDetailResponse.setCoverImage(movie.getCoverImage());
-            movieDetailResponse.setDuration(episodes.size());
+            movieDetailResponse.setDuration(episodeSize);
             movieDetailResponse.setTrailer(movie.getTrailer());
             movieDetailResponse.setFirstEpisodeSlug(firstEpisode.getSlug());
 

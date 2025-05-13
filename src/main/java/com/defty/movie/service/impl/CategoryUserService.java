@@ -41,6 +41,7 @@ public class CategoryUserService implements ICategoryUserService {
         List<String> regions = movieRepository.findAllNations();
         List<Integer> releaseDates = movieRepository.findDistinctReleaseYearsOfActiveMovies();
         List<String> categories = categoryRepository.findAllCategories();
+        List<String> slugCategories = categoryRepository.findAllSlugCategories();
         List<String> paidCategories = new ArrayList<>();
         paidCategories.add("Premium");
         paidCategories.add("Normal");
@@ -49,6 +50,7 @@ public class CategoryUserService implements ICategoryUserService {
                 .releaseDates(releaseDates)
                 .categories(categories)
                 .paidCategories(paidCategories)
+                .slugCategories(slugCategories)
                 .build();
     }
 
