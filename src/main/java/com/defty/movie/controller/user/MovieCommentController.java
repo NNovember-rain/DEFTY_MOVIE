@@ -27,7 +27,7 @@ public class MovieCommentController {
     private final IMovieCommentService movieCommentService;
     String PREFIX_MOVIE_COMMENT = "MOVIE_COMMENT | ";
 
-    @PostMapping("/movie-comment")
+    @PostMapping("/accessible/movie-comment")
     public Object addMovieComment(@RequestBody MovieCommentRequest movieCommentRequest) {
         Integer commentId = movieCommentService.addMovieComment(movieCommentRequest);
         log.info(PREFIX_MOVIE_COMMENT + "Add Episode Comment successfully");
