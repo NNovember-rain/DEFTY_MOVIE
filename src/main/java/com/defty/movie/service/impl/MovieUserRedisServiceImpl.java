@@ -143,6 +143,21 @@ public class MovieUserRedisServiceImpl implements IMovieUserRedisService {
         try {
             Set<String> movieKeys = jedis.keys("movie:*");
             boolean hasData = !movieKeys.isEmpty();
+
+            // Nếu không có dữ liệu, kiểm tra và xóa index nếu tồn tại
+            if (!hasData) {
+                try {
+                    jedis.ftDropIndexDD("movie-idx");
+                    log.info("Redis Search: Dropped index 'movie-idx' as no movie data was found");
+                } catch (JedisDataException e) {
+                    if (e.getMessage() == null || !e.getMessage().toLowerCase().contains("unknown index")) {
+                        log.error("Redis Search: Error dropping index 'movie-idx': {}", e.getMessage(), e);
+                    }
+                } catch (Exception e) {
+                    log.error("Redis Search: Unexpected error while trying to drop index 'movie-idx': {}", e.getMessage(), e);
+                }
+            }
+
             return hasData;
         } catch (Exception e) {
             log.error("Error checking movie data in Redis: {}", e.getMessage());
