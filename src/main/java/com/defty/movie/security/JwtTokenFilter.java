@@ -46,6 +46,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         try {
             if (isBypassToken(request)) {
                 filterChain.doFilter(request, response);
+                log.info("Bypass token filter for request: {}", request.getRequestURI());
                 return;
             }
             final String token = CookieUtil.getValue(request, "access_token");
@@ -105,6 +106,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/user/auth/check-account", apiPrefix), "GET"),
                 Pair.of(String.format("%s/user/auth/check-account-token", apiPrefix), "GET"),
                 Pair.of(String.format("%s/user/accessible/.*", apiPrefix), "GET"),
+                Pair.of(String.format("%s/user/accessible/.*", apiPrefix), "POST"),
                 Pair.of(String.format("%s/admin/upload-image", apiPrefix), "POST"),
 
                 // Swagger

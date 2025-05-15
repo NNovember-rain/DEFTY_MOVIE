@@ -13,6 +13,7 @@ import com.defty.movie.entity.MovieComment;
 import com.defty.movie.entity.User;
 import com.defty.movie.repository.IEpisodeRepository;
 import com.defty.movie.repository.IMovieCommentRepository;
+import com.defty.movie.repository.IUserRepository;
 import com.defty.movie.service.IAuthUserService;
 import com.defty.movie.service.IMovieCommentService;
 import com.defty.movie.utils.ApiResponeUtil;
@@ -39,13 +40,14 @@ public class MovieCommentService implements IMovieCommentService {
     IAuthUserService authUserService;
     IEpisodeRepository episodeRepository;
     MovieCommentMapper movieCommentMapper;
+    IUserRepository userRepository;
 
     String PREFIX_MOVIE_COMMENT = "MOVIE_COMMENT | ";
 
     @Override
     public Integer addMovieComment(MovieCommentRequest movieCommentRequest) {
         MovieComment movieComment = new MovieComment();
-        Optional<User> user = authUserService.getCurrentUser();
+        Optional<User> user = userRepository.findByUsername(movieCommentRequest.getUsername());
         if(user.isPresent()) {
             log.info(PREFIX_MOVIE_COMMENT + "Get current user success");
             movieComment.setUser(user.get());

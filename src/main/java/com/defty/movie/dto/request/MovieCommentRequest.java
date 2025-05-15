@@ -10,4 +10,5 @@ public class MovieCommentRequest {
     Integer episodeId;
     Integer parentId;
     String content;
+    String username;
 }
