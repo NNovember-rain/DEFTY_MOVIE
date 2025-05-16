@@ -73,6 +73,7 @@ public class EpisodeUserService implements IEpisodeUserService {
             Episode episode = episodeList.get(0);
             EpisodeResponse episodeResponse=new EpisodeResponse();
             BeanUtils.copyProperties(episode,episodeResponse);
+            episodeResponse.setProcessedLink(episode.getProcessedLink());
             return episodeResponse;
         }
         else {
