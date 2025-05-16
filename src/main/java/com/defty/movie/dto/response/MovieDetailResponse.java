@@ -25,4 +25,5 @@ public class MovieDetailResponse {
     List<CategoryNameResponse> category;
     List<ActorNameResponse> actor;
     List<EpisodeResponse> episode = new ArrayList<>();
+    private Integer membershipType;
 }

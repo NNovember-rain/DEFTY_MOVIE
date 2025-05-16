@@ -149,6 +149,7 @@ public class MovieUserService implements IMovieUserService {
             movieDetailResponse.setDuration(episodeSize);
             movieDetailResponse.setTrailer(movie.getTrailer());
             movieDetailResponse.setFirstEpisodeSlug(firstEpisode.getSlug());
+            movieDetailResponse.setMembershipType(movie.getMembershipType());
 
             return movieDetailResponse;
         }else throw new NotFoundException("Movie not found");

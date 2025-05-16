@@ -40,14 +40,13 @@ public class MovieCommentService implements IMovieCommentService {
     IAuthUserService authUserService;
     IEpisodeRepository episodeRepository;
     MovieCommentMapper movieCommentMapper;
-    IUserRepository userRepository;
 
     String PREFIX_MOVIE_COMMENT = "MOVIE_COMMENT | ";
 
     @Override
     public Integer addMovieComment(MovieCommentRequest movieCommentRequest) {
         MovieComment movieComment = new MovieComment();
-        Optional<User> user = userRepository.findByUsername(movieCommentRequest.getUsername());
+        Optional<User> user = authUserService.getCurrentUser();
         if(user.isPresent()) {
             log.info(PREFIX_MOVIE_COMMENT + "Get current user success");
             movieComment.setUser(user.get());
